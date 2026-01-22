@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Marcellus&family=Outfit:wght@100..900&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #EA580C;
+  --color-primary-dark: #C2410C;
+  --color-secondary: #7C2D12;
+  --color-accent: #006837;
+  --color-background: #FFF7ED;
+  --color-text: #7C2D12;
+  --color-text-muted: #9A3412;
+
+  --font-serif: "Playfair Display", serif;
+  --font-accent: "Marcellus", serif;
+  --font-sans: "Outfit", sans-serif;
+
+  --letter-spacing-widest: 0.2em;
+}
+
+:root {
+  --text-main: #7C2D12;
+  --text-muted: #9A3412;
+  font-size: 17px;
+  /* Increased base font size */
+}
+
+body {
+  background-color: #FFFBF5;
+  /* Slightly warmer cream */
+  background-image: url('/bg-pattern.svg');
+  background-size: 400px;
+  background-repeat: repeat;
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+h1,
+h2,
+h3,
+h4,
+.serif {
+  font-family: var(--font-serif);
+  font-weight: 700;
+}
+
+.accent-font {
+  font-family: var(--font-accent);
+}
+
+/* Custom AlmondHouse style utility classes */
+.mega-menu-shadow {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.product-card-hover {
+  transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.product-card-hover:hover {
+  transform: translateY(-8px);
+}
+
+.bg-pattern {
+  background-image: url('/bg-pattern.svg');
+  background-size: 400px;
+  background-repeat: repeat;
+}
+
+.btn-primary {
+  @apply bg-primary text-white px-8 py-3 rounded-none uppercase tracking-widest text-sm font-semibold transition-all hover:bg-secondary;
+}
+
+.btn-outline {
+  @apply border border-primary text-primary px-8 py-3 rounded-none uppercase tracking-widest text-sm font-semibold transition-all hover:bg-primary hover:text-white;
+}

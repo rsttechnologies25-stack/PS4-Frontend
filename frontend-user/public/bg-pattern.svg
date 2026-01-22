@@ -1,0 +1,56 @@
+<svg width="400" height="400" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <!-- Transparent Background -->
+    
+    <!-- Sketch Style Sweets Pattern -->
+    <!-- Stroke: Brand Secondary (#7C2D12), Opacity: 0.15 for subtle background -->
+    <g fill="none" stroke="#7C2D12" stroke-width="1" opacity="0.15" stroke-linecap="round" stroke-linejoin="round">
+        
+        <!-- 1. Murukku (Spiral Stack) - Top Left -->
+        <g transform="translate(30, 30) scale(0.6)">
+            <!-- Coils -->
+            <path d="M10,20 C5,15 5,35 15,35 C25,35 30,15 20,10 C10,5 0,20 5,30 C10,40 30,40 35,30" />
+            <path d="M12,18 C10,16 8,24 14,24" /> <!-- Inner detail -->
+        </g>
+
+        <!-- 2. Mysore Pak (Rectangular Blocks) - Top Right -->
+        <g transform="translate(130, 20) scale(0.6)">
+            <!-- Stack of blocks -->
+            <path d="M10,10 L30,10 L35,15 L15,15 Z" /> <!-- Top face -->
+            <path d="M10,10 L10,30 L30,30 L30,10" /> <!-- Front face -->
+            <path d="M30,10 L35,15 L35,35 L30,30" /> <!-- Side face -->
+            <!-- Second block behind/below -->
+            <path d="M0,20 L10,20 L10,40 L0,40 Z" />
+            <path d="M0,20 L5,15 L15,15" />
+        </g>
+
+        <!-- 3. Mixture Bowl - Bottom Left -->
+        <g transform="translate(20, 130) scale(0.6)">
+            <!-- Bowl -->
+            <path d="M5,20 Q25,45 45,20" />
+            <path d="M5,20 L45,20" />
+            <!-- Mixture Scribbles -->
+            <path d="M10,18 L15,10 M20,19 L25,5 M30,18 L28,8 M35,19 L40,12" />
+            <path d="M12,15 Q25,5 38,15" />
+        </g>
+
+        <!-- 4. Laddu Plate - Bottom Right -->
+        <g transform="translate(130, 130) scale(0.6)">
+            <!-- Bottom Row -->
+            <circle cx="10" cy="30" r="8" />
+            <circle cx="26" cy="30" r="8" />
+            <circle cx="42" cy="30" r="8" />
+            <!-- Middle Row -->
+            <circle cx="18" cy="18" r="8" />
+            <circle cx="34" cy="18" r="8" />
+            <!-- Top Row -->
+            <circle cx="26" cy="6" r="8" />
+            <!-- Plate base -->
+            <path d="M0,38 Q26,48 52,38" />
+        </g>
+
+        <!-- 5. Repeat Murukku (Offset Center for flow) -->
+         <g transform="translate(80, 80) scale(0.5)">
+            <path d="M10,20 C5,15 5,35 15,35 C25,35 30,15 20,10 C10,5 0,20 5,30" />
+        </g>
+    </g>
+</svg>
