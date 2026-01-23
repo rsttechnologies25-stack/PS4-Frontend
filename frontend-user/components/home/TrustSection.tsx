@@ -7,7 +7,6 @@ const trustItems = [
     { icon: ShieldCheck, title: "Hygienic Manufacturing", desc: "50,000 sq.ft facility" },
     { icon: Zap, title: "Premium Ingredients", desc: "Quality first" },
     { icon: Heart, title: "No Artificial Preservatives", desc: "Fresh & natural" },
-    { icon: Truck, title: "Pan India Delivery", desc: "Direct to door" },
 ];
 
 export default function TrustSection() {

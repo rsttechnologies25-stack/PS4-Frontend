@@ -22,6 +22,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/context/CartContext";
 import ProductCard from "@/components/ui/ProductCard";
 import { API_URL } from "@/lib/api";
+import { USE_STATIC_DATA, getProductBySlug, getProductsByCategory, STATIC_CATEGORIES } from "@/lib/staticData";
 
 interface Product {
     id: string;
@@ -59,6 +60,21 @@ export default function ProductDetailPage() {
     ] : [];
 
     useEffect(() => {
+        // Use static data for Cloudflare deployment
+        if (USE_STATIC_DATA) {
+            const staticProduct = getProductBySlug(slug as string);
+            if (staticProduct) {
+                setProduct(staticProduct as Product);
+                const related = getProductsByCategory(staticProduct.category.slug)
+                    .filter(p => p.slug !== slug)
+                    .slice(0, 4);
+                setRelatedProducts(related as Product[]);
+            }
+            setLoading(false);
+            return;
+        }
+
+        // Fetch from API (for when backend is available)
         const fetchProduct = async () => {
             try {
                 const res = await fetch(`${API_URL}/products/${slug}`);
@@ -69,7 +85,7 @@ export default function ProductDetailPage() {
                 // Fetch related products
                 const relRes = await fetch(`${API_URL}/products?category=${data.category.slug}`);
                 const relData = await relRes.json();
-                setRelatedProducts(relData.filter((p: any) => p.slug !== slug).slice(0, 4));
+                setRelatedProducts(relData.filter((p: Product) => p.slug !== slug).slice(0, 4));
             } catch (error) {
                 console.error("Error fetching product:", error);
             } finally {

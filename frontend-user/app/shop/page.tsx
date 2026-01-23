@@ -5,6 +5,7 @@ import ProductCard from "@/components/ui/ProductCard";
 import { Loader2, Filter, ShoppingBag } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { API_URL } from "@/lib/api";
+import { USE_STATIC_DATA, STATIC_CATEGORIES, getProductsWithCategory } from "@/lib/staticData";
 
 interface Product {
     id: string;
@@ -35,6 +36,15 @@ export default function ShopPage() {
     const [selectedCategory, setSelectedCategory] = useState("all");
 
     useEffect(() => {
+        // Use static data for Cloudflare deployment
+        if (USE_STATIC_DATA) {
+            setCategories(STATIC_CATEGORIES);
+            setProducts(getProductsWithCategory() as Product[]);
+            setLoading(false);
+            return;
+        }
+
+        // Fetch from API (for when backend is available)
         const fetchData = async () => {
             setLoading(true);
             try {

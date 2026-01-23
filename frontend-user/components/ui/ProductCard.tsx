@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { ShoppingCart } from "lucide-react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useState, useRef } from "react";
@@ -19,7 +18,7 @@ interface ProductCardProps {
     isVeg?: boolean;
 }
 
-export default function ProductCard({ id, name, price, image, weight, slug, description, categoryName = "Sweets", isVeg = true }: ProductCardProps) {
+export default function ProductCard({ id, name, price, image, slug, description, categoryName = "Sweets", isVeg = true }: ProductCardProps) {
     const ref = useRef<HTMLDivElement>(null);
     const [selectedWeight, setSelectedWeight] = useState("250g");
 
@@ -40,7 +39,6 @@ export default function ProductCard({ id, name, price, image, weight, slug, desc
 
     // Cart Context
     const { addToCart } = useCart();
-    const router = useRouter();
 
     const handleAddToCart = (e: React.MouseEvent) => {
         e.preventDefault(); // Prevent link navigation

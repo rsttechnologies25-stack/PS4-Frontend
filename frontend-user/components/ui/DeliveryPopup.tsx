@@ -60,8 +60,8 @@ export default function DeliveryPopup() {
                             <span className="text-[#8B4513] text-lg leading-none">•</span>
                             <span>
                                 <span className="font-bold">Delivery Timeline:</span> Rest of
-                                India: 2–4 days. International: 4–6 days (
-                                <span className="font-semibold text-xs md:text-sm">Import fees not included</span>).
+                                India: 2–4 days.(
+                                <span className="font-semibold text-xs md:text-sm">Delivery fees not included</span>).
                             </span>
                         </li>
                     </ul>

@@ -7,8 +7,15 @@ import Link from "next/link";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useRef } from "react";
 
+interface Category {
+    id: string;
+    name: string;
+    slug: string;
+    image?: string;
+}
+
 // Reusable 3D Card Component for Categories
-const CategoryCard3D = ({ item }: { item: any }) => {
+const CategoryCard3D = ({ item }: { item: Category }) => {
     const ref = useRef<HTMLDivElement>(null);
 
     // Motion values for 3D tilt
@@ -108,18 +115,30 @@ const CategoryCard3D = ({ item }: { item: any }) => {
     );
 };
 
+import { API_URL } from "@/lib/api";
+import { USE_STATIC_DATA, STATIC_CATEGORIES } from "@/lib/staticData";
+
 export default function CollectionsGrid() {
-    const [categories, setCategories] = useState<any[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        // Use static data for Cloudflare deployment
+        if (USE_STATIC_DATA) {
+            setCategories(STATIC_CATEGORIES);
+            setLoading(false);
+            return;
+        }
+
+        // Fetch from API (for when backend is available)
         const fetchCategories = async () => {
             try {
-                const res = await fetch("http://localhost:4000/api/categories");
+                const res = await fetch(`${API_URL}/categories`);
                 const data = await res.json();
-                setCategories(data);
+                setCategories(Array.isArray(data) ? data : []);
             } catch (error) {
                 console.error("Failed to fetch categories:", error);
+                setCategories([]);
             } finally {
                 setLoading(false);
             }

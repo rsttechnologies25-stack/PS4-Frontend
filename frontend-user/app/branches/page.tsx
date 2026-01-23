@@ -5,6 +5,7 @@ import Image from "next/image";
 import { MapPin, Phone, Search, Navigation } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { API_URL } from "@/lib/api";
+import { USE_STATIC_DATA, STATIC_BRANCHES } from "@/lib/staticData";
 
 interface Branch {
     id: string;
@@ -21,6 +22,14 @@ export default function BranchesPage() {
     const [searchQuery, setSearchQuery] = useState("");
 
     useEffect(() => {
+        // Use static data for Cloudflare deployment
+        if (USE_STATIC_DATA) {
+            setBranches(STATIC_BRANCHES);
+            setLoading(false);
+            return;
+        }
+
+        // Fetch from API (for when backend is available)
         const fetchBranches = async () => {
             try {
                 const res = await fetch(`${API_URL}/branches`);

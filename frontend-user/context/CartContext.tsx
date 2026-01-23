@@ -36,7 +36,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
         const savedCart = localStorage.getItem("ps4_cart");
         if (savedCart) {
             try {
-                setCartItems(JSON.parse(savedCart));
+                const parsed = JSON.parse(savedCart);
+                setTimeout(() => setCartItems(parsed), 0);
             } catch (e) {
                 console.error("Failed to parse cart", e);
             }

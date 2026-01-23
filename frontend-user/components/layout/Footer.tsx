@@ -11,7 +11,7 @@ export default function Footer() {
                     <div className="space-y-6">
                         <Image src="/logo-v1.png" alt="PS4 Logo" width={180} height={60} className="h-12 w-auto object-contain" />
                         <p className="text-text-muted text-sm leading-relaxed italic">
-                            "Handcrafting traditions since 1981. Dedicated to bringing the authentic taste of South India to your doorstep."
+                            &quot;Handcrafting traditions since 1981. Dedicated to bringing the authentic taste of South India to your doorstep.&quot;
                         </p>
                         <div className="flex gap-4">
                             <button className="w-10 h-10 rounded-full border border-primary/20 text-text flex items-center justify-center hover:bg-primary/10 hover:border-primary/20 transition-colors">

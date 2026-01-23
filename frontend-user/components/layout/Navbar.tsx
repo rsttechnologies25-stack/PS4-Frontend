@@ -7,6 +7,12 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/context/CartContext";
 
+interface MegaItem {
+    name: string;
+    href: string;
+    image: string;
+}
+
 const menuItems = [
     {
         name: "Shop",
@@ -86,7 +92,7 @@ export default function Navbar() {
                                             >
                                                 <div className="bg-[#FFFBF5] shadow-2xl p-6 border border-[#8B4513]/20 rounded-sm">
                                                     <div className="grid grid-cols-4 gap-4">
-                                                        {item.mega.map((sub: any) => (
+                                                        {item.mega.map((sub: MegaItem) => (
                                                             <Link
                                                                 key={sub.name}
                                                                 href={sub.href}
@@ -160,7 +166,7 @@ export default function Navbar() {
 
                                     {item.mega && (
                                         <div className="grid grid-cols-2 gap-4 pb-6 px-2">
-                                            {item.mega.map((sub: any) => (
+                                            {item.mega.map((sub: MegaItem) => (
                                                 <Link
                                                     key={sub.name}
                                                     href={sub.href}

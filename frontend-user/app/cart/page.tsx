@@ -18,7 +18,7 @@ export default function CartPage() {
                     <Trash2 className="text-primary w-10 h-10" />
                 </div>
                 <h1 className="text-4xl font-black accent-font text-primary mb-4">Your Cart is Empty</h1>
-                <p className="text-text-muted mb-8 text-lg">Looks like you haven't added any sweets yet.</p>
+                <p className="text-text-muted mb-8 text-lg">Looks like you haven&apos;t added any sweets yet.</p>
                 <Link href="/" className="bg-primary text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-secondary transition-colors">
                     Start Shopping
                 </Link>

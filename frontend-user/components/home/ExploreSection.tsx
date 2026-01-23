@@ -11,20 +11,55 @@ const tabs = [
     { name: "SAVOURIES", query: "category=savouries" }
 ];
 
+import { API_URL } from "@/lib/api";
+import { USE_STATIC_DATA, STATIC_PRODUCTS, getProductsByCategory, getBestSellers, getNewLaunches } from "@/lib/staticData";
+
+interface Product {
+    id: string;
+    name: string;
+    price: number;
+    image: string;
+    slug: string;
+    description?: string;
+}
+
 export default function ExploreSection() {
     const [activeTab, setActiveTab] = useState(tabs[0]);
-    const [products, setProducts] = useState<any[]>([]);
+    const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        // Use static data for Cloudflare deployment
+        if (USE_STATIC_DATA) {
+            setLoading(true);
+            let filteredProducts: Product[] = [];
+
+            if (activeTab.query === "isBestSeller=true") {
+                filteredProducts = getBestSellers();
+            } else if (activeTab.query === "isNewLaunch=true") {
+                filteredProducts = getNewLaunches();
+            } else if (activeTab.query.startsWith("category=")) {
+                const categorySlug = activeTab.query.split("=")[1];
+                filteredProducts = getProductsByCategory(categorySlug);
+            } else {
+                filteredProducts = STATIC_PRODUCTS.slice(0, 8);
+            }
+
+            setProducts(filteredProducts);
+            setLoading(false);
+            return;
+        }
+
+        // Fetch from API (for when backend is available)
         const fetchProducts = async () => {
             setLoading(true);
             try {
-                const res = await fetch(`http://localhost:4000/api/products?${activeTab.query}`);
+                const res = await fetch(`${API_URL}/products?${activeTab.query}`);
                 const data = await res.json();
-                setProducts(data);
+                setProducts(Array.isArray(data) ? data : []);
             } catch (error) {
                 console.error("Failed to fetch products:", error);
+                setProducts([]);
             } finally {
                 setLoading(false);
             }

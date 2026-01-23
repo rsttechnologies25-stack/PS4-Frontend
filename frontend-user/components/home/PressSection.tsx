@@ -15,7 +15,7 @@ export default function PressSection() {
                         <div key={item.name} className="flex flex-col items-center">
                             <h3 className="serif text-3xl font-bold text-secondary mb-6 italic">{item.name}</h3>
                             <p className="serif text-lg text-text-muted italic leading-relaxed px-6">
-                                "{item.text}"
+                                &quot;{item.text}&quot;
                             </p>
                             <button className="mt-8 accent-font text-xs uppercase font-bold tracking-widest text-primary border-b border-primary pb-1 hover:text-secondary hover:border-secondary transition-colors">
                                 Read More
