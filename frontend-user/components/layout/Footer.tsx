@@ -14,15 +14,15 @@ export default function Footer() {
                             &quot;Handcrafting traditions since 1981. Dedicated to bringing the authentic taste of South India to your doorstep.&quot;
                         </p>
                         <div className="flex gap-4">
-                            <button className="w-10 h-10 rounded-full border border-primary/20 text-text flex items-center justify-center hover:bg-primary/10 hover:border-primary/20 transition-colors">
+                            <Link href="https://www.instagram.com/perambur_sri_srinivasa?igsh=dXVjNHd5ZnZqbXMy" target="_blank" className="w-10 h-10 rounded-full border border-primary/20 text-text flex items-center justify-center hover:bg-primary/10 hover:border-primary/20 transition-colors">
                                 <Instagram size={18} />
-                            </button>
-                            <button className="w-10 h-10 rounded-full border border-primary/20 text-text flex items-center justify-center hover:bg-primary/10 hover:border-primary/20 transition-colors">
+                            </Link>
+                            <Link href="https://www.facebook.com/profile.php?id=100088165535870&mibextid=rS40aB7S9Ucbxw6v" target="_blank" className="w-10 h-10 rounded-full border border-primary/20 text-text flex items-center justify-center hover:bg-primary/10 hover:border-primary/20 transition-colors">
                                 <Facebook size={18} />
-                            </button>
-                            <button className="w-10 h-10 rounded-full border border-primary/20 text-text flex items-center justify-center hover:bg-primary/10 hover:border-primary/20 transition-colors">
+                            </Link>
+                            <Link href="https://x.com/peramburand" target="_blank" className="w-10 h-10 rounded-full border border-primary/20 text-text flex items-center justify-center hover:bg-primary/10 hover:border-primary/20 transition-colors">
                                 <Twitter size={18} />
-                            </button>
+                            </Link>
                         </div>
                     </div>
 
@@ -31,8 +31,8 @@ export default function Footer() {
                         <ul className="space-y-4 text-sm text-text">
                             <li><Link href="/shop" className="hover:text-primary transition-colors">Shop All</Link></li>
                             <li><Link href="/category/sweets" className="hover:text-primary transition-colors">Sweets</Link></li>
-                            <li><Link href="/category/snacks" className="hover:text-primary transition-colors">Snacks</Link></li>
-                            <li><Link href="/category/gift-hampers" className="hover:text-primary transition-colors">Gift Hampers</Link></li>
+                            <li><Link href="/category/sev" className="hover:text-primary transition-colors">Sev</Link></li>
+                            <li><Link href="/category/savouries" className="hover:text-primary transition-colors">Savouries</Link></li>
                             <li><Link href="/branches" className="hover:text-primary transition-colors">Our Branches</Link></li>
                         </ul>
                     </div>
@@ -72,17 +72,8 @@ export default function Footer() {
                             © 2026 Perambur Sri Srinivasa Sweets & Snacks. All rights reserved.
                         </p>
                         <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.2em] text-text-muted">
-                            Made with ❤️ by <a href="https://rexonsofttech.in" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors font-bold">RST Technologies</a>
+                            Made by <a href="https://rexonsofttech.in" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors font-bold">Rexon Soft Tech</a>
                         </p>
-                    </div>
-
-                    <div className="flex flex-wrap justify-center gap-4 sm:gap-6 items-center opacity-80 grayscale hover:grayscale-0 transition-all">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/d/d6/Visa_2021.svg" alt="Visa" className="h-4 sm:h-5 w-auto" />
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" className="h-4 sm:h-5 w-auto" />
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/3/30/American_Express_logo.svg" alt="Amex" className="h-4 sm:h-5 w-auto" />
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" className="h-4 sm:h-5 w-auto" />
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a6/Diners_Club_Logo3.svg" alt="Diners Club" className="h-4 sm:h-5 w-auto" />
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/9/95/Discover_Card_logo.svg" alt="Discover" className="h-4 sm:h-5 w-auto" />
                     </div>
                 </div>
             </div>

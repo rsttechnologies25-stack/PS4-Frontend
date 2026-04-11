@@ -6,32 +6,74 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const slides = [
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api";
+import { formatImageUrl } from "@/lib/imageHelper";
+
+// Fallback slides when no banners exist in DB
+const fallbackSlides = [
     {
         image: "/hero_motichoor_laddu.jpg",
-        title: "Signature Motichoor Laddu",
-        subtitle: "The Soul of Perambur Sri Srinivasa. Pure Ghee. Traditionally Crafted.",
-        cta: "Order Now",
-        link: "/product/motichur-laddu"
+        displayTitle: "Signature Motichoor Laddu",
+        displaySubtitle: "The Soul of Perambur Sri Srinivasa. Pure Ghee. Traditionally Crafted.",
+        ctaText: "Order Now",
+        link: "/products/motichur-laddu",
+        slideInterval: 6,
     },
     {
         image: "/hero_kaju_katli.jpg",
-        title: "Premium Kaju Katli",
-        subtitle: "Exquisite Cashew Delight. Melt-in-your-mouth Perfection.",
-        cta: "Shop Now",
-        link: "/product/kaju-katli"
-    }
+        displayTitle: "Premium Kaju Katli",
+        displaySubtitle: "Exquisite Cashew Delight. Melt-in-your-mouth Perfection.",
+        ctaText: "Shop Now",
+        link: "/products/kaju-katli",
+        slideInterval: 6,
+    },
 ];
 
-export default function Hero() {
-    const [current, setCurrent] = useState(0);
+interface BannerSlide {
+    id?: string;
+    image: string;
+    displayTitle: string;
+    displaySubtitle: string;
+    ctaText: string;
+    link: string;
+    slideInterval: number;
+}
 
+export default function Hero() {
+    const [slides, setSlides] = useState<BannerSlide[]>(fallbackSlides);
+    const [current, setCurrent] = useState(0);
+    const [loaded, setLoaded] = useState(false);
+
+    // Fetch banners from API
     useEffect(() => {
+        fetch(`${API_URL}/hero-banners/active`)
+            .then((res) => res.json())
+            .then((data) => {
+                if (Array.isArray(data) && data.length > 0) {
+                    const mapped: BannerSlide[] = data.map((b: any) => ({
+                        id: b.id,
+                        image: formatImageUrl(b.image),
+                        displayTitle: b.displayTitle || "Welcome",
+                        displaySubtitle: b.displaySubtitle || "",
+                        ctaText: b.ctaText || "SHOP NOW",
+                        link: b.link || "/",
+                        slideInterval: b.slideInterval || 6,
+                    }));
+                    setSlides(mapped);
+                }
+                setLoaded(true);
+            })
+            .catch(() => setLoaded(true));
+    }, []);
+
+    // Auto-slide with dynamic interval
+    useEffect(() => {
+        const interval = (slides[current]?.slideInterval || 6) * 1000;
         const timer = setInterval(() => {
             setCurrent((prev) => (prev + 1) % slides.length);
-        }, 6000);
+        }, interval);
         return () => clearInterval(timer);
-    }, []);
+    }, [current, slides]);
 
     return (
         <section className="relative h-[70vh] md:h-[80vh] w-full overflow-hidden bg-secondary">
@@ -46,7 +88,7 @@ export default function Hero() {
                 >
                     <Image
                         src={slides[current].image}
-                        alt={slides[current].title}
+                        alt={slides[current].displayTitle}
                         fill
                         className="object-cover brightness-75 scale-105"
                         priority
@@ -57,17 +99,17 @@ export default function Hero() {
                             initial={{ y: 20, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ delay: 0.5 }}
-                            className="text-white uppercase tracking-[0.4em] md:tracking-[0.6em] text-[10px] md:text-sm accent-font mb-4 md:mb-6"
+                            className="text-white uppercase tracking-[0.3em] md:tracking-[0.6em] text-[9px] md:text-sm accent-font mb-4 md:mb-6"
                         >
-                            SINCE 1974
+                            SINCE 1981
                         </motion.p>
                         <motion.h1
                             initial={{ y: 20, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ delay: 0.7 }}
-                            className="serif text-white text-4xl sm:text-5xl md:text-8xl mb-4 md:mb-6 max-w-5xl leading-tight"
+                            className="serif text-white text-2xl sm:text-4xl md:text-5xl lg:text-8xl mb-4 md:mb-6 max-w-5xl leading-tight px-2"
                         >
-                            {slides[current].title}
+                            {slides[current].displayTitle}
                         </motion.h1>
                         <motion.p
                             initial={{ y: 20, opacity: 0 }}
@@ -75,16 +117,16 @@ export default function Hero() {
                             transition={{ delay: 0.8 }}
                             className="text-white/90 text-sm md:text-xl mb-8 md:mb-10 max-w-2xl font-light italic"
                         >
-                            {slides[current].subtitle}
+                            {slides[current].displaySubtitle}
                         </motion.p>
                         <motion.div
                             initial={{ y: 20, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ delay: 0.9 }}
-                            className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto px-10 sm:px-0"
+                            className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto px-6 sm:px-0"
                         >
                             <Link href={slides[current].link} className="btn-primary w-full sm:w-60 h-12 md:h-14 flex items-center justify-center text-[10px] md:text-sm font-bold uppercase tracking-widest">
-                                {slides[current].cta}
+                                {slides[current].ctaText}
                             </Link>
                             <Link href="/about" className="backdrop-blur-sm bg-white/20 border border-white/50 text-white hover:bg-white hover:text-secondary w-full sm:w-60 h-12 md:h-14 flex items-center justify-center text-[10px] md:text-sm font-bold uppercase tracking-widest transition-all duration-300">
                                 Our Story

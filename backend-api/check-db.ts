@@ -1,16 +1,19 @@
+
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-async function check() {
-    try {
-        const branches = await prisma.branch.findMany({ take: 1 });
-        console.log('CHECK_RESULT:', JSON.stringify(branches, null, 2));
-    } catch (error) {
-        console.error('CHECK_ERROR:', error);
-    } finally {
-        await prisma.$disconnect();
-    }
+async function main() {
+    // Use any to bypass TS checks on the outdated client
+    const users: any = await prisma.$queryRawUnsafe('SELECT id, email, customerName, addressLine1, city FROM User LIMIT 5');
+    console.log(JSON.stringify(users, null, 2));
 }
 
-check();
+main()
+    .catch(e => {
+        console.error(e);
+        process.exit(1);
+    })
+    .finally(async () => {
+        await prisma.$disconnect();
+    });

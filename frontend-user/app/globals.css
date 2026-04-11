@@ -28,9 +28,6 @@
 body {
   background-color: #FFFBF5;
   /* Slightly warmer cream */
-  background-image: url('/bg-pattern.svg');
-  background-size: 400px;
-  background-repeat: repeat;
   color: var(--text-main);
   font-family: var(--font-sans);
   overflow-x: hidden;
@@ -63,11 +60,6 @@ h4,
   transform: translateY(-8px);
 }
 
-.bg-pattern {
-  background-image: url('/bg-pattern.svg');
-  background-size: 400px;
-  background-repeat: repeat;
-}
 
 .btn-primary {
   @apply bg-primary text-white px-8 py-3 rounded-none uppercase tracking-widest text-sm font-semibold transition-all hover:bg-secondary;

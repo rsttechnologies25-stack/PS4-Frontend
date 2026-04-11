@@ -1,0 +1,412 @@
+You are a Senior Mobile Architect, Flutter Engineer, and Backend Integration Specialist.
+
+Your task is to build a **production-ready Flutter mobile application (Android + iOS)** for this existing e-commerce platform.
+
+The company already has:
+
+• A fully functional **backend API**
+• An **Admin dashboard**
+• A **User web frontend** (production website)
+• A **production database**
+
+The mobile app must **reuse the same backend APIs and database**, so that any change made in the admin panel is automatically reflected in the mobile app.
+
+The goal is to build a **high-performance, scalable, secure Flutter mobile app** that communicates with the existing backend and **visually matches the existing website UI/UX**.
+
+---
+
+PROJECT REQUIREMENTS
+
+Build a **Flutter-based mobile application** that supports:
+
+Android (APK + Play Store)
+iOS (App Store)
+
+Use **a single Flutter codebase** for both platforms.
+
+The app must consume the existing backend APIs.
+
+Do NOT modify backend logic unless required for mobile optimization.
+
+---
+
+SYSTEM ARCHITECTURE
+
+Follow this architecture:
+
+Admin Panel → Backend API → Database
+Web Frontend → Backend API → Database
+Flutter Mobile App → Backend API → Database
+
+The Flutter mobile app must behave as another frontend client consuming the same API.
+
+All data displayed in the app must come directly from the backend API.
+
+---
+
+IMPORTANT UI/UX REQUIREMENT (WEBSITE DESIGN SYNC)
+
+The **mobile application UI/UX must match the existing user website**.
+
+The mobile app must:
+
+• Use the **same color palette as the website**
+• Use the **same typography or closest mobile equivalent**
+• Use the **same branding elements**
+• Use the **same logos and icons**
+• Follow the **same design language**
+
+The UI should look like a **mobile-optimized version of the existing website**, ensuring brand consistency.
+
+The agent should extract or replicate:
+
+• Primary color
+• Secondary color
+• Background color
+• Button styles
+• Card styles
+• Font family
+• Brand assets
+
+These should be implemented as **centralized theme configuration**.
+
+Example structure:
+
+lib/core/themes/app_theme.dart
+
+The theme configuration must allow future updates to color schemes from a single location.
+
+---
+
+CONTENT SYNC WITH WEBSITE
+
+The mobile app must display the **same content structure as the user website**, including:
+
+Home banners
+Featured products
+Categories
+Offers
+Product descriptions
+Pricing
+Discounts
+
+All content must be fetched from backend APIs to maintain real-time synchronization with the admin dashboard.
+
+---
+
+TECHNOLOGY STACK
+
+Mobile Framework:
+Flutter (latest stable)
+
+Language:
+Dart
+
+State Management:
+Riverpod (recommended)
+
+Networking:
+Dio or HTTP
+
+Authentication:
+JWT token-based authentication
+
+Local Storage:
+SecureStorage / SharedPreferences
+
+Push Notifications:
+Firebase Cloud Messaging (FCM)
+
+Payment Integration:
+Razorpay / Stripe
+
+Image Loading:
+CachedNetworkImage
+
+Routing:
+GoRouter or Navigator 2.0
+
+---
+
+PROJECT STRUCTURE
+
+Follow a scalable architecture:
+
+lib/
+├── main.dart
+├── core/
+│    ├── constants/
+│    ├── utils/
+│    ├── themes/
+│    │     app_theme.dart
+│
+├── models/
+│    ├── product_model.dart
+│    ├── user_model.dart
+│    ├── order_model.dart
+│
+├── services/
+│    ├── api_service.dart
+│    ├── auth_service.dart
+│    ├── notification_service.dart
+│
+├── repositories/
+│
+├── providers/
+│
+├── screens/
+│    ├── splash_screen.dart
+│    ├── login_screen.dart
+│    ├── home_screen.dart
+│    ├── product_screen.dart
+│    ├── cart_screen.dart
+│    ├── checkout_screen.dart
+│    ├── profile_screen.dart
+│    ├── orders_screen.dart
+│
+├── widgets/
+│    ├── product_card.dart
+│    ├── category_widget.dart
+│
+└── routes/
+
+---
+
+CORE FEATURES
+
+1. USER AUTHENTICATION
+
+Implement:
+
+User registration
+User login
+Password reset
+JWT authentication
+
+Store tokens securely using SecureStorage.
+
+Attach JWT tokens to authenticated API requests.
+
+---
+
+2. PRODUCT MANAGEMENT
+
+Fetch products dynamically:
+
+GET /api/products
+
+Display:
+
+Product image
+Product title
+Price
+Discount
+Stock status
+Ratings
+
+All updates from the admin dashboard must reflect instantly in the mobile app.
+
+---
+
+3. CATEGORY SYSTEM
+
+API:
+
+GET /api/categories
+
+Allow product filtering by category.
+
+---
+
+4. PRODUCT DETAILS PAGE
+
+Display:
+
+Product gallery
+Price
+Description
+Stock availability
+Reviews
+Add-to-cart option
+
+---
+
+5. CART SYSTEM
+
+Allow users to:
+
+Add to cart
+Remove items
+Update quantities
+View total cost
+
+Cart should sync with backend when possible.
+
+---
+
+6. CHECKOUT FLOW
+
+Flow:
+
+Cart → Address → Payment → Order confirmation
+
+API:
+
+POST /api/orders
+
+---
+
+7. PAYMENT GATEWAY
+
+Integrate Razorpay or Stripe.
+
+Handle:
+
+Payment success
+Payment failure
+Payment verification
+
+---
+
+8. ORDER MANAGEMENT
+
+Users can view:
+
+Active orders
+Past orders
+Order status updates
+
+API example:
+
+GET /api/orders
+
+---
+
+9. PUSH NOTIFICATIONS
+
+Use Firebase Cloud Messaging.
+
+Notify users for:
+
+Order confirmation
+Shipping updates
+Delivery updates
+Promotions and offers
+
+---
+
+10. PROFILE MANAGEMENT
+
+Allow users to update:
+
+Name
+Email
+Phone number
+Delivery addresses
+
+---
+
+PERFORMANCE REQUIREMENTS
+
+Ensure:
+
+60 FPS smooth UI
+Lazy loading
+Pagination
+Image caching
+Efficient API usage
+Minimal app startup time
+
+---
+
+SECURITY REQUIREMENTS
+
+Use HTTPS for all API calls.
+
+Implement:
+
+JWT authentication
+Secure token storage
+Input validation
+Error handling
+API timeout and retry logic
+
+---
+
+ERROR HANDLING
+
+Handle:
+
+Network failures
+API errors
+Authentication expiry
+Payment errors
+
+Display proper UI feedback.
+
+---
+
+ADMIN PANEL SYNCHRONIZATION
+
+Ensure that any update performed in the admin dashboard such as:
+
+Product addition
+Price changes
+Product deletion
+Stock updates
+
+Is automatically reflected in the mobile application.
+
+---
+
+TESTING
+
+Implement:
+
+Unit tests
+Widget tests
+API integration tests
+
+---
+
+DELIVERABLES
+
+Provide:
+
+Complete Flutter source code
+Android APK
+Android App Bundle
+iOS build configuration
+API documentation used
+Environment configuration files
+
+---
+
+DEPLOYMENT
+
+Prepare the app for:
+
+Google Play Store
+Apple App Store
+
+Include:
+
+App icons
+Splash screens
+Release configuration
+Versioning
+
+---
+
+OPTIONAL ADVANCED FEATURES
+
+Wishlist
+Product reviews
+Coupon codes
+Multi-language support
+Dark mode
+Real-time order tracking
+
+---
+
+The final application must be **production-ready, scalable, secure, and visually consistent with the existing website design and branding**.

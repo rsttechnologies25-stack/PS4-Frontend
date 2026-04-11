@@ -1,4 +1,7 @@
+"use client";
+
 import { Facebook, Instagram, Youtube } from "lucide-react";
+import { motion } from "framer-motion";
 
 const press = [
     { name: "Outlook", text: "The legacy brand from Perambur that conquered hearts across India with its authentic taste." },
@@ -11,8 +14,15 @@ export default function PressSection() {
         <section className="py-20">
             <div className="container mx-auto px-4 text-center">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
-                    {press.map((item) => (
-                        <div key={item.name} className="flex flex-col items-center">
+                    {press.map((item, i) => (
+                        <motion.div
+                            key={item.name}
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, margin: "-50px" }}
+                            transition={{ duration: 0.6, delay: i * 0.1 }}
+                            className="flex flex-col items-center"
+                        >
                             <h3 className="serif text-3xl font-bold text-secondary mb-6 italic">{item.name}</h3>
                             <p className="serif text-lg text-text-muted italic leading-relaxed px-6">
                                 &quot;{item.text}&quot;
@@ -20,11 +30,17 @@ export default function PressSection() {
                             <button className="mt-8 accent-font text-xs uppercase font-bold tracking-widest text-primary border-b border-primary pb-1 hover:text-secondary hover:border-secondary transition-colors">
                                 Read More
                             </button>
-                        </div>
+                        </motion.div>
                     ))}
                 </div>
 
-                <div className="mt-32">
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    transition={{ duration: 0.6 }}
+                    className="mt-32"
+                >
                     <h2 className="accent-font text-primary uppercase tracking-[0.4em] text-sm mb-12">Stalk Us On</h2>
                     <div className="flex justify-center gap-12">
                         {/* Social Circle buttons scaled up */}
@@ -44,7 +60,7 @@ export default function PressSection() {
                             <Youtube size={24} />
                         </a>
                     </div>
-                </div>
+                </motion.div>
             </div>
         </section>
     );

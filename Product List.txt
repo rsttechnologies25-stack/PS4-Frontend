@@ -1,0 +1,969 @@
+almond-tat-baklava
+
+250 Gram – 375
+
+500 Gram – 750
+
+1 Kilogram – 1500
+
+andhra-murukku
+
+250 Gram – 147.62
+
+500 Gram – 295.24
+
+1 Kilogram – 590.48
+
+assorted-baklava
+
+200 Gram – 294
+
+assorted-kaju-bites-6-pcs
+
+250 Gram – 180
+
+500 Gram – 360
+
+1 Kilogram – 720
+
+assorted-sweets
+
+250 Gram – 200
+
+500 Gram – 400
+
+1 Kilogram – 800
+
+avaka-pickle
+
+300 Gram – 165
+
+badam-halwa
+
+250 Gram – 400
+
+500 Gram – 800
+
+1 Kilogram – 1600
+
+badam-katli
+
+250 Gram – 400
+
+500 Gram – 800
+
+1 Kilogram – 1600
+
+besan-laddu
+
+250 Gram – 145
+
+500 Gram – 290
+
+1 Kilogram – 580
+
+big-thattai
+
+200 Gram – 130
+
+bombay-halwa
+
+250 Gram – 200
+
+500 Gram – 400
+
+1 Kilogram – 800
+
+bombay-lakkadi
+
+250 Gram – 138.01
+
+500 Gram – 276.02
+
+1 Kilogram – 552.04
+
+butter-biscuits
+
+150 Gram – 74
+
+butter-murukku
+
+250 Gram – 138.01
+
+500 Gram – 276.02
+
+1 Kilogram – 552.04
+
+butterscotch-burfi
+
+250 Gram – 180
+
+500 Gram – 360
+
+1 Kilogram – 720
+
+carrot-halwa
+
+250 Gram – 200
+
+500 Gram – 400
+
+1 Kilogram – 800
+
+cashew-nut-cookies
+
+150 Gram – 105
+
+chettinad-kara-kulambu
+
+300 Gram – 180
+
+choco-cashew
+
+200 Gram – 140
+
+choco-chips
+
+150 Gram – 105
+
+chocolate-burfi
+
+250 Gram – 200
+
+500 Gram – 400
+
+1 Kilogram – 800
+
+coconut-burfi
+
+250 Gram – 200
+
+500 Gram – 400
+
+1 Kilogram – 800
+
+coconut-crunch
+
+200 Gram – 140
+
+corn-flakes-mixture
+
+250 Gram – 147.62
+
+500 Gram – 295.24
+
+1 Kilogram – 590.48
+
+dates-mysore-pak
+
+250 Gram – 210
+
+500 Gram – 420
+
+1 Kilogram – 840
+
+dhall-mixture
+
+250 Gram – 147.62
+
+500 Gram – 295.24
+
+1 Kilogram – 590.48
+
+dhota-burfi
+
+250 Gram – 200
+
+500 Gram – 400
+
+1 Kilogram – 800
+
+dry-fruit-gift-hamper
+
+1 Qty – 1250
+
+dry-fruit-supreme-laddu
+
+250 Gram – 260
+
+500 Gram – 520
+
+1 Kilogram – 1040
+
+ellu-ball
+
+100 Gram – 125
+
+ellu-murukku
+
+250 Gram – 138.01
+
+500 Gram – 276.02
+
+1 Kilogram – 552.04
+
+finger-chips
+
+100 Gram – 180
+
+150 Gram – 270
+
+fruit-cake
+
+200 Gram – 152
+
+fruit-rusk
+
+200 Gram – 180
+
+fruits-halwa
+
+250 Gram – 205
+
+500 Gram – 410
+
+1 Kilogram – 820
+
+garlic-pickle
+
+300 Gram – 165
+
+ghee-badhusha
+
+250 Gram – 200
+
+500 Gram – 400
+
+1 Kilogram – 800
+
+ghee-boondhi
+
+250 Gram – 190
+
+500 Gram – 380
+
+1 Kilogram – 760
+
+ghee-chandra-kala
+
+250 Gram – 200
+
+500 Gram – 400
+
+1 Kilogram – 800
+
+ghee-crispy-mysore-pak
+
+250 Gram – 200
+
+500 Gram – 400
+
+1 Kilogram – 800
+
+ghee-jalebi
+
+200 Gram – 190
+
+ghee-mini-badhusha
+
+250 Gram – 200
+
+500 Gram – 400
+
+1 Kilogram – 800
+
+ghee-pista-stick
+
+200 Gram – 180
+
+ghee-suryakala
+
+250 Gram – 200
+
+500 Gram – 400
+
+1 Kilogram – 800
+
+gulab-jamun-bowl
+
+10 Pcs – 160
+
+gulab-jamun-bowl-20-pcs
+
+250 Gram – 180
+
+500 Gram – 360
+
+1 Kilogram – 720
+
+gulkanth-burfi
+
+250 Gram – 200
+
+500 Gram – 400
+
+1 Kilogram – 800
+
+horlicks-burfi
+
+250 Gram – 200
+
+500 Gram – 400
+
+1 Kilogram – 800
+
+horlicks-mysore-pak
+
+250 Gram – 210
+
+500 Gram – 420
+
+1 Kilogram – 840
+
+hot-sweet-premium-mixture
+
+250 Gram – 161.09
+
+500 Gram – 322.18
+
+1 Kilogram – 644.36
+
+inji-marappa
+
+200 Gram – 80
+
+jam-pista-cookies
+
+150 Gram – 105
+
+kaju-atta-cookies
+
+200 Gram – 140
+
+kaju-biscuit
+
+250 Gram – 400
+
+500 Gram – 800
+
+1 Kilogram – 1600
+
+kaju-cassata
+
+250 Gram – 400
+
+500 Gram – 800
+
+1 Kilogram – 1600
+
+kaju-chocolate-kajak
+
+250 Gram – 400
+
+500 Gram – 800
+
+1 Kilogram – 1600
+
+kaju-flower
+
+250 Gram – 400
+
+500 Gram – 800
+
+1 Kilogram – 1600
+
+kaju-katli
+
+250 Gram – 310
+
+500 Gram – 620
+
+1 Kilogram – 1240
+
+kaju-katli-premium
+
+250 Gram – 320
+
+500 Gram – 640
+
+1 Kilogram – 1280
+
+kaju-orange-kajak
+
+250 Gram – 400
+
+500 Gram – 800
+
+1 Kilogram – 1600
+
+kaju-pineapple-kajak
+
+250 Gram – 400
+
+500 Gram – 800
+
+1 Kilogram – 1600
+
+kaju-pista-roll
+
+250 Gram – 360
+
+500 Gram – 720
+
+1 Kilogram – 1440
+
+kaju-watermelon
+
+250 Gram – 360
+
+500 Gram – 720
+
+1 Kilogram – 1440
+
+karaboondhi
+
+250 Gram – 138.01
+
+500 Gram – 276.02
+
+1 Kilogram – 552.04
+
+kara-murukku
+
+200 Gram – 135
+
+kara-sev
+
+250 Gram – 138.01
+
+500 Gram – 276.02
+
+1 Kilogram – 552.04
+
+karumbu-sev
+
+250 Gram – 147.62
+
+500 Gram – 295.24
+
+1 Kilogram – 590.48
+
+karuppatti-mysore-pak
+
+250 Gram – 230
+
+500 Gram – 460
+
+1 Kilogram – 920
+
+kashmir-kalakand
+
+250 Gram – 200
+
+500 Gram – 400
+
+1 Kilogram – 800
+
+kathambam-thokku
+
+300 Gram – 180
+
+kai-murukku-bowl
+
+200 Gram – 135
+
+kesar-badam-cookies
+
+200 Gram – 180
+
+kesar-burfi
+
+250 Gram – 200
+
+500 Gram – 400
+
+1 Kilogram – 800
+
+kesar-kaju-katli
+
+250 Gram – 360
+
+500 Gram – 720
+
+1 Kilogram – 1440
+
+kesar-pista-katli
+
+250 Gram – 180
+
+500 Gram – 360
+
+1 Kilogram – 720
+
+kesar-wheat-halwa
+
+250 Gram – 200
+
+500 Gram – 400
+
+1 Kilogram – 800
+
+kollu-idly-podi
+
+250 Gram – 180
+
+krishna-jayanthi-spl-tin-box
+
+1 Qty – 849
+
+lavang-latika
+
+250 Gram – 180
+
+500 Gram – 360
+
+1 Kilogram – 720
+
+lemon-pickle
+
+300 Gram – 165
+
+maa-inchi-pickle
+
+300 Gram – 165
+
+madras-mixture
+
+250 Gram – 147.62
+
+500 Gram – 295.24
+
+1 Kilogram – 590.48
+
+maki-baklava
+
+250 Gram – 375
+
+500 Gram – 750
+
+1 Kilogram – 1500
+
+mango-sticks
+
+250 Gram – 180
+
+500 Gram – 360
+
+1 Kilogram – 720
+
+manathakkali-thokku
+
+1 Qty – 180
+
+masala-cashew
+
+100 Gram – 198
+
+masala-nendram-chips
+
+150 Gram – 180
+
+250 Gram – 360
+
+masala-pori
+
+150 Gram – 180
+
+milk-assorted-thambulam
+
+250 Gram – 180
+
+500 Gram – 360
+
+1 Kilogram – 720
+
+milk-halwa
+
+250 Gram – 210
+
+500 Gram – 420
+
+1 Kilogram – 840
+
+milk-mysore-pak
+
+250 Gram – 210
+
+500 Gram – 420
+
+1 Kilogram – 840
+
+milk-sandwich
+
+250 Gram – 180
+
+500 Gram – 360
+
+1 Kilogram – 720
+
+mini-garlic-murukku
+
+200 Gram – 134
+
+mini-jangri
+
+250 Gram – 200
+
+500 Gram – 400
+
+1 Kilogram – 800
+
+mini-onion-murukku
+
+200 Gram – 123.81
+
+mini-ragi-murukku
+
+200 Gram – 123.81
+
+mix-dry-fruit-nuts-baklava
+
+250 Gram – 375
+
+500 Gram – 750
+
+1 Kilogram – 1500
+
+mix-dry-fruit-tat-baklava
+
+250 Gram – 375
+
+500 Gram – 750
+
+1 Kilogram – 1500
+
+mothi-pak
+
+250 Gram – 200
+
+500 Gram – 400
+
+1 Kilogram – 800
+
+motichur-laddu
+
+250 Gram – 200
+
+500 Gram – 400
+
+1 Kilogram – 800
+
+navadhaniyam-mixture
+
+250 Gram – 147.62
+
+500 Gram – 295.24
+
+1 Kilogram – 590.48
+
+narthangai-pickle
+
+250 Gram – 165
+
+nendram-chips
+
+200 Gram – 137.14
+
+nice-karamurukku
+
+150 Gram – 104.76
+
+oats-cookies
+
+200 Gram – 180
+
+omapodi
+
+250 Gram – 133.33
+
+500 Gram – 266.66
+
+1 Kilogram – 533.32
+
+onion-pakoda
+
+250 Gram – 138.01
+
+500 Gram – 276.02
+
+1 Kilogram – 552.04
+
+osmanlee-square-kunafa
+
+250 Gram – 375
+
+500 Gram – 750
+
+1 Kilogram – 1500
+
+paruppu-podi
+
+250 Gram – 170
+
+pavakkai-chips
+
+100 Gram – 80
+
+peanut-burfi
+
+250 Gram – 130
+
+peanut-pakoda
+
+250 Gram – 155
+
+pepper-cashew
+
+100 Gram – 204
+
+250 Gram – 500
+
+pirandai-thokku
+
+300 Gram – 180
+
+potato-chips-masala
+
+100 Gram – 66.67
+
+potato-chips-salt
+
+100 Gram – 74
+
+ps4-idly-podi
+
+250 Gram – 170
+
+ps4-premium-mixture
+
+250 Gram – 161.09
+
+500 Gram – 322.18
+
+1 Kilogram – 644.36
+
+ps4-spl-dry-fruit-box
+
+1 Qty – 1800
+
+pudina-thokku
+
+300 Gram – 180
+
+ragi-cookies
+
+150 Gram – 105
+
+ragi-laddu
+
+250 Gram – 145
+
+500 Gram – 290
+
+1 Kilogram – 580
+
+ragi-mixture
+
+250 Gram – 147.62
+
+500 Gram – 295.24
+
+1 Kilogram – 590.48
+
+rasgulla-bowl
+
+10 Pcs – 160
+
+rasgulla-bowl-20-pcs
+
+250 Gram – 180
+
+500 Gram – 360
+
+1 Kilogram – 720
+
+ribbon-pakoda
+
+250 Gram – 138.01
+
+500 Gram – 276.02
+
+1 Kilogram – 552.04
+
+seedai
+
+200 Gram – 123.81
+
+seeni-mittai
+
+250 Gram – 145
+
+500 Gram – 290
+
+1 Kilogram – 580
+
+sesame-cookies
+
+200 Gram – 140
+
+soan-papdi-chocolate
+
+250 Gram – 200
+
+500 Gram – 400
+
+1 Kilogram – 800
+
+soan-papdi-white
+
+250 Gram – 200
+
+500 Gram – 400
+
+1 Kilogram – 800
+
+special-kaju-halwa
+
+250 Gram – 275
+
+500 Gram – 550
+
+1 Kilogram – 1100
+
+special-milk-cake
+
+250 Gram – 200
+
+500 Gram – 400
+
+1 Kilogram – 800
+
+special-mysore-pak
+
+250 Gram – 205
+
+500 Gram – 410
+
+1 Kilogram – 820
+
+special-sada-mixture
+
+250 Gram – 150
+
+500 Gram – 300
+
+1 Kilogram – 600
+
+sweet-samosa
+
+250 Gram – 180
+
+500 Gram – 360
+
+1 Kilogram – 720
+
+tea-cake
+
+250 Gram – 160
+
+then-mittai
+
+250 Gram – 180
+
+tomato-thokku
+
+300 Gram – 180
+
+vendaka-chips
+
+125 Gram – 80
+
+wheat-ghee-badhusha
+
+250 Gram – 190
+
+500 Gram – 380
+
+1 Kilogram – 760
+
+wheat-ghee-mini-badhusha
+
+250 Gram – 190
+
+500 Gram – 380
+
+1 Kilogram – 760
+
+wheat-laddu
+
+250 Gram – 180
+
+500 Gram – 360
+
+1 Kilogram – 720
+
+srinivasa-laddu-small
+
+250 Gram – 205
+
+500 Gram – 410
+
+1 Kilogram – 820
+
+karuveppilai-podi
+
+150 Gram – 115
+
+6-in-1-podi-combo
+
+1 Qty – 240
+
+6-in-1-thokku-combo
+
+250 Gram – 370
+
+6-in-1-pickle-combo
+
+250 Gram – 350
+
+ghee-badam-stick
+
+200 Gram – 180
+
+special-kara-sev
+
+250 Gram – 138.01
+
+500 Gram – 276.02
+
+1 Kilogram – 552.04
+
+milagu-sev
+
+250 Gram – 138.01
+
+500 Gram – 276.02
+
+1 Kilogram – 552.04
+
+kara-murukku-tk-200-gms
+
+200 Gram – 135
+
+spl-msl-chips-125-gms
+
+125 Gram – 180
+
+special-tin-box
+
+20 Nos – 579

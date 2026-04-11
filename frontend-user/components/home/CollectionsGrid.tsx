@@ -6,12 +6,14 @@ import Link from "next/link";
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useRef } from "react";
+import { formatImageUrl } from "@/lib/imageHelper";
 
 interface Category {
     id: string;
     name: string;
     slug: string;
     image?: string;
+    parentId?: string | null;
 }
 
 // Reusable 3D Card Component for Categories
@@ -92,8 +94,8 @@ const CategoryCard3D = ({ item }: { item: Category }) => {
                         className="w-full h-full"
                     >
                         <Image
-                            src={item.image || "/ps4_sweets_hero_1.png"}
-                            alt={item.name}
+                            src={formatImageUrl(item.image)}
+                            alt={`${item.name} Collection from Perambur Srinivasa Sweets`}
                             fill
                             className="object-cover"
                         />
@@ -102,9 +104,9 @@ const CategoryCard3D = ({ item }: { item: Category }) => {
                     {/* Dark gradient overlay for text readability */}
                     <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-10 transition-opacity duration-300" />
 
-                    <div className="absolute inset-0 flex items-center justify-center z-20">
-                        {/* Text centered, removed the border box */}
-                        <h3 className="serif text-white text-3xl md:text-4xl uppercase tracking-widest drop-shadow-md group-hover:text-primary transition-colors duration-300">{item.name}</h3>
+                    <div className="absolute inset-0 flex items-center justify-center z-20 p-4">
+                        {/* Text centered, responsive size to prevent cropping */}
+                        <h3 className="serif text-white text-lg sm:text-2xl md:text-3xl lg:text-4xl uppercase tracking-wider md:tracking-widest drop-shadow-md group-hover:text-primary transition-colors duration-300 text-center leading-tight break-words max-w-full">{item.name}</h3>
                     </div>
 
                     {/* Border Fade Effect */}
@@ -125,7 +127,7 @@ export default function CollectionsGrid() {
     useEffect(() => {
         // Use static data for Cloudflare deployment
         if (USE_STATIC_DATA) {
-            setCategories(STATIC_CATEGORIES);
+            setCategories(STATIC_CATEGORIES.filter(cat => !cat.parentId));
             setLoading(false);
             return;
         }
@@ -135,7 +137,37 @@ export default function CollectionsGrid() {
             try {
                 const res = await fetch(`${API_URL}/categories`);
                 const data = await res.json();
-                setCategories(Array.isArray(data) ? data : []);
+
+                // Custom sort order based on slug
+                const order = [
+                    "sweets",
+                    "savouries",
+                    "sev",
+                    "pickle",
+                    "podi",
+                    "cookies",
+                    "gifting",
+                    "outdoor-catering"
+                ];
+
+                // Only show top-level categories on the home grid
+                const topLevel = Array.isArray(data)
+                    ? data.filter((cat: Category) => !cat.parentId)
+                    : [];
+
+                // Sort topLevel based on the defined order
+                const sorted = topLevel.sort((a, b) => {
+                    const indexA = order.indexOf(a.slug);
+                    const indexB = order.indexOf(b.slug);
+
+                    // If a slug is not in the order array, put it at the end
+                    if (indexA === -1) return 1;
+                    if (indexB === -1) return -1;
+
+                    return indexA - indexB;
+                });
+
+                setCategories(sorted);
             } catch (error) {
                 console.error("Failed to fetch categories:", error);
                 setCategories([]);
@@ -149,19 +181,57 @@ export default function CollectionsGrid() {
     return (
         <section className="py-20 bg-background text-center">
             <div className="container mx-auto px-4">
-                <h2 className="accent-font text-primary uppercase tracking-[0.4em] text-sm mb-4">Our Categories</h2>
-                <h3 className="serif text-secondary text-4xl md:text-5xl mb-12">The PS4 Collections</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 0.6 }}
+                >
+                    <h2 className="accent-font text-primary uppercase tracking-[0.4em] text-sm mb-4">Our Categories</h2>
+                    <h3 className="serif text-secondary text-3xl md:text-5xl mb-12">The PS4 Collections</h3>
+                </motion.div>
+
+                <motion.div
+                    initial="hidden"
+                    whileInView="show"
+                    viewport={{ once: true, margin: "-50px" }}
+                    variants={{
+                        hidden: { opacity: 0 },
+                        show: {
+                            opacity: 1,
+                            transition: { staggerChildren: 0.15 }
+                        }
+                    }}
+                    className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8"
+                >
                     {loading ? (
                         Array(6).fill(0).map((_, i) => (
-                            <div key={i} className="animate-pulse bg-primary/5 aspect-square rounded-xl" />
+                            <motion.div
+                                variants={{ hidden: { opacity: 0, scale: 0.8 }, show: { opacity: 1, scale: 1 } }}
+                                key={i}
+                                className="animate-pulse bg-primary/5 aspect-square rounded-xl"
+                            />
                         ))
                     ) : (
                         categories.map((item) => (
-                            <CategoryCard3D key={item.id} item={item} />
+                            <motion.div
+                                key={item.id}
+                                variants={{
+                                    hidden: { opacity: 0, y: 40, scale: 0.95 },
+                                    show: {
+                                        opacity: 1,
+                                        y: 0,
+                                        scale: 1,
+                                        transition: { type: "spring", stiffness: 200, damping: 20 }
+                                    }
+                                }}
+                                className="h-full"
+                            >
+                                <CategoryCard3D item={item} />
+                            </motion.div>
                         ))
                     )}
-                </div>
+                </motion.div>
             </div>
         </section>
     );
