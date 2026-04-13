@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, Suspense } from "react";
+import { API_URL } from "@/lib/api";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Lock, Loader2, AlertCircle, CheckCircle2, ArrowRight } from "lucide-react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+
 
 function ResetPasswordForm() {
     const searchParams = useSearchParams();

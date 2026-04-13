@@ -1,6 +1,7 @@
 "use client";
 
-import { useCart } from "@/context/CartContext";
+import { useCart } from "@/context/CartContext";import { API_URL } from "@/lib/api";
+
 import { useAuth } from "@/context/AuthContext";
 import { Minus, Plus, Trash2, ArrowLeft, Loader2, CheckCircle2, ShoppingCart, AlertCircle, Package, MapPin, Info } from "lucide-react";
 import Link from "next/link";
@@ -13,7 +14,7 @@ function cn(...classes: any[]) {
     return classes.filter(Boolean).join(" ");
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+
 
 const INDIAN_STATES = [
     "Tamil Nadu", "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
@@ -116,6 +117,14 @@ export default function CartPage() {
 
         return null;
     }, [address.city, address.pincode, address.state]);
+
+    const phoneError = useMemo(() => {
+        const phone = address.phoneNumber?.trim() || "";
+        if (phone.length > 0 && !/^\d{10}$/.test(phone)) {
+            return "Phone number must be exactly 10 digits.";
+        }
+        return null;
+    }, [address.phoneNumber]);
 
     // Update delivery zone based on pincode and state
     useEffect(() => {
@@ -256,8 +265,8 @@ export default function CartPage() {
             return;
         }
 
-        if (pincodeError) {
-            setError(pincodeError);
+        if (pincodeError || phoneError) {
+            setError(pincodeError || phoneError);
             return;
         }
 
@@ -301,9 +310,25 @@ export default function CartPage() {
                 return;
             }
 
-            // 2. Initialize Razorpay Checkout
+            // 2. Fetch Razorpay Public Key (Option B)
+            let razorpayKey = "";
+            try {
+                const keyRes = await fetch(`${API_URL}/settings/razorpay-key`);
+                const keyData = await keyRes.json();
+                razorpayKey = keyData.keyId;
+            } catch (err) {
+                console.error("Failed to fetch Razorpay key", err);
+            }
+
+            if (!razorpayKey) {
+                setError("Payment system configuration missing. Please contact support.");
+                setLoading(false);
+                return;
+            }
+
+            // 3. Initialize Razorpay Checkout
             const options = {
-                key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!,
+                key: razorpayKey,
                 amount: orderData.totalAmount * 100,
                 currency: "INR",
                 name: "Perambur Sri Srinivasa",
@@ -363,7 +388,7 @@ export default function CartPage() {
         }
     };
 
-    const isAddressValid = address.customerName && address.phoneNumber && address.addressLine1 && address.city && address.state && address.pincode && !isHillArea && !pincodeError;
+    const isAddressValid = address.customerName && address.phoneNumber && address.addressLine1 && address.city && address.state && address.pincode && !isHillArea && !pincodeError && !phoneError;
 
     if (orderSuccess) {
         return (
@@ -645,8 +670,12 @@ export default function CartPage() {
                                                     type="tel"
                                                     name="phoneNumber"
                                                     value={address.phoneNumber}
-                                                    onChange={handleAddressChange}
-                                                    placeholder="Mobile Number"
+                                                    onChange={(e) => {
+                                                        const val = e.target.value.replace(/\D/g, '').slice(0, 10);
+                                                        setAddress({ ...address, phoneNumber: val });
+                                                    }}
+                                                    placeholder="10-digit Mobile Number"
+                                                    maxLength={10}
                                                     className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#A85D2A]/20 focus:border-[#A85D2A] transition-all"
                                                     required
                                                 />
@@ -724,10 +753,10 @@ export default function CartPage() {
                                     </div>
                                 )}
 
-                                {pincodeError && (
+                                {(pincodeError || phoneError) && (
                                     <div className="mt-4 p-4 bg-orange-50 border border-orange-100 rounded-xl flex gap-3 text-orange-600">
                                         <AlertCircle size={20} className="shrink-0" />
-                                        <p className="text-xs font-bold leading-tight">{pincodeError} Please verify your address details.</p>
+                                        <p className="text-xs font-bold leading-tight">{pincodeError || phoneError} Please verify your address details.</p>
                                     </div>
                                 )}
                             </div>

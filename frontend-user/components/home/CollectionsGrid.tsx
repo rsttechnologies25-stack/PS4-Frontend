@@ -118,19 +118,13 @@ const CategoryCard3D = ({ item }: { item: Category }) => {
 };
 
 import { API_URL } from "@/lib/api";
-import { USE_STATIC_DATA, STATIC_CATEGORIES } from "@/lib/staticData";
+import { STATIC_CATEGORIES } from "@/lib/staticData";
 
 export default function CollectionsGrid() {
     const [categories, setCategories] = useState<Category[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Use static data for Cloudflare deployment
-        if (USE_STATIC_DATA) {
-            setCategories(STATIC_CATEGORIES.filter(cat => !cat.parentId));
-            setLoading(false);
-            return;
-        }
 
         // Fetch from API (for when backend is available)
         const fetchCategories = async () => {

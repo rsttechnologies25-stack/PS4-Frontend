@@ -1,6 +1,7 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";import { API_URL } from "@/lib/api";
+
 import { useAuth } from "./AuthContext";
 
 export interface CartItem {
@@ -61,7 +62,7 @@ interface CartContextType {
     removeCoupon: () => void;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 

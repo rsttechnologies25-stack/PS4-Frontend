@@ -28,7 +28,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useDispatchInfo } from "@/hooks/useDispatchInfo";
 import ProductCard from "@/components/ui/ProductCard";
 import { API_URL } from "@/lib/api";
-import { USE_STATIC_DATA, getProductBySlug, getProductsByCategory } from "@/lib/staticData";
+import { getProductBySlug, getProductsByCategory } from "@/lib/staticData";
 import { formatImageUrl } from "@/lib/imageHelper";
 
 function cn(...classes: any[]) {
@@ -111,18 +111,6 @@ export default function ProductClient({ slug }: { slug: string }) {
     const deliveryInfo = product?.deliveryInfo || product?.category?.deliveryInfo || product?.category?.parent?.deliveryInfo;
 
     useEffect(() => {
-        if (USE_STATIC_DATA) {
-            const staticProduct = getProductBySlug(slug as string);
-            if (staticProduct) {
-                setProduct(staticProduct as Product);
-                const related = getProductsByCategory(staticProduct.category.slug)
-                    .filter(p => p.slug !== slug)
-                    .slice(0, 4);
-                setRelatedProducts(related as Product[]);
-            }
-            setLoading(false);
-            return;
-        }
 
         const fetchProduct = async () => {
             try {
@@ -298,7 +286,7 @@ export default function ProductClient({ slug }: { slug: string }) {
                         },
                         "offers": {
                             "@type": "Offer",
-                            "url": `https://perambursrinivasa.com/product/${product.slug}`,
+                            "url": `https://perambursrinivasa.co.in/product/${product.slug}`,
                             "priceCurrency": "INR",
                             "price": finalPrice,
                             "availability": definitivelySoldOut ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",

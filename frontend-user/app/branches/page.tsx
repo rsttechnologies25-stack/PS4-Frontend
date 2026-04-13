@@ -5,7 +5,7 @@ import Image from "next/image";
 import { MapPin, Phone, Search, Navigation } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { API_URL } from "@/lib/api";
-import { USE_STATIC_DATA, STATIC_BRANCHES } from "@/lib/staticData";
+import { STATIC_BRANCHES } from "@/lib/staticData";
 
 interface Branch {
     id: string;
@@ -24,11 +24,6 @@ export default function BranchesPage() {
     const [selectedCity, setSelectedCity] = useState<string | null>(null);
 
     useEffect(() => {
-        if (USE_STATIC_DATA) {
-            setBranches(STATIC_BRANCHES);
-            setLoading(false);
-            return;
-        }
 
         const fetchBranches = async () => {
             try {

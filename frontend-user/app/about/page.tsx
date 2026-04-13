@@ -1,6 +1,8 @@
 "use client";
 
-import Image from "next/image";
+import Image from "next/image";import { API_URL } from "@/lib/api";
+import { formatImageUrl } from "@/lib/imageHelper";
+
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import {
@@ -17,7 +19,7 @@ import {
     Loader2
 } from "lucide-react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+
 
 const IconMap: Record<string, any> = {
     Calendar, MapPin, Factory, Globe2, ShieldCheck, Heart, Star, Quote, UtensilsCrossed
@@ -77,7 +79,7 @@ export default function AboutPage() {
                             className="absolute inset-0 z-0"
                         >
                             <Image
-                                src={content.hero.image || "/about_us_hero.png"}
+                                src={content.hero.image ? formatImageUrl(content.hero.image) : "/about_us_hero.png"}
                                 alt="PS4 Sweets and Snacks"
                                 fill
                                 className="object-cover"
@@ -136,7 +138,7 @@ export default function AboutPage() {
                                         transition={{ delay: 0.2, duration: 1 }}
                                     >
                                         <Image
-                                            src={content.legacy.image || "/about_legacy_img.png"}
+                                            src={content.legacy.image ? formatImageUrl(content.legacy.image) : "/about_legacy_img.png"}
                                             alt="Founder Legacy"
                                             fill
                                             className="object-cover transition-transform duration-700 group-hover:scale-110"
@@ -211,7 +213,7 @@ export default function AboutPage() {
                     {content.restaurant.isVisible && (
                         <section className="relative min-h-[80vh] flex items-center overflow-hidden">
                             <div className="absolute inset-0 z-0">
-                                <Image src={content.restaurant.image || "/hero_motichoor_laddu.jpg"} fill className="object-cover" alt="Restaurant Background" />
+                                <Image src={content.restaurant.image ? formatImageUrl(content.restaurant.image) : "/hero_motichoor_laddu.jpg"} fill className="object-cover" alt="Restaurant Background" />
                                 <div className="absolute inset-0 bg-primary/70 backdrop-blur-[2px]" />
                             </div>
 
@@ -241,7 +243,7 @@ export default function AboutPage() {
                     {content.global.isVisible && (
                         <section className="relative min-h-[80vh] flex items-center overflow-hidden">
                             <div className="absolute inset-0 z-0">
-                                <Image src={content.global.image || "/ps4_sweets_hero_1.png"} fill className="object-cover" alt="Global Support Background" />
+                                <Image src={content.global.image ? formatImageUrl(content.global.image) : "/ps4_sweets_hero_1.png"} fill className="object-cover" alt="Global Support Background" />
                                 <div className="absolute inset-0 bg-primary/70 backdrop-blur-[2px]" />
                             </div>
 

@@ -13,7 +13,7 @@ const tabs = [
 ];
 
 import { API_URL } from "@/lib/api";
-import { USE_STATIC_DATA, STATIC_PRODUCTS, getProductsByCategory, getBestSellers, getNewLaunches } from "@/lib/staticData";
+import { STATIC_PRODUCTS } from "@/lib/staticData";
 
 interface Product {
     id: string;
@@ -32,26 +32,6 @@ export default function ExploreSection() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Use static data for Cloudflare deployment
-        if (USE_STATIC_DATA) {
-            setLoading(true);
-            let filteredProducts: Product[] = [];
-
-            if (activeTab.query === "isBestSeller=true") {
-                filteredProducts = getBestSellers();
-            } else if (activeTab.query === "isNewLaunch=true") {
-                filteredProducts = getNewLaunches();
-            } else if (activeTab.query.startsWith("category=")) {
-                const categorySlug = activeTab.query.split("=")[1];
-                filteredProducts = getProductsByCategory(categorySlug);
-            } else {
-                filteredProducts = STATIC_PRODUCTS.slice(0, 8);
-            }
-
-            setProducts(filteredProducts);
-            setLoading(false);
-            return;
-        }
 
         // Fetch from API (for when backend is available)
         const fetchProducts = async () => {

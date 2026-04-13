@@ -5,7 +5,7 @@ import Link from "next/link";
 import ProductCard from "../ui/ProductCard";
 import { motion } from "framer-motion";
 import { API_URL } from "@/lib/api";
-import { USE_STATIC_DATA, STATIC_PRODUCTS, getProductsByCategory, getBestSellers, getNewLaunches } from "@/lib/staticData";
+import { STATIC_PRODUCTS } from "@/lib/staticData";
 
 interface Product {
     id: string;
@@ -41,23 +41,6 @@ export default function ProductShowcase({
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (USE_STATIC_DATA) {
-            let filteredProducts: Product[] = [];
-
-            if (filter === "isBestSeller") {
-                filteredProducts = getBestSellers();
-            } else if (filter === "isNewLaunch") {
-                filteredProducts = getNewLaunches();
-            } else if (categorySlug) {
-                filteredProducts = getProductsByCategory(categorySlug);
-            } else {
-                filteredProducts = STATIC_PRODUCTS.slice(0, limit);
-            }
-
-            setProducts(filteredProducts.slice(0, limit));
-            setLoading(false);
-            return;
-        }
 
         const fetchProducts = async () => {
             setLoading(true);

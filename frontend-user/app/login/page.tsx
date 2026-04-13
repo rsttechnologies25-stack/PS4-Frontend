@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState } from "react";import { API_URL } from "@/lib/api";
+
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { Mail, Lock, Loader2, AlertCircle, ArrowRight } from "lucide-react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");

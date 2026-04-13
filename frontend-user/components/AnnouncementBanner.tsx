@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";import { API_URL } from "@/lib/api";
+
 import { Volume2 } from "lucide-react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api";
+
 
 interface Announcement {
     id: string;

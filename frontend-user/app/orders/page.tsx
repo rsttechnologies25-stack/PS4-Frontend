@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";import { API_URL } from "@/lib/api";
+
 import { useAuth } from "@/context/AuthContext";
 import { ShoppingBag, Calendar, Package, ChevronRight, Loader2, Info, RefreshCw, Clock } from "lucide-react";
 import Link from "next/link";
@@ -9,7 +10,7 @@ import { useCart } from "@/context/CartContext";
 import { motion } from "framer-motion";
 import { formatImageUrl } from "@/lib/imageHelper";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+
 
 interface Order {
     id: string;

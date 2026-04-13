@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { API_URL } from "@/lib/api";
 import Link from "next/link";
 import { Mail, Loader2, AlertCircle, CheckCircle2, ArrowLeft } from "lucide-react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+
 
 export default function ForgotPasswordPage() {
     const [email, setEmail] = useState("");

@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion } from "framer-motion";import { API_URL } from "@/lib/api";
+
 import {
     MapPin,
     Phone,
@@ -16,7 +17,7 @@ import {
 import Image from "next/image";
 import { useState, useEffect } from "react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+
 
 export default function ContactPage() {
     const [content, setContent] = useState<any>(null);

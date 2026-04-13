@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";import { API_URL } from "@/lib/api";
+
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api";
+
 import { formatImageUrl } from "@/lib/imageHelper";
 
 // Fallback slides when no banners exist in DB
@@ -16,7 +17,7 @@ const fallbackSlides = [
         displayTitle: "Signature Motichoor Laddu",
         displaySubtitle: "The Soul of Perambur Sri Srinivasa. Pure Ghee. Traditionally Crafted.",
         ctaText: "Order Now",
-        link: "/products/motichur-laddu",
+        link: "/product/motichur-laddu",
         slideInterval: 6,
     },
     {
@@ -24,7 +25,7 @@ const fallbackSlides = [
         displayTitle: "Premium Kaju Katli",
         displaySubtitle: "Exquisite Cashew Delight. Melt-in-your-mouth Perfection.",
         ctaText: "Shop Now",
-        link: "/products/kaju-katli",
+        link: "/product/kaju-katli",
         slideInterval: 6,
     },
 ];

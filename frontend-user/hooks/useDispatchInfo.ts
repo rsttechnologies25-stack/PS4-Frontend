@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from '@/context/LocationContext';
+import { API_URL } from '@/lib/api';
 
 interface DispatchSettings {
     dispatchCutoffHour: number;
@@ -22,7 +23,7 @@ export function useDispatchInfo() {
     useEffect(() => {
         const fetchSettings = async () => {
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/settings`);
+                const res = await fetch(`${API_URL}/settings`);
                 if (res.ok) {
                     const data = await res.json();
                     setSettings({

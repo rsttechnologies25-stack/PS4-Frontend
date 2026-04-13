@@ -48,6 +48,8 @@ user_startup.log
 user_startup_err*
 tsconfig.tsbuildinfo
 out/
-.next/
-node_modules/
-.env*
+# wrangler
+.wrangler/
+.vscode/
+.idea/
+*.local

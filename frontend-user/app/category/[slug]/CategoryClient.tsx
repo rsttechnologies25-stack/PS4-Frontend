@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import ProductCard from "@/components/ui/ProductCard";
 import { Loader2 } from "lucide-react";
 import { API_URL } from "@/lib/api";
-import { USE_STATIC_DATA, getCategoryBySlug, getProductsByCategory, STATIC_CATEGORIES } from "@/lib/staticData";
+import { getCategoryBySlug, getProductsByCategory, STATIC_CATEGORIES } from "@/lib/staticData";
 
 interface Product {
     id: string;
@@ -41,19 +41,6 @@ export default function CategoryClient({ slug }: CategoryClientProps) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Use static data for Cloudflare deployment
-        if (USE_STATIC_DATA) {
-            const staticCategory = getCategoryBySlug(slug);
-            const staticProducts = getProductsByCategory(slug);
-            const staticSubs = staticCategory ? STATIC_CATEGORIES.filter(c => c.parentId === staticCategory.id) : [];
-
-            setCategory(staticCategory || null);
-            setProducts(staticProducts as Product[]);
-            setFilteredProducts(staticProducts as Product[]);
-            setSubCategories(staticSubs as Category[]);
-            setLoading(false);
-            return;
-        }
 
         // Fetch from API (for when backend is available)
         const fetchData = async () => {

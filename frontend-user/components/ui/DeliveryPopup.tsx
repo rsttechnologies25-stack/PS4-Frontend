@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Truck, X } from "lucide-react";
 
+import { API_URL } from "@/lib/api";
+
 interface SiteSettings {
     deliveryPopupEnabled: boolean;
     deliveryPopupTitle: string;
@@ -17,7 +19,7 @@ export default function DeliveryPopup() {
     useEffect(() => {
         const fetchSettings = async () => {
             try {
-                const res = await fetch('http://localhost:4000/api/settings');
+                const res = await fetch(`${API_URL}/settings`);
                 if (res.ok) {
                     const data = await res.json();
                     setSettings(data);

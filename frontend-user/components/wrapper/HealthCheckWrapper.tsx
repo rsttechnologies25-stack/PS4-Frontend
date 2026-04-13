@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { API_URL } from "@/lib/api";
 import Maintenance from "@/components/layout/Maintenance";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+
 
 export default function HealthCheckWrapper({ children }: { children: React.ReactNode }) {
     const [isServerDown, setIsServerDown] = useState(false);

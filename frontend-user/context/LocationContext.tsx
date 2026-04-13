@@ -1,6 +1,7 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";import { API_URL } from "@/lib/api";
+
 
 interface LocationData {
     areaName: string;
@@ -22,7 +23,7 @@ interface LocationContextType {
     clearLocation: () => void;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api";
+
 
 const LocationContext = createContext<LocationContextType | undefined>(undefined);
 
