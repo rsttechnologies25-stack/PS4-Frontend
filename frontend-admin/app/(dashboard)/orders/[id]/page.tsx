@@ -191,7 +191,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             // --- Order & Customer Details ---
             doc.setFontSize(10);
             doc.setTextColor(0);
-            doc.text(`Order ID: #${order.id.slice(-8).toUpperCase()}`, 14, 45);
+            doc.text(`Order ID: ${order.readableId || "#" + order.id.slice(-8).toUpperCase()}`, 14, 45);
             doc.text(`Date: ${new Date(order.createdAt).toLocaleDateString()} ${new Date(order.createdAt).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}`, 14, 51);
             doc.text(`Status: ${order.status}`, 14, 57);
 
@@ -287,7 +287,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             doc.setTextColor(100);
             doc.text("This is a computer generated invoice.", 14, currentY);
 
-            doc.save(`Invoice_${order.id.slice(-8).toUpperCase()}.pdf`);
+            doc.save(`Invoice_${(order.readableId || order.id.slice(-8)).toUpperCase().replace("#", "")}.pdf`);
         };
 
         // Ensure image is loaded before saving
@@ -306,7 +306,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                 </Link>
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
                     <div>
-                        <h1 className="text-4xl font-black text-brand-maroon uppercase tracking-tight outfit">Order #{order.id.slice(-8).toUpperCase()}</h1>
+                        <h1 className="text-4xl font-black text-brand-maroon uppercase tracking-tight outfit">Order {order.readableId || "#" + order.id.slice(-8).toUpperCase()}</h1>
                         <p className="text-orange-900/40 font-black text-[10px] tracking-[0.3em] uppercase mt-2 flex items-center gap-2">
                             <Calendar size={14} className="text-brand-orange" /> Recorded on {new Date(order.createdAt).toLocaleDateString(undefined, { dateStyle: 'full' })} at {new Date(order.createdAt).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
                         </p>

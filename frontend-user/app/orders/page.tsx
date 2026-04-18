@@ -14,6 +14,7 @@ import { formatImageUrl } from "@/lib/imageHelper";
 
 interface Order {
     id: string;
+    readableId?: string;
     totalAmount: number;
     status: string;
     createdAt: string;
@@ -123,7 +124,7 @@ export default function OrdersPage() {
                                         <div className="flex items-center gap-6">
                                             <div className="space-y-1">
                                                 <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Order ID</p>
-                                                <p className="text-sm font-bold text-[#8B4513]">#{order.id.slice(-8).toUpperCase()}</p>
+                                                <p className="text-sm font-bold text-[#8B4513]">{order.readableId || "#" + order.id.slice(-8).toUpperCase()}</p>
                                             </div>
                                             <div className="space-y-1">
                                                 <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Date</p>

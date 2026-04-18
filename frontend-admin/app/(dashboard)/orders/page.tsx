@@ -124,7 +124,7 @@ export default function OrdersPage() {
             const shippingGST = order.shippingCharge - shippingBase;
 
             return {
-                "Order ID": `#${order.id.slice(-8).toUpperCase()}`,
+                "Order ID": order.readableId || `#${order.id.slice(-8).toUpperCase()}`,
                 "Date": format(new Date(order.createdAt), "dd MMM yyyy HH:mm"),
                 "Customer Name": order.customerName || order.user?.name || "Guest",
                 "Mobile Number": order.phoneNumber || "N/A",
@@ -330,7 +330,7 @@ export default function OrdersPage() {
                                         <tr key={order.id} className="hover:bg-orange-100/5 transition-colors group">
                                             <td className="px-8 py-6">
                                                 <div className="space-y-1">
-                                                    <p className="font-bold text-[#7C2D12] text-sm outfit uppercase tracking-tighter">#{order.id.slice(-8).toUpperCase()}</p>
+                                                    <p className="font-bold text-[#7C2D12] text-sm outfit uppercase tracking-tighter">{order.readableId || "#" + order.id.slice(-8).toUpperCase()}</p>
                                                     <p className="text-[10px] text-orange-900/40 font-black uppercase tracking-widest">{new Date(order.createdAt).toLocaleDateString(undefined, { dateStyle: 'medium' })}</p>
                                                 </div>
                                             </td>

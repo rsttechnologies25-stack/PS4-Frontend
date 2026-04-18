@@ -332,7 +332,7 @@ export default function CartPage() {
                 amount: orderData.totalAmount * 100,
                 currency: "INR",
                 name: "Perambur Sri Srinivasa",
-                description: `Order #${orderData.id.slice(-8).toUpperCase()}`,
+                description: `Order ${orderData.readableId || "#" + orderData.id.slice(-8).toUpperCase()}`,
                 order_id: orderData.razorpayOrderId,
                 handler: async function (response: any) {
                     setLoading(true);
