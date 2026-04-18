@@ -1,19 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { API_URL } from "@/lib/api";
 import Link from "next/link";
 import ProductCard from "../ui/ProductCard";
 import { motion, AnimatePresence } from "framer-motion";
-
-const tabs = [
-    { name: "BEST SELLERS", query: "isBestSeller=true" },
-    { name: "NEW LAUNCHES", query: "isNewLaunch=true" },
-    { name: "SWEETS", query: "category=sweets&includeChildren=true" },
-    { name: "SAVOURIES", query: "category=savouries&includeChildren=true" }
-];
-
-import { API_URL } from "@/lib/api";
-import { STATIC_PRODUCTS } from "@/lib/staticData";
 
 interface Product {
     id: string;
@@ -26,14 +17,46 @@ interface Product {
     variants?: { id: string; weight: string; price: number; stock: number; isDefault: boolean; sortOrder: number }[];
 }
 
+interface ExploreTab {
+    name: string;
+    query: string;
+}
+
 export default function ExploreSection() {
-    const [activeTab, setActiveTab] = useState(tabs[0]);
+    const [tabs, setTabs] = useState<ExploreTab[]>([
+        { name: "BEST SELLERS", query: "isBestSeller=true" },
+        { name: "NEW LAUNCHES", query: "isNewLaunch=true" }
+    ]);
+    const [activeTab, setActiveTab] = useState<ExploreTab>(tabs[0]);
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const res = await fetch(`${API_URL}/categories`);
+                if (res.ok) {
+                    const data = await res.json();
+                    // Get first 4 main categories for tabs
+                    const mainCats = data.filter((c: any) => !c.parentId).slice(0, 4);
+                    const dynamicTabs = mainCats.map((cat: any) => ({
+                        name: cat.name.toUpperCase(),
+                        query: `category=${cat.slug}&includeChildren=true`
+                    }));
+                    
+                    setTabs(prev => {
+                        const baseTabs = prev.slice(0, 2);
+                        return [...baseTabs, ...dynamicTabs];
+                    });
+                }
+            } catch (error) {
+                console.error("Failed to fetch categories for ExploreSection:", error);
+            }
+        };
+        fetchCategories();
+    }, []);
 
-        // Fetch from API (for when backend is available)
+    useEffect(() => {
         const fetchProducts = async () => {
             setLoading(true);
             try {
@@ -48,7 +71,7 @@ export default function ExploreSection() {
             }
         };
 
-        fetchProducts();
+        if (activeTab) fetchProducts();
     }, [activeTab]);
 
     return (
@@ -75,7 +98,7 @@ export default function ExploreSection() {
                         <button
                             key={tab.name}
                             onClick={() => setActiveTab(tab)}
-                            className={`text-[13px] tracking-[0.2em] font-bold transition-all border-b-2 py-2 whitespace-nowrap accent-font ${activeTab.name === tab.name ? "border-primary text-secondary" : "border-transparent text-text-muted hover:text-primary"
+                            className={`text-[13px] tracking-[0.2em] font-bold transition-all border-b-2 py-2 whitespace-nowrap accent-font ${activeTab?.name === tab.name ? "border-primary text-secondary" : "border-transparent text-text-muted hover:text-primary"
                                 }`}
                         >
                             {tab.name}
@@ -150,11 +173,11 @@ export default function ExploreSection() {
                     >
                         <Link
                             href={
-                                activeTab.name === "SWEETS" ? "/category/sweets" :
-                                activeTab.name === "SAVOURIES" ? "/category/savouries" :
-                                activeTab.name === "BEST SELLERS" ? "/shop?filter=best-seller" :
-                                activeTab.name === "NEW LAUNCHES" ? "/shop?filter=new-launch" :
-                                "/shop"
+                                activeTab.query.includes('category=') 
+                                    ? `/category/${activeTab.query.split('category=')[1].split('&')[0]}`
+                                    : activeTab.name === "BEST SELLERS" ? "/shop?filter=best-seller" :
+                                      activeTab.name === "NEW LAUNCHES" ? "/shop?filter=new-launch" :
+                                      "/shop"
                             }
                             className="inline-flex items-center gap-3 group"
                         >

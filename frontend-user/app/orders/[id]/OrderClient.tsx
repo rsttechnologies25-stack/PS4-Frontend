@@ -42,6 +42,7 @@ interface OrderItem {
 
 interface Order {
     id: string;
+    readableId: string | null;
     status: string;
     totalAmount: number;
     discountAmount: number;
@@ -176,7 +177,8 @@ export default function OrderClient({ params }: { params: Promise<{ id: string }
             // --- Order & Customer Details ---
             doc.setFontSize(10);
             doc.setTextColor(0);
-            doc.text(`Order ID: #${order.id.slice(-8).toUpperCase()}`, 14, 45);
+            const displayId = order.readableId || `#${order.id.slice(-8).toUpperCase()}`;
+            doc.text(`Order ID: ${displayId}`, 14, 45);
             doc.text(`Date: ${new Date(order.createdAt).toLocaleDateString()} ${new Date(order.createdAt).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}`, 14, 51);
             doc.text(`Status: ${order.status}`, 14, 57);
 
@@ -272,7 +274,8 @@ export default function OrderClient({ params }: { params: Promise<{ id: string }
             doc.setTextColor(100);
             doc.text("This is a computer generated invoice.", 14, currentY);
 
-            doc.save(`Invoice_${order.id.slice(-8).toUpperCase()}.pdf`);
+            const displayIdForFilename = (order.readableId || order.id.slice(-8).toUpperCase()).replace(/#/g, '');
+            doc.save(`Invoice_${displayIdForFilename}.pdf`);
         };
 
         // Ensure image is loaded before saving to prevent blank logos
@@ -289,7 +292,7 @@ export default function OrderClient({ params }: { params: Promise<{ id: string }
                     </Link>
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                         <div>
-                            <h1 className="text-3xl md:text-4xl font-black text-secondary uppercase tracking-tight serif">Order #{order.id.slice(-8).toUpperCase()}</h1>
+                            <h1 className="text-3xl md:text-4xl font-black text-secondary uppercase tracking-tight serif">Order {order.readableId || `#${order.id.slice(-8).toUpperCase()}`}</h1>
                             <p className="text-primary font-black text-[10px] tracking-[0.3em] uppercase mt-1 flex items-center gap-2">
                                 <Calendar size={12} /> Placed on {new Date(order.createdAt).toLocaleDateString(undefined, { dateStyle: 'long' })}
                             </p>

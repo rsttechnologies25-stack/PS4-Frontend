@@ -11,33 +11,15 @@ import { useNotifications } from "@/context/NotificationContext";
 import { useLocation } from "@/context/LocationContext";
 import SearchModal from "./SearchModal";
 import { formatDistanceToNow } from 'date-fns';
+import { API_URL } from "@/lib/api";
 
-interface MegaItem {
+interface Category {
+    id: string;
     name: string;
-    href: string;
+    slug: string;
     image: string;
+    parentId?: string | null;
 }
-
-const menuItems = [
-    {
-        name: "Shop",
-        href: "/shop",
-        mega: [
-            { name: "Sweets", href: "/category/sweets", image: "/hero_motichoor_laddu.jpg" },
-            { name: "Savouries", href: "/category/savouries", image: "https://perambursrinivasa.com/cdn/shop/files/ANDHRA_MURUKKU.jpg?v=1753018411" },
-            { name: "Sev", href: "/category/sev", image: "https://perambursrinivasa.com/cdn/shop/files/MINI_KARA_SEV.jpg?v=1753017794" },
-            { name: "Pickle", href: "/category/pickle", image: "https://perambursrinivasa.com/cdn/shop/files/image6.webp?v=1746161359" },
-            { name: "Podi", href: "/category/podi", image: "https://perambursrinivasa.com/cdn/shop/files/IDLY_PODI_34e04bc4-aee0-42a9-949a-2bd13815a4f1.jpg?v=1753016470" },
-            { name: "Cookies", href: "/category/cookies", image: "https://perambursrinivasa.com/cdn/shop/files/KESAR_BADAM_COOKIES.jpg?v=1753017309" },
-            { name: "Gifting", href: "/category/gifting", image: "https://perambursrinivasa.com/cdn/shop/files/KESAR_BADAM_COOKIES.jpg?v=1753017309" },
-            { name: "Outdoor Catering", href: "/category/outdoor-catering", image: "https://perambursrinivasa.com/cdn/shop/files/KESAR_BADAM_COOKIES.jpg?v=1753017309" }
-        ]
-    },
-    { name: "Best Sellers", href: "/shop?filter=best-seller" },
-    { name: "Branches", href: "/branches" },
-    { name: "Contact", href: "/contact" },
-    { name: "About Us", href: "/about" },
-];
 
 export default function Navbar() {
     const [activeMega, setActiveMega] = useState<string | null>(null);
@@ -50,6 +32,43 @@ export default function Navbar() {
     const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
     const { location, setShowLocationModal } = useLocation();
     const [expandedMenus, setExpandedMenus] = useState<string[]>([]);
+    
+    // Dynamic Categories State
+    const [categories, setCategories] = useState<Category[]>([]);
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                // Fetch only top-level categories (no parentId)
+                const res = await fetch(`${API_URL}/categories`);
+                if (res.ok) {
+                    const data = await res.json();
+                    // Filter to ensure we only show top-level main categories in the main nav
+                    const mainCats = data.filter((c: Category) => !c.parentId);
+                    setCategories(mainCats);
+                }
+            } catch (error) {
+                console.error("Failed to fetch categories for Navbar:", error);
+            }
+        };
+        fetchCategories();
+    }, []);
+
+    const menuItems = [
+        {
+            name: "Shop",
+            href: "/shop",
+            mega: categories.map(cat => ({
+                name: cat.name,
+                href: `/category/${cat.slug}`,
+                image: cat.image || "/logo-v1.png" // Fallback if no image
+            }))
+        },
+        { name: "Best Sellers", href: "/shop?filter=best-seller" },
+        { name: "Branches", href: "/branches" },
+        { name: "Contact", href: "/contact" },
+        { name: "About Us", href: "/about" },
+    ];
 
     const toggleMenu = (name: string) => {
         setExpandedMenus(prev =>
@@ -125,7 +144,7 @@ export default function Navbar() {
                                             >
                                                 <div className="bg-[#FFFBF5] shadow-2xl p-6 border border-[#8B4513]/20 rounded-sm">
                                                     <div className="grid grid-cols-4 gap-6">
-                                                        {item.mega.map((sub: MegaItem) => (
+                                                        {item.mega.map((sub) => (
                                                             <Link
                                                                 key={sub.name}
                                                                 href={sub.href}
@@ -390,7 +409,7 @@ export default function Navbar() {
                                                 className="overflow-hidden"
                                             >
                                                 <div className="grid grid-cols-2 gap-4 pb-6 px-2">
-                                                    {item.mega.map((sub: MegaItem) => (
+                                                    {item.mega.map((sub) => (
                                                         <Link
                                                             key={sub.name}
                                                             href={sub.href}

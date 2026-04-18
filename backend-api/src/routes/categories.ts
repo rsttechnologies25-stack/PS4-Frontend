@@ -9,6 +9,7 @@ router.get('/', async (req, res) => {
         const { parent } = req.query;
         const categories = await prisma.category.findMany({
             where: parent ? { parentId: parent as string } : {},
+            orderBy: { sortOrder: 'asc' },
             select: {
                 id: true,
                 name: true,
@@ -16,17 +17,22 @@ router.get('/', async (req, res) => {
                 image: true,
                 deliveryInfo: true,
                 parentId: true,
+                sortOrder: true,
                 products: { take: 4 }
             }
         });
-        res.json(categories);
+        const result = categories.map(c => ({
+            ...c,
+            sortOrder: Number((c as any).sortOrder || 0)
+        }));
+        res.json(result);
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch categories' });
     }
 });
 
 router.post('/', authMiddleware, async (req, res) => {
-    const { name, slug, image, parentId, deliveryInfo } = req.body;
+    const { name, slug, image, parentId, deliveryInfo, sortOrder } = req.body;
     try {
         const category = await prisma.category.create({
             data: {
@@ -34,7 +40,8 @@ router.post('/', authMiddleware, async (req, res) => {
                 slug,
                 image: image || null,
                 parentId: parentId || null,
-                deliveryInfo: deliveryInfo || null
+                deliveryInfo: deliveryInfo || null,
+                sortOrder: (sortOrder !== undefined && sortOrder !== null) ? Number(sortOrder) : 0
             }
         });
         res.status(201).json(category);
@@ -45,7 +52,7 @@ router.post('/', authMiddleware, async (req, res) => {
 });
 
 router.put('/:id', authMiddleware, async (req, res) => {
-    const { name, slug, image, parentId, deliveryInfo } = req.body;
+    const { name, slug, image, parentId, deliveryInfo, sortOrder } = req.body;
     try {
         const category = await prisma.category.update({
             where: { id: req.params.id as string },
@@ -54,7 +61,8 @@ router.put('/:id', authMiddleware, async (req, res) => {
                 slug,
                 image: image || null,
                 parentId: parentId || null,
-                deliveryInfo: deliveryInfo || null
+                deliveryInfo: deliveryInfo || null,
+                sortOrder: (sortOrder !== undefined && sortOrder !== null) ? Number(sortOrder) : 0
             }
         });
         res.json(category);
@@ -79,13 +87,31 @@ router.get('/:idOrSlug', async (req, res) => {
 
         // Try finding by ID first
         let category = await prisma.category.findUnique({
-            where: { id: idOrSlug }
+            where: { id: idOrSlug },
+            select: {
+                id: true,
+                name: true,
+                slug: true,
+                image: true,
+                deliveryInfo: true,
+                parentId: true,
+                sortOrder: true,
+            }
         });
 
         // If not found by ID, try finding by slug
         if (!category) {
             category = await prisma.category.findUnique({
-                where: { slug: idOrSlug }
+                where: { slug: idOrSlug },
+                select: {
+                    id: true,
+                    name: true,
+                    slug: true,
+                    image: true,
+                    deliveryInfo: true,
+                    parentId: true,
+                    sortOrder: true,
+                }
             });
         }
 

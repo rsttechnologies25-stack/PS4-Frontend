@@ -131,7 +131,8 @@ exports.Prisma.CategoryScalarFieldEnum = {
   slug: 'slug',
   image: 'image',
   parentId: 'parentId',
-  deliveryInfo: 'deliveryInfo'
+  deliveryInfo: 'deliveryInfo',
+  sortOrder: 'sortOrder'
 };
 
 exports.Prisma.ProductScalarFieldEnum = {
@@ -243,7 +244,11 @@ exports.Prisma.SiteSettingsScalarFieldEnum = {
   splashContent: 'splashContent',
   dispatchCutoffHour: 'dispatchCutoffHour',
   dispatchSundayPolicy: 'dispatchSundayPolicy',
-  dispatchLimitText: 'dispatchLimitText'
+  dispatchLimitText: 'dispatchLimitText',
+  nextOrderNumber: 'nextOrderNumber',
+  orderIdPrefix: 'orderIdPrefix',
+  orderIdSuffix: 'orderIdSuffix',
+  orderIdPadding: 'orderIdPadding'
 };
 
 exports.Prisma.UserScalarFieldEnum = {
@@ -280,6 +285,7 @@ exports.Prisma.CartItemScalarFieldEnum = {
 
 exports.Prisma.OrderScalarFieldEnum = {
   id: 'id',
+  readableId: 'readableId',
   userId: 'userId',
   status: 'status',
   totalAmount: 'totalAmount',

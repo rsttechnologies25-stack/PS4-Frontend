@@ -18,22 +18,30 @@ import { formatImageUrl } from "@/lib/imageHelper";
 export default function CategoriesPage() {
     const [categories, setCategories] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [syncing, setSyncing] = useState(false);
     const [deletingId, setDeletingId] = useState<string | null>(null);
 
     useEffect(() => {
-        fetchCategories();
+        const init = async () => {
+            await fetchCategories(true);
+            setLoading(false);
+        };
+        init();
     }, []);
 
-    const fetchCategories = async () => {
+    const fetchCategories = async (isInitial = false) => {
+        if (!isInitial) setSyncing(true);
         try {
             const res = await fetch(`${API_URL}/categories`);
             if (res.ok) {
-                setCategories(await res.json());
+                const data = await res.json();
+                setCategories(data);
+                console.log("Categories synced:", data);
             }
         } catch (error) {
             console.error("Failed to fetch categories", error);
         } finally {
-            setLoading(false);
+            if (!isInitial) setSyncing(false);
         }
     };
 
@@ -66,13 +74,24 @@ export default function CategoriesPage() {
                     <h1 className="text-4xl font-bold text-brand-maroon tracking-tight">Category Hierarchy</h1>
                     <p className="text-orange-900/50 mt-2 font-medium italic">Organise your shop's structure and collections</p>
                 </div>
-                <Link
-                    href="/categories/new"
-                    className="bg-primary text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-primary-dark transition-all shadow-xl shadow-orange-600/20 w-fit transform hover:scale-[1.02]"
-                >
-                    <Plus size={22} />
-                    Create New Collection
-                </Link>
+                <div className="flex items-center gap-3">
+                    <button
+                        onClick={() => fetchCategories(false)}
+                        disabled={syncing}
+                        className={`p-4 bg-white border border-orange-200 text-[#7C2D12] rounded-2xl transition-all shadow-sm flex items-center gap-2 group ${syncing ? 'opacity-50 cursor-not-allowed' : 'hover:bg-orange-50 active:scale-95'}`}
+                        title="Sync with production"
+                    >
+                        <Loader2 className={syncing ? "animate-spin text-primary" : "text-[#7C2D12]/40 group-hover:text-primary transition-colors"} size={20} />
+                        <span className="font-bold text-sm">{syncing ? 'Syncing...' : 'Sync Data'}</span>
+                    </button>
+                    <Link
+                        href="/categories/new"
+                        className="bg-primary text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-primary-dark transition-all shadow-xl shadow-orange-600/20 w-fit transform hover:scale-[1.02]"
+                    >
+                        <Plus size={22} />
+                        Create New Collection
+                    </Link>
+                </div>
             </div>
 
             {loading ? (
@@ -98,6 +117,7 @@ export default function CategoriesPage() {
                                         <div className="flex items-center gap-3">
                                             <h3 className="text-2xl font-bold text-[#7C2D12]">{parent.name}</h3>
                                             <span className="text-[10px] font-black uppercase tracking-widest bg-[#7C2D12] text-white px-2 py-0.5 rounded-md">Main</span>
+                                            <span className="text-[10px] font-black uppercase tracking-widest bg-orange-200 text-[#7C2D12] px-2 py-0.5 rounded-md">Order: {parent.sortOrder ?? 0}</span>
                                         </div>
                                         <p className="text-[#7C2D12]/60 font-bold text-sm mt-1 uppercase tracking-widest font-mono">{parent.slug}</p>
                                     </div>
@@ -132,6 +152,7 @@ export default function CategoriesPage() {
                                                     {child.image && <img src={child.image} alt={child.name} className="w-full h-full object-cover" />}
                                                 </div>
                                                 <span className="font-bold text-brand-maroon tracking-wide truncate max-w-[120px]">{child.name}</span>
+                                                <span className="text-[9px] font-bold bg-orange-100 text-brand-maroon px-1.5 py-0.5 rounded">#{child.sortOrder ?? 0}</span>
                                             </div>
                                             <div className="flex items-center gap-1 opacity-0 group-hover/child:opacity-100 transition-opacity">
                                                 <Link href={`/categories/${child.id}`} className="p-2 text-orange-900/40 hover:text-primary transition-colors">

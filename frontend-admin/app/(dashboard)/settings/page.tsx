@@ -33,7 +33,11 @@ export default function SettingsPage() {
         },
         dispatchCutoffHour: 14,
         dispatchSundayPolicy: false,
-        dispatchLimitText: 'ORDER WITHIN {time} HOURS'
+        dispatchLimitText: 'ORDER WITHIN {time} HOURS',
+        nextOrderNumber: 1,
+        orderIdPrefix: '#',
+        orderIdSuffix: '',
+        orderIdPadding: 3
     });
     const [uploading, setUploading] = useState(false);
     const [uploadTarget, setUploadTarget] = useState<{ tab: 'about' | 'contact' | 'splash', path: string } | null>(null);
@@ -344,6 +348,62 @@ export default function SettingsPage() {
                                                 className="w-full bg-[#FAFAFA] border-4 border-[#7C2D12]/10 rounded-2xl px-6 py-4 text-[#7C2D12] font-black focus:border-[#EA580C] outline-none transition-all shadow-sm"
                                             />
                                             <p className="text-[10px] text-[#EA580C] font-black uppercase ml-4">Use {"{time}"} as a placeholder for the countdown timer.</p>
+                                        </div>
+                                    </div>
+                                </section>
+                                
+                                <section className="space-y-8 pt-8 border-t-2 border-[#7C2D12]/10">
+                                    <div className="flex items-center gap-4 border-b-2 border-[#7C2D12]/10 pb-4">
+                                        <History className="text-[#EA580C]" size={24} />
+                                        <h2 className="text-3xl font-black text-[#7C2D12] outfit uppercase">Order ID Sequencing</h2>
+                                    </div>
+                                    <div className="bg-[#FFF7ED] p-8 rounded-[2rem] border-4 border-[#EA580C]/10 mb-8">
+                                        <p className="text-[#7C2D12] font-black uppercase text-xs mb-4">Live Preview:</p>
+                                        <div className="bg-white px-8 py-4 rounded-2xl border-2 border-[#7C2D12]/10 inline-block font-black text-3xl text-[#7C2D12] outfit">
+                                            {settings.orderIdPrefix}{settings.nextOrderNumber.toString().padStart(settings.orderIdPadding, '0')}{settings.orderIdSuffix}
+                                        </div>
+                                    </div>
+                                    <div className="grid md:grid-cols-2 gap-8">
+                                        <div className="space-y-3">
+                                            <label className="text-xs font-black text-[#7C2D12]/40 uppercase tracking-[0.3em] ml-4">ID Prefix</label>
+                                            <input
+                                                type="text"
+                                                value={settings.orderIdPrefix || ''}
+                                                onChange={e => setSettings({ ...settings, orderIdPrefix: e.target.value })}
+                                                placeholder="#"
+                                                className="w-full bg-[#FAFAFA] border-4 border-[#7C2D12]/10 rounded-2xl px-6 py-4 text-[#7C2D12] font-black focus:border-[#EA580C] outline-none transition-all shadow-sm"
+                                            />
+                                        </div>
+                                        <div className="space-y-3">
+                                            <label className="text-xs font-black text-[#7C2D12]/40 uppercase tracking-[0.3em] ml-4">ID Suffix</label>
+                                            <input
+                                                type="text"
+                                                value={settings.orderIdSuffix || ''}
+                                                onChange={e => setSettings({ ...settings, orderIdSuffix: e.target.value })}
+                                                placeholder="e.g. 2026"
+                                                className="w-full bg-[#FAFAFA] border-4 border-[#7C2D12]/10 rounded-2xl px-6 py-4 text-[#7C2D12] font-black focus:border-[#EA580C] outline-none transition-all shadow-sm"
+                                            />
+                                        </div>
+                                        <div className="space-y-3">
+                                            <label className="text-xs font-black text-[#7C2D12]/40 uppercase tracking-[0.3em] ml-4">Padding (Min Digits)</label>
+                                            <input
+                                                type="number"
+                                                min="1"
+                                                max="10"
+                                                value={settings.orderIdPadding || 3}
+                                                onChange={e => setSettings({ ...settings, orderIdPadding: parseInt(e.target.value) || 1 })}
+                                                className="w-full bg-[#FAFAFA] border-4 border-[#7C2D12]/10 rounded-2xl px-6 py-4 text-[#7C2D12] font-black focus:border-[#EA580C] outline-none transition-all shadow-sm"
+                                            />
+                                        </div>
+                                        <div className="space-y-3">
+                                            <label className="text-xs font-black text-[#EA580C] uppercase tracking-[0.3em] ml-4">Next Order Number</label>
+                                            <input
+                                                type="number"
+                                                min="1"
+                                                value={settings.nextOrderNumber || 1}
+                                                onChange={e => setSettings({ ...settings, nextOrderNumber: parseInt(e.target.value) || 1 })}
+                                                className="w-full bg-[#FFF7ED] border-4 border-[#EA580C]/20 rounded-2xl px-6 py-4 text-[#7C2D12] font-black focus:border-[#EA580C] outline-none transition-all shadow-sm"
+                                            />
                                         </div>
                                     </div>
                                 </section>

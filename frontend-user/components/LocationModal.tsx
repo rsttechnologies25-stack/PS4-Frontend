@@ -108,23 +108,23 @@ export default function LocationModal() {
                                 <label className="text-xs font-black text-gray-400 uppercase tracking-widest">
                                     Enter Pincode
                                 </label>
-                                <div className="flex gap-2">
-                                    <input
-                                        type="text"
-                                        maxLength={6}
-                                        value={pincode}
-                                        onChange={(e) => setPincode(e.target.value.replace(/\D/g, ""))}
-                                        placeholder="E.g. 600011"
-                                        className="flex-1 border-2 border-gray-200 rounded-xl px-4 py-3 text-lg font-bold text-center tracking-[0.3em] focus:border-[#EA580C] focus:outline-none transition-colors"
-                                    />
-                                    <button
-                                        type="submit"
-                                        disabled={pincode.length !== 6 || loading}
-                                        className="bg-[#EA580C] text-white px-6 py-3 rounded-xl font-bold hover:bg-[#C2410C] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                                    >
-                                        {loading ? <Loader2 size={20} className="animate-spin" /> : "Check"}
-                                    </button>
-                                </div>
+                                    <div className="flex gap-2">
+                                        <input
+                                            type="text"
+                                            maxLength={6}
+                                            value={pincode}
+                                            onChange={(e) => setPincode(e.target.value.replace(/\D/g, ""))}
+                                            placeholder="E.g. 600011"
+                                            className="flex-1 w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-lg font-bold text-center tracking-[0.2em] sm:tracking-[0.3em] focus:border-[#EA580C] focus:outline-none transition-colors"
+                                        />
+                                        <button
+                                            type="submit"
+                                            disabled={pincode.length !== 6 || loading}
+                                            className="flex-shrink-0 bg-[#EA580C] text-white px-4 sm:px-6 py-3 rounded-xl font-bold hover:bg-[#C2410C] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                                        >
+                                            {loading ? <Loader2 size={20} className="animate-spin" /> : "Check"}
+                                        </button>
+                                    </div>
                             </form>
 
                             {/* Error / Not deliverable */}

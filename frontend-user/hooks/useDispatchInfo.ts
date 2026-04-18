@@ -16,9 +16,9 @@ export function useDispatchInfo() {
         dispatchLimitText: 'ORDER WITHIN {time} HOURS',
     });
     const [timeLeftString, setTimeLeftString] = useState("");
-    const [dispatchLabel, setDispatchLabel] = useState("TODAY");
+    const [dispatchLabel, setDispatchLabel] = useState("DISPATCHED BY TODAY");
     const [deliveryEstimate, setDeliveryEstimate] = useState("2-4 Days");
-    const [progress, setProgress] = useState(33); // Ordered, Dispatched, Delivered
+    const [progress, setProgress] = useState(40); // Initial dummy value
 
     useEffect(() => {
         const fetchSettings = async () => {
@@ -41,17 +41,25 @@ export function useDispatchInfo() {
 
     useEffect(() => {
         const timer = setInterval(() => {
+            // Get current time in IST
             const now = new Date();
-            // Convert to IST if needed, but for local browser it's usually fine if the user is in India
-            // For robust logic, we should probably force IST
+            const istOffset = 5.5 * 60 * 60 * 1000;
+            const istTime = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + istOffset);
             
-            const currentHour = now.getHours();
-            const currentDay = now.getDay(); // 0 is Sunday
+            const currentHour = istTime.getHours();
+            const currentMinute = istTime.getMinutes();
+            const currentDay = istTime.getDay(); // 0 is Sunday
             
             let targetDispatchDay = "TODAY";
             let hoursRemaining = settings.dispatchCutoffHour - currentHour;
-            let minutesRemaining = 60 - now.getMinutes();
+            let minutesRemaining = 60 - currentMinute;
             
+            // Progress Calculation (0-100)
+            // 0-33: Order Stage
+            // 33-66: Dispatch Stage
+            // 66-100: Delivery Stage
+            let currentProgress = 20; // Default
+
             if (hoursRemaining <= 0) {
                 // Past cutoff
                 if (currentDay === 6) { // Saturday
@@ -62,23 +70,28 @@ export function useDispatchInfo() {
                     targetDispatchDay = "TOMORROW";
                 }
                 
-                // If past cutoff, the "Order Within" should probably show time until *next* day's cutoff
-                // But usually, it's more useful to show "Dispatch by Tomorrow"
                 setTimeLeftString(""); // Hide countdown if past cutoff today
+                currentProgress = 55; // Further into dispatch stage
             } else {
                 // Before cutoff
                 if (currentDay === 0 && !settings.dispatchSundayPolicy) {
                     targetDispatchDay = "TOMORROW";
                     setTimeLeftString("");
+                    currentProgress = 35;
                 } else {
                     targetDispatchDay = "TODAY";
                     const h = Math.max(0, hoursRemaining - 1);
                     const m = minutesRemaining % 60;
                     setTimeLeftString(`${h} ${h === 1 ? 'HOUR' : 'HOURS'} ${m} ${m === 1 ? 'MINUTE' : 'MINUTES'}`);
+                    
+                    // Progress grows as we approach cutoff
+                    const percentOfCutoff = (currentHour + (currentMinute/60)) / settings.dispatchCutoffHour;
+                    currentProgress = 25 + (percentOfCutoff * 15); // Scale between 25 and 40
                 }
             }
             
             setDispatchLabel(`DISPATCH BY ${targetDispatchDay}`);
+            setProgress(currentProgress);
         }, 1000);
 
         return () => clearInterval(timer);
@@ -104,6 +117,7 @@ export function useDispatchInfo() {
         dispatchLabel,
         timeLeftString,
         deliveryEstimate,
+        progress,
         limitTextTemplate: settings.dispatchLimitText
     };
 }

@@ -81,7 +81,7 @@ interface Product {
 export default function ProductClient({ slug }: { slug: string }) {
     const { addToCart } = useCart();
     const { token, user } = useAuth();
-    const { dispatchLabel, timeLeftString, deliveryEstimate, limitTextTemplate } = useDispatchInfo();
+    const { dispatchLabel, timeLeftString, deliveryEstimate, progress, limitTextTemplate } = useDispatchInfo();
     const router = useRouter();
 
     const [product, setProduct] = useState<Product | null>(null);
@@ -513,8 +513,18 @@ export default function ProductClient({ slug }: { slug: string }) {
                                 <div className="text-text-muted text-[10px] font-black uppercase tracking-wider">{dispatchLabel}</div>
                             </div>
                             <div className="relative h-2 bg-gray-200 rounded-full overflow-hidden mb-6">
-                                <div className="absolute inset-y-0 left-0 w-1/4 bg-primary rounded-full"></div>
-                                <div className="absolute inset-y-0 left-1/4 w-1/4 bg-primary/40"></div>
+                                <div 
+                                    className="absolute inset-y-0 left-0 bg-primary rounded-full transition-all duration-1000"
+                                    style={{ width: `${Math.min(progress, 33.33)}%` }}
+                                ></div>
+                                <div 
+                                    className="absolute inset-y-0 bg-primary/40 transition-all duration-1000"
+                                    style={{ left: '33.33%', width: `${Math.max(0, Math.min(progress - 33.33, 33.33))}%` }}
+                                ></div>
+                                <div 
+                                    className="absolute inset-y-0 bg-primary/10 transition-all duration-1000"
+                                    style={{ left: '66.66%', width: `${Math.max(0, Math.min(progress - 66.66, 33.34))}%` }}
+                                ></div>
                             </div>
                             <div className="grid grid-cols-3 text-[10px] font-black uppercase tracking-widest text-text-muted">
                                 <div className="text-primary">Ordered</div>

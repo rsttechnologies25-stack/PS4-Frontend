@@ -31,6 +31,7 @@ export default function CategoryForm({ categoryId, initialData }: CategoryFormPr
         deliveryInfo: "",
         image: "",
         parentId: "",
+        sortOrder: 0,
     });
 
     useEffect(() => {
@@ -71,6 +72,7 @@ export default function CategoryForm({ categoryId, initialData }: CategoryFormPr
             deliveryInfo: data.deliveryInfo || "",
             image: data.image || "",
             parentId: data.parentId || "",
+            sortOrder: data.sortOrder || 0,
         });
     };
 
@@ -178,6 +180,19 @@ export default function CategoryForm({ categoryId, initialData }: CategoryFormPr
                                     placeholder="ghee-sweets"
                                 />
                             </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="text-sm font-black text-[#7C2D12]/50 uppercase tracking-widest ml-1">Display Order</label>
+                            <input
+                                type="number"
+                                value={formData.sortOrder}
+                                onChange={(e) => setFormData({ ...formData, sortOrder: Number(e.target.value) })}
+                                className="w-full px-6 py-4 bg-orange-50/20 border border-orange-100 rounded-2xl focus:ring-4 focus:ring-[#EA580C]/10 focus:border-[#EA580C] outline-none transition-all font-bold placeholder:text-[#7C2D12]/20"
+                                placeholder="0"
+                                min={0}
+                            />
+                            <p className="text-xs text-[#7C2D12]/40 ml-1">Lower numbers appear first (e.g., 1 is before 5).</p>
                         </div>
 
 
