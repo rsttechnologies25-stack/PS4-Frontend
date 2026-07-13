@@ -7,8 +7,8 @@ import DeliveryPopup from "@/components/ui/DeliveryPopup";
 import ProductShowcase from "@/components/home/ProductShowcase";
 
 export const metadata: Metadata = {
-  title: "Perambur Srinivasa Sweets | Authentic Southern Traditions since 1981",
-  description: "Purity in every bite. Discover handcrafted South Indian sweets, crisps, and traditional savories. Order online for authentic taste delivered to your doorstep.",
+  title: "Perambur Srinivasa Sweets | 100% Veg Sweets & Savouries",
+  description: "Experience purity with 100% Veg South Indian sweets and snacks. Enjoy 10% off online! Prepared with no artificial preservatives and no MSG. We specialize in customized gifting for corporate & bulk orders.",
 };
 
 export default function Home() {

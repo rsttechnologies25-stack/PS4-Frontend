@@ -15,11 +15,22 @@ import HealthCheckWrapper from "@/components/wrapper/HealthCheckWrapper";
 export const metadata: Metadata = {
   metadataBase: new URL("https://perambursrinivasa.com"),
   title: {
-    default: "Perambur Srinivasa Sweets | Authentic Southern Traditions since 1981",
+    default: "Perambur Srinivasa Sweets | 100% Veg Sweets & Snacks",
     template: "%s | Perambur Srinivasa Sweets",
   },
-  description: "Experience the authentic taste of South India with Perambur Sri Srinivasa. Premium Ghee Sweets, Cashew Delights, and Traditional Savouries crafted with purity since 1981.",
-  keywords: ["South Indian Sweets", "Chennai Snacks", "Online Sweets Delivery", "Pure Ghee Sweets", "Gifting Boxes", "Perambur Srinivasa"],
+  description: "Order 100% Veg traditional South Indian sweets and snacks online with 10% off. Handcrafted with no artificial preservatives and no MSG. We offer customized gifting for corporate & bulk orders.",
+  keywords: [
+    "South Indian Sweets", 
+    "Chennai Snacks", 
+    "Online Sweets Delivery", 
+    "100% Veg Sweets", 
+    "No MSG Snacks", 
+    "No Artificial Preservatives Sweets", 
+    "Corporate Gifting Sweets", 
+    "Bulk Orders Sweets", 
+    "Customized Gift Boxes", 
+    "Perambur Srinivasa"
+  ],
   authors: [{ name: "Perambur Sri Srinivasa" }],
   creator: "Perambur Sri Srinivasa",
   publisher: "Perambur Sri Srinivasa",
@@ -36,8 +47,8 @@ export const metadata: Metadata = {
     locale: "en_IN",
     url: "https://perambursrinivasa.com",
     siteName: "Perambur Srinivasa Sweets",
-    title: "Perambur Srinivasa Sweets | Authentic Southern Traditions",
-    description: "Authentic South Indian Sweets & Snacks crafted with purity since 1981. Order online for delivery across India.",
+    title: "Perambur Srinivasa Sweets | 100% Veg Sweets & Snacks",
+    description: "Order 100% Veg traditional South Indian sweets and snacks online with 10% off. Crafted with no artificial preservatives and no MSG. Ideal for corporate & bulk orders.",
     images: [
       {
         url: "/hero_motichoor_laddu.jpg",
@@ -49,8 +60,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Perambur Srinivasa Sweets | Authentic Southern Traditions",
-    description: "Premium South Indian Sweets & Snacks since 1981.",
+    title: "Perambur Srinivasa Sweets | 100% Veg Sweets & Snacks",
+    description: "100% Veg South Indian sweets and snacks online with 10% off. No artificial preservatives and no MSG.",
     images: ["/hero_motichoor_laddu.jpg"],
   },
 };
