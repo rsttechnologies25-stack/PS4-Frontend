@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";import { API_URL } from "@/lib/api";
 
 import { useAuth } from "./AuthContext";
+import Toast from "@/components/Toast";
 
 export interface CartItem {
     id: string;
@@ -60,9 +61,11 @@ interface CartContextType {
     setDeliveryState: (state: string) => void;
     applyCoupon: (code: string) => Promise<{ success: boolean; message: string }>;
     removeCoupon: () => void;
+    // Notification State
+    showToast: boolean;
+    toastMessage: string;
+    setShowToast: (show: boolean) => void;
 }
-
-
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
@@ -76,10 +79,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const { user, token, isLoading: authLoading } = useAuth();
     const [isInitialLoad, setIsInitialLoad] = useState(true);
 
+    // Toast Notification State
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState("");
+
     // 1. Initial Load: Rules and Initial Cart (Guest vs DB)
     useEffect(() => {
         const loadInitialData = async () => {
-            await fetchRules();
+            // Fetch rules in parallel with cart initialization
+            fetchRules();
 
             if (!authLoading) {
                 if (token) {
@@ -141,13 +149,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         if (user && token) {
             syncCartOnLogin();
-        } else if (!user && !token && !authLoading) {
-            // Logout cleanup: Clear in-memory cart
-            setCartItems([]);
-            setAppliedCoupon(null);
-            // After clearing memory, the next cycle will load ps4_cart if it exists
         }
-    }, [user, token, authLoading]);
+    }, [user, token]);
 
     const syncCartOnLogin = async () => {
         const localCart = localStorage.getItem("ps4_cart");
@@ -187,6 +190,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
             : [...cartItems, { ...item, variantId, quantity: quantityToAdd }];
 
         setCartItems(newItems);
+
+        // Trigger Toast Notification
+        setToastMessage(`${item.name} added to cart!`);
+        setShowToast(true);
 
         if (user && token) {
             await updateBackendCart(variantId, item.id, item.weight, (existingItem?.quantity || 0) + quantityToAdd);
@@ -241,13 +248,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
     const hasSoldOutItems = cartItems.some(item => item.isSoldOut);
 
-    // Helper to parse weight strings (e.g., "250g", "1kg", "1.5kg") to kg numeric
     const parseWeightToKg = (weightStr: string): number => {
         const numeric = parseFloat(weightStr);
         if (isNaN(numeric)) return 0;
         if (weightStr.toLowerCase().includes('kg')) return numeric;
         if (weightStr.toLowerCase().includes('g')) return numeric / 1000;
-        return numeric; // Default to kg if no unit found
+        return numeric;
     };
 
     const totalWeight = cartItems.reduce((sum, item) => {
@@ -255,14 +261,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
         return sum + (itemWeightKg * item.quantity);
     }, 0);
 
-    // Helper to match pincode against rule patterns (e.g., "600012" or "600*")
     const isPincodeInArea = (pincode: string, pincodeList: string | null) => {
         if (!pincode || !pincodeList) return false;
         if (pincodeList === "*") return true;
-        
         const targets = pincodeList.split(",").map(p => p.trim().toLowerCase());
         const search = pincode.trim().toLowerCase();
-        
         return targets.some(target => {
             if (target.endsWith("*")) {
                 return search.startsWith(target.slice(0, -1));
@@ -271,43 +274,31 @@ export function CartProvider({ children }: { children: ReactNode }) {
         });
     };
 
-    // TIERED SHIPPING CATEGORIZATION (Priority Based)
     const getActiveRule = () => {
         if (shippingRules.length === 0) return null;
-
-        // Tier 1: Exact Pincode Match (Rule 1: Specific Areas like 600012)
         const exactMatch = shippingRules.find(r => 
             r.pincodes !== "*" && !r.pincodes.includes("*") && isPincodeInArea(deliveryArea, r.pincodes) && r.isActive
         );
         if (exactMatch) return exactMatch;
-
-        // Tier 2: Wildcard Pincode Match (Rule 2: 600* etc)
         const wildcardMatch = shippingRules.find(r => 
             r.pincodes.includes("*") && r.pincodes !== "*" && isPincodeInArea(deliveryArea, r.pincodes) && r.isActive
         );
         if (wildcardMatch) return wildcardMatch;
-
-        // Tier 3: State-based Match (Rule 3: TAMIL NADU)
         if (deliveryState === "Tamil Nadu") {
             const stateMatch = shippingRules.find(r => 
                 r.areaName.toUpperCase() === "TAMIL NADU" && r.isActive
             );
             if (stateMatch) return stateMatch;
         }
-
-        // Tier 4: Global Fallback (Rule 4: OTHER STATES)
         return shippingRules.find(r => r.areaName.toUpperCase() === "OTHER STATES" && r.isActive) || null;
     };
 
     const activeRule = getActiveRule();
-
     const shippingFee = activeRule
         ? activeRule.baseCharge + Math.max(0, Math.ceil(totalWeight - activeRule.baseWeightLimit)) * activeRule.additionalChargePerKg
         : 0;
 
-    // Calculate Discount
     const isCouponValid = appliedCoupon && Number(totalAmount) >= Number(appliedCoupon.minCartAmount);
-
     const discountAmount = isCouponValid
         ? (appliedCoupon.type === 'FIXED' ? appliedCoupon.value : (totalAmount * appliedCoupon.value) / 100)
         : 0;
@@ -324,7 +315,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             const data = await res.json();
             if (data.valid) {
                 setAppliedCoupon({
-                    id: data.code, // Backend returns code as ID for simulation
+                    id: data.code,
                     code: data.code,
                     type: data.type,
                     value: data.value,
@@ -340,7 +331,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
     const removeCoupon = () => setAppliedCoupon(null);
 
-    // Auto-remove coupon if cart total drops below minCartAmount
     useEffect(() => {
         if (appliedCoupon) {
             const threshold = Number(appliedCoupon.minCartAmount);
@@ -372,10 +362,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
                 setDeliveryArea,
                 setDeliveryState,
                 applyCoupon,
-                removeCoupon
+                removeCoupon,
+                showToast,
+                toastMessage,
+                setShowToast
             }}
         >
             {children}
+            <Toast 
+                show={showToast} 
+                message={toastMessage} 
+                onClose={() => setShowToast(false)} 
+            />
         </CartContext.Provider>
     );
 }
