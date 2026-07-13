@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "About Us | Perambur Srinivasa Sweets",
-    description: "Our story began in 1981 with a small sweet shop in Perambur. Today, we are a household name across South India, known for our authentic taste and commitment to quality.",
+    title: "About Us",
+    description: "Perambur Sri Srinivasa Sweets and Snacks (PS4) roots can be traced back to 1981. Learn about our heritage, our commitment to quality, and our sweet traditional journey.",
 };
 
 export default function AboutLayout({

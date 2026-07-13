@@ -66,17 +66,31 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebSite",
-              "name": "Perambur Srinivasa Sweets",
-              "url": "https://perambursrinivasa.com",
-              "potentialAction": {
-                "@type": "SearchAction",
-                "target": "https://perambursrinivasa.com/shop?q={search_term_string}",
-                "query-input": "required name=search_term_string"
+            __html: JSON.stringify([
+              {
+                "@context": "https://schema.org",
+                "@type": "WebSite",
+                "name": "Perambur Srinivasa Sweets",
+                "url": "https://perambursrinivasa.com",
+                "potentialAction": {
+                  "@type": "SearchAction",
+                  "target": "https://perambursrinivasa.com/shop?q={search_term_string}",
+                  "query-input": "required name=search_term_string"
+                }
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "Organization",
+                "name": "Perambur Srinivasa Sweets",
+                "url": "https://perambursrinivasa.com",
+                "logo": "https://perambursrinivasa.com/app-icon.png",
+                "contactPoint": {
+                  "@type": "ContactPoint",
+                  "telephone": "+91-92824-45577",
+                  "contactType": "customer service"
+                }
               }
-            }),
+            ]),
           }}
         />
         <HealthCheckWrapper>

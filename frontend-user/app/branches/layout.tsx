@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Our Outlets | Perambur Srinivasa Sweets",
-    description: "Find a Perambur Srinivasa Sweets outlet near you. Visit our stores across Chennai and Tirupati for authentic South Indian sweets and savories.",
+    title: "Branches",
+    description: "Find our branches in Chennai and Tirupati. Visit our outlets for authentic South Indian sweets, snacks, and delicious savories.",
 };
 
 export default function BranchesLayout({

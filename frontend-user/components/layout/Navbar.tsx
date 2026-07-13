@@ -66,6 +66,7 @@ export default function Navbar() {
         },
         { name: "Best Sellers", href: "/shop?filter=best-seller" },
         { name: "Branches", href: "/branches" },
+        { name: "Restaurant", href: "/restaurant" },
         { name: "Contact", href: "/contact" },
         { name: "About Us", href: "/about" },
     ];

@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Shop Full Collection | Perambur Srinivasa Sweets",
-    description: "Explore our entire collection of authentic South Indian sweets, snacks, and savouries. Handcrafted with love and delivered fresh to your doorstep.",
+    title: "Products",
+    description: "Indulge in the richness of our sweets and snacks. Explore our entire collection of authentic South Indian sweets, snacks, and savouries delivered fresh to your doorstep.",
 };
 
 export default function ShopLayout({
