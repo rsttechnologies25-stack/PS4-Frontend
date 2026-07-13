@@ -75,7 +75,6 @@ export default function Footer() {
                                 </li>
                             ))}
                             <li><Link href="/branches" className="hover:text-primary transition-colors">Our Branches</Link></li>
-                            <li><Link href="/restaurant" className="hover:text-primary transition-colors">Restaurant</Link></li>
                         </ul>
                     </div>
 
