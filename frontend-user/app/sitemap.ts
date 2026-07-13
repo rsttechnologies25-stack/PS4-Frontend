@@ -35,7 +35,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
 
     const categoryRoutes = categories.map(cat => ({
-        url: `${baseUrl}/category/${cat.slug}`,
+        url: `${baseUrl}/category/${cat.slug.replaceAll('&', '%26')}`,
         lastModified: new Date(),
         changeFrequency: 'weekly' as const,
         priority: 0.7,
