@@ -286,7 +286,7 @@ export default function ProductClient({ slug }: { slug: string }) {
                         },
                         "offers": {
                             "@type": "Offer",
-                            "url": `https://perambursrinivasa.co.in/product/${product.slug}`,
+                            "url": `https://perambursrinivasa.com/product/${product.slug}`,
                             "priceCurrency": "INR",
                             "price": finalPrice,
                             "availability": definitivelySoldOut ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",

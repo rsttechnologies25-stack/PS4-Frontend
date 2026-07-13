@@ -13,7 +13,7 @@ import { NotificationProvider } from "@/context/NotificationContext";
 import HealthCheckWrapper from "@/components/wrapper/HealthCheckWrapper";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://perambursrinivasa.co.in"),
+  metadataBase: new URL("https://perambursrinivasa.com"),
   title: {
     default: "Perambur Srinivasa Sweets | Authentic Southern Traditions since 1981",
     template: "%s | Perambur Srinivasa Sweets",
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_IN",
-    url: "https://perambursrinivasa.co.in",
+    url: "https://perambursrinivasa.com",
     siteName: "Perambur Srinivasa Sweets",
     title: "Perambur Srinivasa Sweets | Authentic Southern Traditions",
     description: "Authentic South Indian Sweets & Snacks crafted with purity since 1981. Order online for delivery across India.",
@@ -70,10 +70,10 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "WebSite",
               "name": "Perambur Srinivasa Sweets",
-              "url": "https://perambursrinivasa.co.in",
+              "url": "https://perambursrinivasa.com",
               "potentialAction": {
                 "@type": "SearchAction",
-                "target": "https://perambursrinivasa.co.in/shop?q={search_term_string}",
+                "target": "https://perambursrinivasa.com/shop?q={search_term_string}",
                 "query-input": "required name=search_term_string"
               }
             }),
