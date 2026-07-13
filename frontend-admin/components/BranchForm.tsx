@@ -28,6 +28,7 @@ export default function BranchForm({ branchId, initialData }: BranchFormProps) {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(!!branchId && !initialData);
+    const [uploading, setUploading] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
         address: "",
@@ -73,6 +74,40 @@ export default function BranchForm({ branchId, initialData }: BranchFormProps) {
             latitude: data.latitude?.toString() || "",
             longitude: data.longitude?.toString() || "",
         });
+    };
+
+    const uploadFile = async (file: File) => {
+        setUploading(true);
+        try {
+            const formDataUpload = new FormData();
+            formDataUpload.append("image", file);
+
+            const res = await fetchWithAuth(`${API_URL}/upload`, {
+                method: "POST",
+                body: formDataUpload,
+                isFormData: true,
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                const fullUrl = data.url.startsWith("http") ? data.url : `${API_URL.replace('/api', '')}${data.url}`;
+                setFormData(prev => ({ ...prev, image: fullUrl }));
+            } else {
+                alert(`Failed to upload ${file.name}`);
+            }
+        } catch (error) {
+            console.error("Upload error:", error);
+            alert("Error uploading image");
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            uploadFile(e.target.files[0]);
+        }
+        e.target.value = "";
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -277,36 +312,64 @@ export default function BranchForm({ branchId, initialData }: BranchFormProps) {
                         <label className="text-sm font-black text-[#7C2D12]/50 uppercase tracking-widest ml-1">Store Asset</label>
 
                         <div className="relative aspect-[4/3] rounded-3xl overflow-hidden border-2 border-dashed border-orange-200 bg-orange-50/30 group hover:border-[#EA580C] transition-colors flex items-center justify-center">
-                            {formData.image ? (
+                            {uploading ? (
+                                <div className="flex flex-col items-center text-[#7C2D12]/60 gap-3">
+                                    <LoaderIcon className="animate-spin text-[#EA580C]" size={36} />
+                                    <span className="text-xs font-bold">Uploading image...</span>
+                                </div>
+                            ) : formData.image ? (
                                 <>
                                     <img src={formData.image} alt="Preview" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                                     <div className="absolute inset-0 bg-[#7C2D12]/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
                                         <button
                                             type="button"
                                             onClick={() => setFormData({ ...formData, image: "" })}
-                                            className="p-4 bg-red-600 text-white rounded-full shadow-lg"
+                                            className="p-4 bg-red-600 text-white rounded-full shadow-lg hover:scale-110 active:scale-95 transition-transform"
+                                            title="Remove Image"
                                         >
                                             <XIcon size={24} />
                                         </button>
                                     </div>
                                 </>
                             ) : (
-                                <div className="flex flex-col items-center text-[#7C2D12]/20 p-6 text-center">
-                                    <UploadIcon size={40} className="mb-2" />
-                                    <span className="text-xs font-bold">Image URL Required</span>
-                                </div>
+                                <label className="flex flex-col items-center text-[#7C2D12]/40 p-6 text-center cursor-pointer w-full h-full justify-center">
+                                    <input 
+                                        type="file" 
+                                        accept="image/*" 
+                                        onChange={handleFileSelect} 
+                                        className="hidden" 
+                                    />
+                                    <UploadIcon size={40} className="mb-2 text-orange-400 group-hover:scale-110 transition-transform" />
+                                    <span className="text-xs font-bold">Upload Image</span>
+                                    <span className="text-[10px] text-[#7C2D12]/30 mt-1">Browse your files</span>
+                                </label>
                             )}
                         </div>
 
-                        <div className="relative group">
-                            <MediaIcon className="absolute left-5 top-1/2 -translate-y-1/2 text-[#7C2D12]/30 group-focus-within:text-[#EA580C] transition-colors" size={18} />
-                            <input
-                                type="text"
-                                value={formData.image}
-                                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                                className="w-full pl-12 pr-6 py-4 bg-orange-50/20 border border-orange-100 rounded-2xl focus:ring-4 focus:ring-[#EA580C]/10 focus:border-[#EA580C] outline-none transition-all text-xs font-bold"
-                                placeholder="https://image-url.com/store.jpg"
-                            />
+                        <div className="flex flex-col gap-4">
+                            <div className="relative group">
+                                <MediaIcon className="absolute left-5 top-1/2 -translate-y-1/2 text-[#7C2D12]/30 group-focus-within:text-[#EA580C] transition-colors" size={18} />
+                                <input
+                                    type="text"
+                                    value={formData.image}
+                                    onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                                    className="w-full pl-12 pr-6 py-4 bg-orange-50/20 border border-orange-100 rounded-2xl focus:ring-4 focus:ring-[#EA580C]/10 focus:border-[#EA580C] outline-none transition-all text-xs font-bold"
+                                    placeholder="Or paste image URL here..."
+                                />
+                            </div>
+                            
+                            {formData.image && (
+                                <label className="flex items-center justify-center gap-2 px-6 py-3 bg-orange-50 border border-orange-200 text-[#7C2D12] text-xs font-bold rounded-2xl cursor-pointer hover:bg-orange-100 transition-colors">
+                                    <input 
+                                        type="file" 
+                                        accept="image/*" 
+                                        onChange={handleFileSelect} 
+                                        className="hidden" 
+                                    />
+                                    <UploadIcon size={14} className="text-[#EA580C]" />
+                                    Replace Image
+                                </label>
+                            )}
                         </div>
                     </div>
                 </div>
