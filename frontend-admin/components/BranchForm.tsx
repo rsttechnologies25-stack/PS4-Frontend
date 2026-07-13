@@ -38,6 +38,7 @@ export default function BranchForm({ branchId, initialData }: BranchFormProps) {
         isHeadOffice: false,
         latitude: "",
         longitude: "",
+        mapLink: "",
     });
 
     useEffect(() => {
@@ -73,6 +74,7 @@ export default function BranchForm({ branchId, initialData }: BranchFormProps) {
             isHeadOffice: data.isHeadOffice || false,
             latitude: data.latitude?.toString() || "",
             longitude: data.longitude?.toString() || "",
+            mapLink: data.mapLink || "",
         });
     };
 
@@ -245,6 +247,20 @@ export default function BranchForm({ branchId, initialData }: BranchFormProps) {
                                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                                     className="w-full pl-14 pr-6 py-4 bg-orange-50/20 border border-orange-100 rounded-2xl focus:ring-4 focus:ring-[#EA580C]/10 focus:border-[#EA580C] outline-none transition-all font-bold placeholder:text-[#7C2D12]/20"
                                     placeholder="+91 98765 43210"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="text-sm font-black text-[#7C2D12]/50 uppercase tracking-widest ml-1">Google Map Link (Directions)</label>
+                            <div className="relative group">
+                                <GlobeIcon className="absolute left-6 top-1/2 -translate-y-1/2 text-[#7C2D12]/30 group-focus-within:text-[#EA580C] transition-colors" size={20} />
+                                <input
+                                    type="text"
+                                    value={formData.mapLink}
+                                    onChange={(e) => setFormData({ ...formData, mapLink: e.target.value })}
+                                    className="w-full pl-14 pr-6 py-4 bg-orange-50/20 border border-orange-100 rounded-2xl focus:ring-4 focus:ring-[#EA580C]/10 focus:border-[#EA580C] outline-none transition-all font-bold placeholder:text-[#7C2D12]/20"
+                                    placeholder="https://maps.app.goo.gl/..."
                                 />
                             </div>
                         </div>

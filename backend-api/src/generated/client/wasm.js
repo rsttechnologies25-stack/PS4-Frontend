@@ -182,7 +182,8 @@ exports.Prisma.BranchScalarFieldEnum = {
   image: 'image',
   isHeadOffice: 'isHeadOffice',
   latitude: 'latitude',
-  longitude: 'longitude'
+  longitude: 'longitude',
+  mapLink: 'mapLink'
 };
 
 exports.Prisma.AnnouncementScalarFieldEnum = {

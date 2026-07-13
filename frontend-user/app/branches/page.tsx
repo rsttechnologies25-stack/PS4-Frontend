@@ -15,6 +15,7 @@ interface Branch {
     phone: string;
     image?: string;
     isHeadOffice?: boolean;
+    mapLink?: string;
 }
 
 export default function BranchesPage() {
@@ -232,7 +233,7 @@ export default function BranchesPage() {
                                                 </div>
 
                                                 <a
-                                                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(branch.name + ' ' + branch.address)}`}
+                                                    href={branch.mapLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(branch.name + ' ' + branch.address)}`}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     className="mt-auto w-full py-4 rounded-xl border-2 border-primary/10 text-primary text-xs font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3 hover:bg-primary hover:border-primary hover:text-white transition-all active:scale-[0.98]"

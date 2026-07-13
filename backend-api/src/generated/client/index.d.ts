@@ -8597,6 +8597,7 @@ export namespace Prisma {
     isHeadOffice: boolean | null
     latitude: number | null
     longitude: number | null
+    mapLink: string | null
   }
 
   export type BranchMaxAggregateOutputType = {
@@ -8609,6 +8610,7 @@ export namespace Prisma {
     isHeadOffice: boolean | null
     latitude: number | null
     longitude: number | null
+    mapLink: string | null
   }
 
   export type BranchCountAggregateOutputType = {
@@ -8621,6 +8623,7 @@ export namespace Prisma {
     isHeadOffice: number
     latitude: number
     longitude: number
+    mapLink: number
     _all: number
   }
 
@@ -8645,6 +8648,7 @@ export namespace Prisma {
     isHeadOffice?: true
     latitude?: true
     longitude?: true
+    mapLink?: true
   }
 
   export type BranchMaxAggregateInputType = {
@@ -8657,6 +8661,7 @@ export namespace Prisma {
     isHeadOffice?: true
     latitude?: true
     longitude?: true
+    mapLink?: true
   }
 
   export type BranchCountAggregateInputType = {
@@ -8669,6 +8674,7 @@ export namespace Prisma {
     isHeadOffice?: true
     latitude?: true
     longitude?: true
+    mapLink?: true
     _all?: true
   }
 
@@ -8768,6 +8774,7 @@ export namespace Prisma {
     isHeadOffice: boolean
     latitude: number | null
     longitude: number | null
+    mapLink: string | null
     _count: BranchCountAggregateOutputType | null
     _avg: BranchAvgAggregateOutputType | null
     _sum: BranchSumAggregateOutputType | null
@@ -8799,6 +8806,7 @@ export namespace Prisma {
     isHeadOffice?: boolean
     latitude?: boolean
     longitude?: boolean
+    mapLink?: boolean
   }, ExtArgs["result"]["branch"]>
 
   export type BranchSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -8811,6 +8819,7 @@ export namespace Prisma {
     isHeadOffice?: boolean
     latitude?: boolean
     longitude?: boolean
+    mapLink?: boolean
   }, ExtArgs["result"]["branch"]>
 
   export type BranchSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -8823,6 +8832,7 @@ export namespace Prisma {
     isHeadOffice?: boolean
     latitude?: boolean
     longitude?: boolean
+    mapLink?: boolean
   }, ExtArgs["result"]["branch"]>
 
   export type BranchSelectScalar = {
@@ -8835,9 +8845,10 @@ export namespace Prisma {
     isHeadOffice?: boolean
     latitude?: boolean
     longitude?: boolean
+    mapLink?: boolean
   }
 
-  export type BranchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "address" | "city" | "phone" | "image" | "isHeadOffice" | "latitude" | "longitude", ExtArgs["result"]["branch"]>
+  export type BranchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "address" | "city" | "phone" | "image" | "isHeadOffice" | "latitude" | "longitude" | "mapLink", ExtArgs["result"]["branch"]>
 
   export type $BranchPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Branch"
@@ -8852,6 +8863,7 @@ export namespace Prisma {
       isHeadOffice: boolean
       latitude: number | null
       longitude: number | null
+      mapLink: string | null
     }, ExtArgs["result"]["branch"]>
     composites: {}
   }
@@ -9284,6 +9296,7 @@ export namespace Prisma {
     readonly isHeadOffice: FieldRef<"Branch", 'Boolean'>
     readonly latitude: FieldRef<"Branch", 'Float'>
     readonly longitude: FieldRef<"Branch", 'Float'>
+    readonly mapLink: FieldRef<"Branch", 'String'>
   }
     
 
@@ -25708,7 +25721,8 @@ export namespace Prisma {
     image: 'image',
     isHeadOffice: 'isHeadOffice',
     latitude: 'latitude',
-    longitude: 'longitude'
+    longitude: 'longitude',
+    mapLink: 'mapLink'
   };
 
   export type BranchScalarFieldEnum = (typeof BranchScalarFieldEnum)[keyof typeof BranchScalarFieldEnum]
@@ -26475,6 +26489,7 @@ export namespace Prisma {
     isHeadOffice?: BoolFilter<"Branch"> | boolean
     latitude?: FloatNullableFilter<"Branch"> | number | null
     longitude?: FloatNullableFilter<"Branch"> | number | null
+    mapLink?: StringNullableFilter<"Branch"> | string | null
   }
 
   export type BranchOrderByWithRelationInput = {
@@ -26487,6 +26502,7 @@ export namespace Prisma {
     isHeadOffice?: SortOrder
     latitude?: SortOrderInput | SortOrder
     longitude?: SortOrderInput | SortOrder
+    mapLink?: SortOrderInput | SortOrder
   }
 
   export type BranchWhereUniqueInput = Prisma.AtLeast<{
@@ -26502,6 +26518,7 @@ export namespace Prisma {
     isHeadOffice?: BoolFilter<"Branch"> | boolean
     latitude?: FloatNullableFilter<"Branch"> | number | null
     longitude?: FloatNullableFilter<"Branch"> | number | null
+    mapLink?: StringNullableFilter<"Branch"> | string | null
   }, "id">
 
   export type BranchOrderByWithAggregationInput = {
@@ -26514,6 +26531,7 @@ export namespace Prisma {
     isHeadOffice?: SortOrder
     latitude?: SortOrderInput | SortOrder
     longitude?: SortOrderInput | SortOrder
+    mapLink?: SortOrderInput | SortOrder
     _count?: BranchCountOrderByAggregateInput
     _avg?: BranchAvgOrderByAggregateInput
     _max?: BranchMaxOrderByAggregateInput
@@ -26534,6 +26552,7 @@ export namespace Prisma {
     isHeadOffice?: BoolWithAggregatesFilter<"Branch"> | boolean
     latitude?: FloatNullableWithAggregatesFilter<"Branch"> | number | null
     longitude?: FloatNullableWithAggregatesFilter<"Branch"> | number | null
+    mapLink?: StringNullableWithAggregatesFilter<"Branch"> | string | null
   }
 
   export type AnnouncementWhereInput = {
@@ -28214,6 +28233,7 @@ export namespace Prisma {
     isHeadOffice?: boolean
     latitude?: number | null
     longitude?: number | null
+    mapLink?: string | null
   }
 
   export type BranchUncheckedCreateInput = {
@@ -28226,6 +28246,7 @@ export namespace Prisma {
     isHeadOffice?: boolean
     latitude?: number | null
     longitude?: number | null
+    mapLink?: string | null
   }
 
   export type BranchUpdateInput = {
@@ -28238,6 +28259,7 @@ export namespace Prisma {
     isHeadOffice?: BoolFieldUpdateOperationsInput | boolean
     latitude?: NullableFloatFieldUpdateOperationsInput | number | null
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type BranchUncheckedUpdateInput = {
@@ -28250,6 +28272,7 @@ export namespace Prisma {
     isHeadOffice?: BoolFieldUpdateOperationsInput | boolean
     latitude?: NullableFloatFieldUpdateOperationsInput | number | null
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type BranchCreateManyInput = {
@@ -28262,6 +28285,7 @@ export namespace Prisma {
     isHeadOffice?: boolean
     latitude?: number | null
     longitude?: number | null
+    mapLink?: string | null
   }
 
   export type BranchUpdateManyMutationInput = {
@@ -28274,6 +28298,7 @@ export namespace Prisma {
     isHeadOffice?: BoolFieldUpdateOperationsInput | boolean
     latitude?: NullableFloatFieldUpdateOperationsInput | number | null
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type BranchUncheckedUpdateManyInput = {
@@ -28286,6 +28311,7 @@ export namespace Prisma {
     isHeadOffice?: BoolFieldUpdateOperationsInput | boolean
     latitude?: NullableFloatFieldUpdateOperationsInput | number | null
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AnnouncementCreateInput = {
@@ -30244,6 +30270,7 @@ export namespace Prisma {
     isHeadOffice?: SortOrder
     latitude?: SortOrder
     longitude?: SortOrder
+    mapLink?: SortOrder
   }
 
   export type BranchAvgOrderByAggregateInput = {
@@ -30261,6 +30288,7 @@ export namespace Prisma {
     isHeadOffice?: SortOrder
     latitude?: SortOrder
     longitude?: SortOrder
+    mapLink?: SortOrder
   }
 
   export type BranchMinOrderByAggregateInput = {
@@ -30273,6 +30301,7 @@ export namespace Prisma {
     isHeadOffice?: SortOrder
     latitude?: SortOrder
     longitude?: SortOrder
+    mapLink?: SortOrder
   }
 
   export type BranchSumOrderByAggregateInput = {
