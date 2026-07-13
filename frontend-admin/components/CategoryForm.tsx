@@ -24,6 +24,7 @@ export default function CategoryForm({ categoryId, initialData }: CategoryFormPr
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(!!categoryId && !initialData);
+    const [uploading, setUploading] = useState(false);
     const [categories, setCategories] = useState<any[]>([]);
     const [formData, setFormData] = useState({
         name: "",
@@ -74,6 +75,40 @@ export default function CategoryForm({ categoryId, initialData }: CategoryFormPr
             parentId: data.parentId || "",
             sortOrder: data.sortOrder || 0,
         });
+    };
+
+    const uploadFile = async (file: File) => {
+        setUploading(true);
+        try {
+            const formDataUpload = new FormData();
+            formDataUpload.append("image", file);
+
+            const res = await fetchWithAuth(`${API_URL}/upload`, {
+                method: "POST",
+                body: formDataUpload,
+                isFormData: true,
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                const fullUrl = data.url.startsWith("http") ? data.url : `${API_URL.replace('/api', '')}${data.url}`;
+                setFormData(prev => ({ ...prev, image: fullUrl }));
+            } else {
+                alert(`Failed to upload ${file.name}`);
+            }
+        } catch (error) {
+            console.error("Upload error:", error);
+            alert("Error uploading image");
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            uploadFile(e.target.files[0]);
+        }
+        e.target.value = "";
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -233,34 +268,62 @@ export default function CategoryForm({ categoryId, initialData }: CategoryFormPr
                         <label className="text-sm font-black text-[#7C2D12]/50 uppercase tracking-widest ml-1">Cover Art</label>
 
                         <div className="relative aspect-square rounded-3xl border-2 border-dashed border-orange-200 bg-orange-50/30 flex items-center justify-center overflow-hidden group">
-                            {formData.image ? (
+                            {uploading ? (
+                                <div className="flex flex-col items-center text-[#7C2D12]/60 gap-3">
+                                    <Loader2 className="animate-spin text-[#EA580C]" size={36} />
+                                    <span className="text-xs font-bold">Uploading...</span>
+                                </div>
+                            ) : formData.image ? (
                                 <>
                                     <img src={formData.image} alt="Preview" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                                     <button
                                         type="button"
                                         onClick={() => setFormData({ ...formData, image: "" })}
-                                        className="absolute top-4 right-4 p-2 bg-red-600 text-white rounded-xl shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                                        className="absolute top-4 right-4 p-3 bg-red-600 text-white rounded-xl shadow-lg opacity-0 group-hover:opacity-100 transition-opacity hover:scale-110 active:scale-95 transition-transform"
+                                        title="Remove Image"
                                     >
                                         <X size={16} />
                                     </button>
                                 </>
                             ) : (
-                                <div className="flex flex-col items-center text-[#7C2D12]/20">
-                                    <Upload size={40} className="mb-2" />
-                                    <span className="text-xs font-bold">Square Image URL</span>
-                                </div>
+                                <label className="flex flex-col items-center text-[#7C2D12]/40 p-6 text-center cursor-pointer w-full h-full justify-center">
+                                    <input 
+                                        type="file" 
+                                        accept="image/*" 
+                                        onChange={handleFileSelect} 
+                                        className="hidden" 
+                                    />
+                                    <Upload size={40} className="mb-2 text-orange-400 group-hover:scale-110 transition-transform" />
+                                    <span className="text-xs font-bold">Upload Image</span>
+                                    <span className="text-[10px] text-[#7C2D12]/30 mt-1">Browse your files</span>
+                                </label>
                             )}
                         </div>
 
-                        <div className="relative group">
-                            <LinkIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-[#7C2D12]/30 group-focus-within:text-[#EA580C] transition-colors" size={18} />
-                            <input
-                                type="text"
-                                value={formData.image}
-                                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                                className="w-full pl-11 pr-4 py-3 bg-orange-50/20 border border-orange-100 rounded-xl focus:ring-4 focus:ring-[#EA580C]/10 focus:border-[#EA580C] outline-none transition-all text-xs font-bold"
-                                placeholder="https://image-url.com/category-hero.jpg"
-                            />
+                        <div className="flex flex-col gap-4">
+                            <div className="relative group">
+                                <LinkIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-[#7C2D12]/30 group-focus-within:text-[#EA580C] transition-colors" size={18} />
+                                <input
+                                    type="text"
+                                    value={formData.image}
+                                    onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                                    className="w-full pl-11 pr-4 py-3 bg-orange-50/20 border border-orange-100 rounded-xl focus:ring-4 focus:ring-[#EA580C]/10 focus:border-[#EA580C] outline-none transition-all text-xs font-bold"
+                                    placeholder="Or paste image URL here..."
+                                />
+                            </div>
+                            
+                            {formData.image && (
+                                <label className="flex items-center justify-center gap-2 px-6 py-3 bg-orange-50 border border-orange-200 text-[#7C2D12] text-xs font-bold rounded-2xl cursor-pointer hover:bg-orange-100 transition-colors">
+                                    <input 
+                                        type="file" 
+                                        accept="image/*" 
+                                        onChange={handleFileSelect} 
+                                        className="hidden" 
+                                    />
+                                    <Upload size={14} className="text-[#EA580C]" />
+                                    Replace Image
+                                </label>
+                            )}
                         </div>
                     </div>
                 </div>
