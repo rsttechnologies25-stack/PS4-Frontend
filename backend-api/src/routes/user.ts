@@ -221,4 +221,38 @@ router.post('/reset-password', authLimiter, validate(resetPasswordSchema), async
     }
 });
 
+// Delete Account
+router.delete('/me', userAuthMiddleware, async (req, res) => {
+    try {
+        const userId = req.user?.id;
+        if (!userId) return res.status(401).json({ error: 'Unauthorized' });
+
+        // 1. Delete cart items
+        await prisma.cartItem.deleteMany({ where: { userId } });
+
+        // 2. Dissociate/Anonymize reviews (set userId to null, customerName to Anonymous)
+        await prisma.review.updateMany({
+            where: { userId },
+            data: {
+                userId: null,
+                customerName: 'Anonymous'
+            }
+        });
+
+        // 3. Delete notifications
+        await prisma.notification.deleteMany({ where: { userId } });
+
+        // 4. Delete orders (order items are cascade deleted automatically by the database schema)
+        await prisma.order.deleteMany({ where: { userId } });
+
+        // 5. Delete the user
+        await prisma.user.delete({ where: { id: userId } });
+
+        res.json({ success: true, message: 'Your account and all associated data have been permanently deleted.' });
+    } catch (error) {
+        console.error('Delete account error:', error);
+        res.status(500).json({ error: 'Failed to delete account. Please try again later.' });
+    }
+});
+
 export default router;
