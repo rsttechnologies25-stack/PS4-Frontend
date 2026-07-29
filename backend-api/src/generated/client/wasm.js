@@ -257,6 +257,8 @@ exports.Prisma.UserScalarFieldEnum = {
   email: 'email',
   password: 'password',
   name: 'name',
+  otp: 'otp',
+  otpExpires: 'otpExpires',
   passwordResetToken: 'passwordResetToken',
   passwordResetExpires: 'passwordResetExpires',
   createdAt: 'createdAt',
