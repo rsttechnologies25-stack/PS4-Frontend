@@ -150,8 +150,9 @@ export default function CustomersPage() {
     };
 
     const filteredCustomers = customers.filter(c => 
-        c.email.toLowerCase().includes(searchQuery.toLowerCase()) || 
-        (c.name && c.name.toLowerCase().includes(searchQuery.toLowerCase()))
+        (c.email && c.email.toLowerCase().includes(searchQuery.toLowerCase())) || 
+        (c.name && c.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (c.phoneNumber && c.phoneNumber.includes(searchQuery))
     );
 
     return (
@@ -260,9 +261,14 @@ export default function CustomersPage() {
                                                     </div>
                                                     <div>
                                                         <p className={`font-black tracking-tight outfit ${user.isBanned ? 'text-red-900/40 line-through' : 'text-brand-maroon'}`}>
-                                                            {user.name || "Anonymous User"}
+                                                            {user.name || user.customerName || "Customer"}
                                                         </p>
-                                                        <p className="text-xs font-bold text-orange-900/40">{user.email}</p>
+                                                        <div className="flex items-center gap-2 text-xs font-bold text-orange-900/50">
+                                                            {user.email && <span>{user.email}</span>}
+                                                            {user.email && user.phoneNumber && <span>•</span>}
+                                                            {user.phoneNumber && <span>📱 {user.phoneNumber}</span>}
+                                                            {!user.email && !user.phoneNumber && <span>No Contact Info</span>}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </td>
@@ -311,13 +317,18 @@ export default function CustomersPage() {
                                                     </button>
 
                                                     <button 
-                                                        onClick={() => handleBlacklistToggle(user.email)}
-                                                        className="p-3 bg-red-600 text-white rounded-xl transition-all hover:bg-red-700 relative group/blacklist"
-                                                        title="Blacklist Email"
+                                                        onClick={() => user.email && handleBlacklistToggle(user.email)}
+                                                        disabled={!user.email}
+                                                        className={`p-3 rounded-xl transition-all relative group/blacklist ${
+                                                            user.email 
+                                                                ? 'bg-red-600 text-white hover:bg-red-700' 
+                                                                : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                                        }`}
+                                                        title={user.email ? "Blacklist Email" : "No Email Associated"}
                                                     >
                                                         <ShieldX size={18} />
                                                         <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-brand-maroon text-white text-[10px] font-black py-1 px-3 rounded-lg opacity-0 group-hover/blacklist:opacity-100 pointer-events-none transition-opacity whitespace-nowrap">
-                                                            Email Blacklist
+                                                            {user.email ? "Email Blacklist" : "No Email to Blacklist"}
                                                         </span>
                                                     </button>
                                                 </div>
@@ -431,7 +442,9 @@ export default function CustomersPage() {
                                 </div>
                                 <div>
                                     <h3 className="text-2xl font-black text-brand-maroon outfit tracking-tight leading-none">Internal Notes</h3>
-                                    <p className="text-xs font-bold text-orange-900/40 mt-1">{noteModal.user?.email}</p>
+                                    <p className="text-xs font-bold text-orange-900/40 mt-1">
+                                        {noteModal.user?.email || noteModal.user?.phoneNumber || noteModal.user?.name || "Customer Notes"}
+                                    </p>
                                 </div>
                             </div>
                             <button onClick={() => setNoteModal({ isOpen: false, user: null })} className="p-2 hover:bg-orange-50 rounded-full transition-colors text-orange-900/40">
