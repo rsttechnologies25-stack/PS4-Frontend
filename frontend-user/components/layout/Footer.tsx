@@ -44,10 +44,10 @@ export default function Footer() {
                             &quot;Handcrafting traditions since 1981. Dedicated to bringing the authentic taste of South India to your doorstep.&quot;
                         </p>
                         <div className="flex gap-4">
-                            <Link href="https://www.instagram.com/perambur_sri_srinivasa?igsh=dXVjNHd5ZnZqbXMy" target="_blank" className="w-10 h-10 rounded-full bg-[#E4405F] text-white flex items-center justify-center hover:scale-110 transition-transform shadow-lg shadow-[#E4405F]/20">
+                            <Link href="https://www.instagram.com/perambursrisrinivasa.sweets?igsi=cGR6NGpmNjl4c20y" target="_blank" className="w-10 h-10 rounded-full bg-[#E4405F] text-white flex items-center justify-center hover:scale-110 transition-transform shadow-lg shadow-[#E4405F]/20">
                                 <Instagram size={18} />
                             </Link>
-                            <Link href="https://www.facebook.com/profile.php?id=100088165535870&mibextid=rS40aB7S9Ucbxw6v" target="_blank" className="w-10 h-10 rounded-full bg-[#1877F2] text-white flex items-center justify-center hover:scale-110 transition-transform shadow-lg shadow-[#1877F2]/20">
+                            <Link href="https://www.facebook.com/share/1WEMsJ6YZw/" target="_blank" className="w-10 h-10 rounded-full bg-[#1877F2] text-white flex items-center justify-center hover:scale-110 transition-transform shadow-lg shadow-[#1877F2]/20">
                                 <Facebook size={18} />
                             </Link>
                             <Link href="https://x.com/peramburand" target="_blank" className="w-10 h-10 rounded-full bg-[#000000] text-white flex items-center justify-center hover:scale-110 transition-transform shadow-lg shadow-black/20">

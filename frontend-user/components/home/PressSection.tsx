@@ -44,16 +44,16 @@ export default function PressSection() {
                     <h2 className="accent-font text-primary uppercase tracking-[0.4em] text-sm mb-12">Stalk Us On</h2>
                     <div className="flex justify-center gap-12">
                         {/* Social Circle buttons scaled up */}
-                        <a href="#" className="w-16 h-16 rounded-full border border-primary/20 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all cursor-pointer hover:border-transparent">
+                        <a href="https://www.facebook.com/share/1WEMsJ6YZw/" target="_blank" rel="noopener noreferrer" className="w-16 h-16 rounded-full border border-primary/20 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all cursor-pointer hover:border-transparent">
                             <Facebook size={24} />
                         </a>
-                        <a href="#" className="w-16 h-16 rounded-full border border-primary/20 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all cursor-pointer hover:border-transparent">
+                        <a href="https://x.com/peramburand" target="_blank" rel="noopener noreferrer" className="w-16 h-16 rounded-full border border-primary/20 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all cursor-pointer hover:border-transparent">
                             {/* X Logo */}
                             <svg viewBox="0 0 24 24" aria-hidden="true" className="w-5 h-5 fill-current">
                                 <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817-6.49 6.817H1.158l7.73-8.835L.75 2.25h6.886l4.639 6.136 5.969-6.136Zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
                             </svg>
                         </a>
-                        <a href="#" className="w-16 h-16 rounded-full border border-primary/20 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all cursor-pointer hover:border-transparent">
+                        <a href="https://www.instagram.com/perambursrisrinivasa.sweets?igsi=cGR6NGpmNjl4c20y" target="_blank" rel="noopener noreferrer" className="w-16 h-16 rounded-full border border-primary/20 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all cursor-pointer hover:border-transparent">
                             <Instagram size={24} />
                         </a>
                         <a href="#" className="w-16 h-16 rounded-full border border-primary/20 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all cursor-pointer hover:border-transparent">
