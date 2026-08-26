@@ -73,7 +73,6 @@ export default function LoginPage() {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     className="block w-full pl-14 pr-6 py-5 bg-orange-50/30 border border-orange-100 rounded-2xl focus:ring-4 focus:ring-[#EA580C]/10 focus:border-[#EA580C] outline-none transition-all placeholder:text-[#7C2D12]/20 font-bold text-lg"
-                                    placeholder="admin@ps4sweets.com"
                                 />
                             </div>
                         </div>
