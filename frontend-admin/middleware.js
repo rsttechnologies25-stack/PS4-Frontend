@@ -23,8 +23,15 @@ export function middleware(request) {
             response.cookies.delete('admin_token');
             return response;
         }
-        // Check role is admin
-        if (payload.role !== 'ADMIN' && payload.role !== 'SUPERADMIN') {
+        // Validate admin token identity and expiration
+        if (!payload.id && !payload.email) {
+            const response = NextResponse.redirect(new URL('/login', request.url));
+            response.cookies.delete('admin_token');
+            return response;
+        }
+
+        // If role claim exists, ensure it is ADMIN or SUPERADMIN
+        if (payload.role && payload.role !== 'ADMIN' && payload.role !== 'SUPERADMIN') {
             const response = NextResponse.redirect(new URL('/login', request.url));
             response.cookies.delete('admin_token');
             return response;
