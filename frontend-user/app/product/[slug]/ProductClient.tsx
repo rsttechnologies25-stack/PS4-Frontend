@@ -299,7 +299,7 @@ export default function ProductClient({ slug }: { slug: string }) {
                                 "reviewCount": product.reviewCount || 1
                             }
                         } : {})
-                    }),
+                    }).replace(/</g, '\\u003c'),
                 }}
             />
             <main className="min-h-screen bg-[#FFFBF5] pt-28 pb-20">

@@ -201,7 +201,7 @@ export default function HeroBannersPage() {
                 : `${API_URL}/hero-banners`;
             const method = editingId ? "PUT" : "POST";
 
-            const res = await fetch(url, { method, [editingId ? 'headers' : '']: { 'Authorization': `Bearer ${localStorage.getItem('admin_token')}` }, body: formData });
+            const res = await fetch(url, { method, headers: { 'Authorization': `Bearer ${localStorage.getItem('admin_token')}` }, body: formData });
             if (res.ok) {
                 resetForm();
                 fetchBanners();
@@ -231,7 +231,11 @@ export default function HeroBannersPage() {
 
     const handleToggle = async (id: string) => {
         try {
-            await fetch(`${API_URL}/hero-banners/${id}/toggle`, { method: "PATCH" });
+            const token = localStorage.getItem("admin_token");
+            await fetch(`${API_URL}/hero-banners/${id}/toggle`, { 
+                method: "PATCH",
+                headers: { "Authorization": `Bearer ${token}` }
+            });
             fetchBanners();
         } catch (err) {
             console.error("Failed to toggle:", err);

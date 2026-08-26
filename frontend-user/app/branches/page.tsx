@@ -95,7 +95,7 @@ export default function BranchesPage() {
                                     "priceRange": "₹₹"
                                 }
                             }))
-                        }),
+                        }).replace(/</g, '\\u003c'),
                     }}
                 />
             )}

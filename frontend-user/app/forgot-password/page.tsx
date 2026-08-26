@@ -23,8 +23,7 @@ export default function ForgotPasswordPage() {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
-                    email,
-                    frontendUrl: typeof window !== "undefined" ? window.location.origin : undefined
+                    email
                 })
             });
 
