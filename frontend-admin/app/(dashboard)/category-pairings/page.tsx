@@ -43,18 +43,27 @@ export default function CategoryPairingsPage() {
     const fetchData = async () => {
         try {
             const [pRes, cRes] = await Promise.all([
-                fetch(`${API_URL}/category-pairings`),
-                fetch(`${API_URL}/categories`)
+                fetchWithAuth(`${API_URL}/category-pairings`),
+                fetchWithAuth(`${API_URL}/categories`)
             ]);
-            const pData = await pRes.json();
-            const cData = await cRes.json();
+            let pData: any = [];
+            let cData: any = [];
 
-            setPairings(pData);
+            if (pRes.ok) {
+                pData = await pRes.json();
+            }
+            if (cRes.ok) {
+                cData = await cRes.json();
+            }
+
+            setPairings(Array.isArray(pData) ? pData : []);
             // Only use top-level categories for simplicity in pairing, or all? 
             // Let's use all to allow subcategory specific pairings.
             setCategories(Array.isArray(cData) ? cData : cData.categories || []);
         } catch (error) {
             console.error("Error fetching data:", error);
+            setPairings([]);
+            setCategories([]);
         } finally {
             setLoading(false);
         }

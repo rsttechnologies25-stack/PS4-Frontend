@@ -93,31 +93,46 @@ export default function HeroBannersPage() {
 
     const fetchBanners = useCallback(async () => {
         try {
-            const res = await fetch(`${API_URL}/hero-banners`);
-            const data = await res.json();
-            setBanners(data);
+            const res = await fetchWithAuth(`${API_URL}/hero-banners`);
+            if (res.ok) {
+                const data = await res.json();
+                setBanners(Array.isArray(data) ? data : []);
+            } else {
+                setBanners([]);
+            }
         } catch (err) {
             console.error("Failed to fetch banners:", err);
+            setBanners([]);
         }
     }, []);
 
     const fetchProducts = useCallback(async () => {
         try {
-            const res = await fetch(`${API_URL}/products`);
-            const data = await res.json();
-            setProducts(Array.isArray(data) ? data : data.products || []);
+            const res = await fetchWithAuth(`${API_URL}/products`);
+            if (res.ok) {
+                const data = await res.json();
+                setProducts(Array.isArray(data) ? data : data.products || []);
+            } else {
+                setProducts([]);
+            }
         } catch (err) {
             console.error("Failed to fetch products:", err);
+            setProducts([]);
         }
     }, []);
 
     const fetchCategories = useCallback(async () => {
         try {
-            const res = await fetch(`${API_URL}/categories`);
-            const data = await res.json();
-            setCategories(Array.isArray(data) ? data : []);
+            const res = await fetchWithAuth(`${API_URL}/categories`);
+            if (res.ok) {
+                const data = await res.json();
+                setCategories(Array.isArray(data) ? data : []);
+            } else {
+                setCategories([]);
+            }
         } catch (err) {
             console.error("Failed to fetch categories:", err);
+            setCategories([]);
         }
     }, []);
 
@@ -201,7 +216,7 @@ export default function HeroBannersPage() {
                 : `${API_URL}/hero-banners`;
             const method = editingId ? "PUT" : "POST";
 
-            const res = await fetch(url, { method, headers: { 'Authorization': `Bearer ${localStorage.getItem('admin_token')}` }, body: formData });
+            const res = await fetchWithAuth(url, { method, body: formData, isFormData: true });
             if (res.ok) {
                 resetForm();
                 fetchBanners();
@@ -218,10 +233,8 @@ export default function HeroBannersPage() {
     const handleDelete = async (id: string) => {
         if (!confirm("Are you sure you want to delete this banner?")) return;
         try {
-            const token = localStorage.getItem("admin_token");
-            await fetch(`${API_URL}/hero-banners/${id}`, { 
-                method: "DELETE",
-                headers: { "Authorization": `Bearer ${token}` }
+            await fetchWithAuth(`${API_URL}/hero-banners/${id}`, { 
+                method: "DELETE"
             });
             fetchBanners();
         } catch (err) {
@@ -231,10 +244,8 @@ export default function HeroBannersPage() {
 
     const handleToggle = async (id: string) => {
         try {
-            const token = localStorage.getItem("admin_token");
-            await fetch(`${API_URL}/hero-banners/${id}/toggle`, { 
-                method: "PATCH",
-                headers: { "Authorization": `Bearer ${token}` }
+            await fetchWithAuth(`${API_URL}/hero-banners/${id}/toggle`, { 
+                method: "PATCH"
             });
             fetchBanners();
         } catch (err) {
