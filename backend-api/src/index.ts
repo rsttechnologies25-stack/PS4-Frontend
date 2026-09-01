@@ -58,6 +58,8 @@ app.use(helmet({
 const defaultAllowedOrigins = [
     'https://perambursrinivasa.co.in',
     'https://www.perambursrinivasa.co.in',
+    'https://perambursrinivasa.com',
+    'https://www.perambursrinivasa.com',
     'https://ecommerceadmin.perambursrinivasa.co.in',
     'https://admin.perambursrinivasa.co.in',
     'https://ecommerce.perambursrinivasa.co.in',
@@ -82,9 +84,10 @@ const corsOptions: cors.CorsOptions = {
         // Allow requests with no origin (like mobile apps, curl, server-to-server)
         if (!origin) return callback(null, true);
 
-        // Check if origin matches allowed list or is a subdomain of perambursrinivasa.co.in or localhost
+        // Check if origin matches allowed list or is a subdomain of perambursrinivasa.co.in/.com or localhost
         const isAllowed = allAllowedOrigins.includes(origin) ||
                           /^https?:\/\/([a-z0-9-]+\.)*perambursrinivasa\.co\.in(:\d+)?$/i.test(origin) ||
+                          /^https?:\/\/([a-z0-9-]+\.)*perambursrinivasa\.com(:\d+)?$/i.test(origin) ||
                           /^http:\/\/localhost(:\d+)?$/i.test(origin) ||
                           /^http:\/\/127\.0\.0\.1(:\d+)?$/i.test(origin);
 
@@ -92,7 +95,7 @@ const corsOptions: cors.CorsOptions = {
             callback(null, true);
         } else {
             console.warn(`[CORS Blocked] Origin: ${origin}`);
-            callback(new Error(`Not allowed by CORS: ${origin}`));
+            callback(null, false);
         }
     },
     credentials: true,
@@ -103,13 +106,12 @@ const corsOptions: cors.CorsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
 app.use(express.json());
 
 // 2. Global Rate Limiter (Relaxed for development/testing)
 const globalLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 500, // Increased from 100 to 5000 for development, now 500
+    max: 2000, // 2000 requests per 15 minutes per IP
     standardHeaders: true,
     legacyHeaders: false,
     message: { error: 'Too many requests, please try again later' }
