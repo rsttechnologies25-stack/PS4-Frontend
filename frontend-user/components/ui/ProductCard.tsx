@@ -216,15 +216,15 @@ export default function ProductCard({ id, name, price, image, slug, description,
                                             const v = sortedVariants.find(v => v.id === e.target.value);
                                             if (v) setSelectedVariant(v);
                                         }}
-                                        className="appearance-none w-full bg-white border border-gray-200 text-text-main py-2 pl-3 pr-8 rounded-lg text-sm focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 cursor-pointer transition-all hover:border-gray-300 shadow-sm"
+                                        className="appearance-none w-full bg-white border border-gray-200 text-[#7C2D12] font-semibold py-2 pl-3 pr-8 rounded-lg text-sm focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 cursor-pointer transition-all hover:border-gray-300 shadow-sm"
                                     >
                                         {sortedVariants.map((v) => (
-                                            <option key={v.id} value={v.id}>
+                                            <option key={v.id} value={v.id} className="text-[#7C2D12] bg-white font-medium">
                                                 {v.weight} — ₹{v.price}{v.stock <= 0 ? ' (Out of Stock)' : ''}
                                             </option>
                                         ))}
                                     </select>
-                                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-text-muted">
+                                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-[#9A3412]">
                                         <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                             <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                                         </svg>
