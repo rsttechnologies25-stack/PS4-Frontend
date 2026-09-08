@@ -195,10 +195,14 @@ export default function OrderClient({ params }: { params: Promise<{ id: string }
             const tableRows: any[] = [];
 
             order.items.forEach((item) => {
+                const qtyDisplay = item.weight && item.weight.trim()
+                    ? (item.quantity > 1 ? `${item.quantity} x ${item.weight.trim()}` : item.weight.trim())
+                    : `${item.quantity}`;
+
                 const itemData = [
                     item.productName || item.product?.name || 'Removed Product',
                     `Rs. ${item.price.toFixed(2)}`,
-                    item.quantity,
+                    qtyDisplay,
                     `Rs. ${(item.price * item.quantity).toFixed(2)}`
                 ];
                 tableRows.push(itemData);
