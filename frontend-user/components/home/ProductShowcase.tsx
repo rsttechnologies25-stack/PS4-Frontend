@@ -15,6 +15,7 @@ interface Product {
     slug: string;
     description?: string;
     categoryId?: string;
+    isSoldOut?: boolean;
     variants?: { id: string; weight: string; price: number; stock: number; isDefault: boolean; sortOrder: number }[];
 }
 
@@ -52,7 +53,10 @@ export default function ProductShowcase({
 
                 const res = await fetch(`${API_URL}/products?${query}&limit=${limit}`);
                 const data = await res.json();
-                const productsArray = Array.isArray(data) ? data : (data?.data || []);
+                let productsArray = Array.isArray(data) ? data : (data?.data || []);
+                if (filter === "isNewLaunch") {
+                    productsArray = productsArray.filter((p: Product) => !p.isSoldOut);
+                }
                 setProducts(productsArray);
             } catch (error) {
                 console.error(`Failed to fetch products for ${title}:`, error);
@@ -99,6 +103,7 @@ export default function ProductShowcase({
                                 variants={product.variants}
                                 categoryId={product.categoryId}
                                 isVeg={true}
+                                isSoldOut={product.isSoldOut}
                             />
                         ))
                     )}

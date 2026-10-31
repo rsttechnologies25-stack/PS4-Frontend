@@ -184,6 +184,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
     };
 
     const addToCart = async (item: Omit<CartItem, "quantity" | "variantId">, quantityToAdd: number = 1) => {
+        if (item.isSoldOut) {
+            setToastMessage(`${item.name} is currently sold out.`);
+            setShowToast(true);
+            return;
+        }
+
         const variantId = `${item.id}-${item.weight}`;
         const existingItem = cartItems.find((i) => i.variantId === variantId);
         const newItems = existingItem

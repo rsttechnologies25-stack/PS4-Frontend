@@ -79,7 +79,7 @@ function ShopContent() {
     const filteredProducts = products.filter(p => {
         // 1. Global Filter (Best Seller / New Launch)
         if (globalFilter === "best-seller" && !p.isBestSeller) return false;
-        if (globalFilter === "new-launch" && !p.isNewLaunch) return false;
+        if (globalFilter === "new-launch" && (!p.isNewLaunch || p.isSoldOut)) return false;
 
         // 2. Category Filter
         if (selectedCategory === "all") return true;

@@ -579,6 +579,7 @@ export default function CartPage() {
                                                     <span className="text-[10px] text-gray-400 font-medium">{displayWeight}</span>
                                                 </div>
                                                 <button
+                                                    disabled={product.isSoldOut}
                                                     onClick={() => addToCart({
                                                         id: product.id,
                                                         name: product.name,
@@ -590,9 +591,14 @@ export default function CartPage() {
                                                         categoryId: product.categoryId,
                                                         isSoldOut: product.isSoldOut
                                                     })}
-                                                    className="w-full bg-[#A85D2A]/10 hover:bg-[#A85D2A] text-[#A85D2A] hover:text-white text-[10px] font-black uppercase tracking-wider py-2 rounded-lg transition-all active:scale-95"
+                                                    className={cn(
+                                                        "w-full text-[10px] font-black uppercase tracking-wider py-2 rounded-lg transition-all",
+                                                        product.isSoldOut
+                                                            ? "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
+                                                            : "bg-[#A85D2A]/10 hover:bg-[#A85D2A] text-[#A85D2A] hover:text-white active:scale-95"
+                                                    )}
                                                 >
-                                                    + Quick Add
+                                                    {product.isSoldOut ? "Sold Out" : "+ Quick Add"}
                                                 </button>
                                             </div>
                                         );

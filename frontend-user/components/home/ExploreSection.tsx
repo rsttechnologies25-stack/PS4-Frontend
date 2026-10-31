@@ -14,6 +14,7 @@ interface Product {
     slug: string;
     description?: string;
     categoryId?: string;
+    isSoldOut?: boolean;
     variants?: { id: string; weight: string; price: number; stock: number; isDefault: boolean; sortOrder: number }[];
 }
 
@@ -62,7 +63,11 @@ export default function ExploreSection() {
             try {
                 const res = await fetch(`${API_URL}/products?${activeTab.query}`);
                 const data = await res.json();
-                setProducts(Array.isArray(data) ? data : []);
+                let prods = Array.isArray(data) ? data : [];
+                if (activeTab.name === "NEW LAUNCHES" || activeTab.query.includes("isNewLaunch=true")) {
+                    prods = prods.filter((p: any) => !p.isSoldOut);
+                }
+                setProducts(prods);
             } catch (error) {
                 console.error("Failed to fetch products:", error);
                 setProducts([]);
@@ -146,6 +151,7 @@ export default function ExploreSection() {
                                         categoryName={(product as any).category?.name}
                                         categoryId={product.categoryId}
                                         isVeg={true}
+                                        isSoldOut={(product as any).isSoldOut}
                                     />
                                 ))}
                             </motion.div>
