@@ -5,6 +5,7 @@ import { useState } from "react";import { API_URL } from "@/lib/api";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { Mail, Lock, User, Loader2, AlertCircle, ArrowRight } from "lucide-react";
+import { trackCompleteRegistration } from "@/lib/fpixel";
 
 
 
@@ -30,6 +31,7 @@ export default function RegisterPage() {
 
             const data = await res.json();
             if (res.ok) {
+                trackCompleteRegistration("Email");
                 login(data.token, data.user);
                 window.location.href = "/";
             } else {

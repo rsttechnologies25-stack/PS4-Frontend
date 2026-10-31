@@ -7,6 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { API_URL } from "@/lib/api";
 import { formatImageUrl } from "@/lib/imageHelper";
+import { trackSearch } from "@/lib/fpixel";
 
 interface SearchResult {
     products: any[];
@@ -47,7 +48,9 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
             try {
                 const res = await fetch(`${API_URL}/search?q=${encodeURIComponent(query)}`);
                 if (res.ok) {
-                    setResults(await res.json());
+                    const data = await res.json();
+                    setResults(data);
+                    trackSearch(query);
                 }
             } catch (error) {
                 console.error("Search failed:", error);

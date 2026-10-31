@@ -9,6 +9,7 @@ import Image from "next/image";
 import { useState, useEffect, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { formatImageUrl } from "@/lib/imageHelper";
+import { trackInitiateCheckout, trackPurchase } from "@/lib/fpixel";
 
 function cn(...classes: any[]) {
     return classes.filter(Boolean).join(" ");
@@ -326,6 +327,12 @@ export default function CartPage() {
                 return;
             }
 
+            // Trigger Meta Pixel InitiateCheckout
+            trackInitiateCheckout({
+                items: cartItems.map(i => ({ id: i.id, name: i.name, price: i.price, quantity: i.quantity })),
+                totalAmount: orderData.totalAmount || finalTotal
+            });
+
             // 3. Initialize Razorpay Checkout
             const options = {
                 key: razorpayKey,
@@ -353,6 +360,12 @@ export default function CartPage() {
 
                         const verifyData = await verifyRes.json();
                         if (verifyRes.ok && verifyData.success) {
+                            // Trigger Meta Pixel Purchase event
+                            trackPurchase({
+                                orderId: orderData.readableId || orderData.id,
+                                items: cartItems.map(i => ({ id: i.id, name: i.name, price: i.price, quantity: i.quantity })),
+                                totalAmount: orderData.totalAmount || finalTotal
+                            });
                             setOrderSuccess(true);
                             clearCart();
                         } else {

@@ -4,6 +4,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from "react
 
 import { useAuth } from "./AuthContext";
 import Toast from "@/components/Toast";
+import { trackAddToCart } from "@/lib/fpixel";
 
 export interface CartItem {
     id: string;
@@ -190,6 +191,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
             : [...cartItems, { ...item, variantId, quantity: quantityToAdd }];
 
         setCartItems(newItems);
+
+        // Trigger Meta Pixel AddToCart
+        trackAddToCart({
+            id: item.id,
+            name: item.name,
+            category: item.categoryName,
+            price: item.price,
+            quantity: quantityToAdd
+        });
 
         // Trigger Toast Notification
         setToastMessage(`${item.name} added to cart!`);

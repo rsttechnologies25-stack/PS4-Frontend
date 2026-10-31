@@ -30,6 +30,7 @@ import ProductCard from "@/components/ui/ProductCard";
 import { API_URL } from "@/lib/api";
 import { getProductBySlug, getProductsByCategory } from "@/lib/staticData";
 import { formatImageUrl } from "@/lib/imageHelper";
+import { trackViewContent } from "@/lib/fpixel";
 
 function cn(...classes: any[]) {
     return classes.filter(Boolean).join(" ");
@@ -120,10 +121,18 @@ export default function ProductClient({ slug }: { slug: string }) {
                 setProduct(data);
 
                 // Pre-select default variant
+                let defaultVar: ProductVariant | null = null;
                 if (data.variants && data.variants.length > 0) {
-                    const defaultVar = data.variants.find((v: ProductVariant) => v.isDefault) || data.variants[0];
+                    defaultVar = data.variants.find((v: ProductVariant) => v.isDefault) || data.variants[0];
                     setSelectedVariant(defaultVar);
                 }
+
+                trackViewContent({
+                    id: data.id,
+                    name: data.name,
+                    category: data.category?.name,
+                    price: defaultVar?.price || data.price || 0,
+                });
 
                 const relRes = await fetch(`${API_URL}/products?category=${data.category.slug}&limit=20`);
                 const relDataRaw = await relRes.json();
