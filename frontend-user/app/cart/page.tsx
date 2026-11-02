@@ -10,6 +10,7 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { formatImageUrl } from "@/lib/imageHelper";
 import { trackInitiateCheckout, trackPurchase } from "@/lib/fpixel";
+import { trackBeginCheckout, trackPurchase as trackGaPurchase } from "@/lib/gtag";
 
 function cn(...classes: any[]) {
     return classes.filter(Boolean).join(" ");
@@ -333,6 +334,12 @@ export default function CartPage() {
                 totalAmount: orderData.totalAmount || finalTotal
             });
 
+            // Trigger Google Analytics BeginCheckout
+            trackBeginCheckout({
+                items: cartItems.map(i => ({ id: i.id, name: i.name, price: i.price, quantity: i.quantity })),
+                totalAmount: orderData.totalAmount || finalTotal
+            });
+
             // 3. Initialize Razorpay Checkout
             const options = {
                 key: razorpayKey,
@@ -362,6 +369,13 @@ export default function CartPage() {
                         if (verifyRes.ok && verifyData.success) {
                             // Trigger Meta Pixel Purchase event
                             trackPurchase({
+                                orderId: orderData.readableId || orderData.id,
+                                items: cartItems.map(i => ({ id: i.id, name: i.name, price: i.price, quantity: i.quantity })),
+                                totalAmount: orderData.totalAmount || finalTotal
+                            });
+
+                            // Trigger Google Analytics Purchase event
+                            trackGaPurchase({
                                 orderId: orderData.readableId || orderData.id,
                                 items: cartItems.map(i => ({ id: i.id, name: i.name, price: i.price, quantity: i.quantity })),
                                 totalAmount: orderData.totalAmount || finalTotal

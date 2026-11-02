@@ -12,6 +12,7 @@ import { LocationProvider } from "@/context/LocationContext";
 import { NotificationProvider } from "@/context/NotificationContext";
 import HealthCheckWrapper from "@/components/wrapper/HealthCheckWrapper";
 import MetaPixel from "@/components/analytics/MetaPixel";
+import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://perambursrinivasa.com"),
@@ -76,6 +77,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="antialiased" suppressHydrationWarning>
         <MetaPixel />
+        <GoogleAnalytics />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

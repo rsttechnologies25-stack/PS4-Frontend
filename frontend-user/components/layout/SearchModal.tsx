@@ -8,6 +8,7 @@ import Image from "next/image";
 import { API_URL } from "@/lib/api";
 import { formatImageUrl } from "@/lib/imageHelper";
 import { trackSearch } from "@/lib/fpixel";
+import { trackSearch as trackGaSearch } from "@/lib/gtag";
 
 interface SearchResult {
     products: any[];
@@ -51,6 +52,7 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
                     const data = await res.json();
                     setResults(data);
                     trackSearch(query);
+                    trackGaSearch(query);
                 }
             } catch (error) {
                 console.error("Search failed:", error);

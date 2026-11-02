@@ -31,6 +31,7 @@ import { API_URL } from "@/lib/api";
 import { getProductBySlug, getProductsByCategory } from "@/lib/staticData";
 import { formatImageUrl } from "@/lib/imageHelper";
 import { trackViewContent } from "@/lib/fpixel";
+import { trackViewItem } from "@/lib/gtag";
 
 function cn(...classes: any[]) {
     return classes.filter(Boolean).join(" ");
@@ -128,6 +129,12 @@ export default function ProductClient({ slug }: { slug: string }) {
                 }
 
                 trackViewContent({
+                    id: data.id,
+                    name: data.name,
+                    category: data.category?.name,
+                    price: defaultVar?.price || data.price || 0,
+                });
+                trackViewItem({
                     id: data.id,
                     name: data.name,
                     category: data.category?.name,

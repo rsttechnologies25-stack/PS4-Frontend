@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { Mail, Lock, User, Loader2, AlertCircle, ArrowRight } from "lucide-react";
 import { trackCompleteRegistration } from "@/lib/fpixel";
+import { trackSignUp } from "@/lib/gtag";
 
 
 
@@ -32,6 +33,7 @@ export default function RegisterPage() {
             const data = await res.json();
             if (res.ok) {
                 trackCompleteRegistration("Email");
+                trackSignUp("Email");
                 login(data.token, data.user);
                 window.location.href = "/";
             } else {
