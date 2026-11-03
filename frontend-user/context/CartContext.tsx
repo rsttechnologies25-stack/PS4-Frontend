@@ -21,6 +21,7 @@ export interface CartItem {
     categoryId?: string;
     isVeg?: boolean;
     isSoldOut?: boolean;
+    isDisabled?: boolean;
 }
 
 export interface Coupon {
@@ -185,6 +186,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
     };
 
     const addToCart = async (item: Omit<CartItem, "quantity" | "variantId">, quantityToAdd: number = 1) => {
+        if (item.isDisabled) {
+            setToastMessage(`${item.name} is currently unavailable.`);
+            setShowToast(true);
+            return;
+        }
+
         if (item.isSoldOut) {
             setToastMessage(`${item.name} is currently sold out.`);
             setShowToast(true);

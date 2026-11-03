@@ -20,7 +20,8 @@ import {
     Trash2,
     Image as ImageIcon,
     GripVertical,
-    Globe
+    Globe,
+    EyeOff
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatImageUrl } from "@/lib/imageHelper";
@@ -59,6 +60,7 @@ export default function ProductForm({ productId, initialData }: ProductFormProps
         isBestSeller: false,
         isNewLaunch: false,
         isSoldOut: false,
+        isDisabled: false,
     });
     const [variants, setVariants] = useState<Variant[]>([
         { weight: "", price: "", stock: "100", isDefault: true }
@@ -87,7 +89,7 @@ export default function ProductForm({ productId, initialData }: ProductFormProps
 
     const fetchProduct = async () => {
         try {
-            const res = await fetch(`${API_URL}/products/${productId}`);
+            const res = await fetchWithAuth(`${API_URL}/products/${productId}?includeDisabled=true`);
             if (res.ok) {
                 const data = await res.json();
                 populateForm(data);
@@ -110,6 +112,7 @@ export default function ProductForm({ productId, initialData }: ProductFormProps
             isBestSeller: data.isBestSeller || false,
             isNewLaunch: data.isNewLaunch || false,
             isSoldOut: data.isSoldOut || false,
+            isDisabled: data.isDisabled || false,
         });
 
         // Populate variants
@@ -289,6 +292,7 @@ export default function ProductForm({ productId, initialData }: ProductFormProps
             const payload = {
                 ...formData,
                 isSoldOut: formData.isSoldOut,
+                isDisabled: formData.isDisabled,
                 image: images.find(img => img.isPrimary)?.url || images[0]?.url || formData.image,
                 variants: validVariants.map(v => ({
                     weight: v.weight,
@@ -781,6 +785,32 @@ export default function ProductForm({ productId, initialData }: ProductFormProps
                                     </div>
                                     <span className="font-black">Mark Sold Out</span>
                                 </div>
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={() => setFormData({ ...formData, isDisabled: !formData.isDisabled })}
+                                className={cn(
+                                    "flex items-center justify-between p-6 rounded-2xl border-2 transition-all group",
+                                    formData.isDisabled
+                                        ? "bg-red-50 border-red-500 text-red-700 shadow-sm"
+                                        : "bg-white border-orange-100 text-[#7C2D12]/50 hover:bg-red-50/30"
+                                )}
+                            >
+                                <div className="flex items-center gap-4">
+                                    <div className={cn("p-2 rounded-xl transition-colors", formData.isDisabled ? "bg-red-600 text-white" : "bg-orange-100 text-orange-400")}>
+                                        <EyeOff size={20} />
+                                    </div>
+                                    <div className="text-left">
+                                        <span className="font-black block">Disable Product</span>
+                                        <span className="text-[10px] text-[#7C2D12]/40 font-bold block">Hide from customer website</span>
+                                    </div>
+                                </div>
+                                {formData.isDisabled && (
+                                    <span className="text-[9px] bg-red-600 text-white px-2 py-0.5 rounded-full font-black uppercase tracking-wider">
+                                        Hidden
+                                    </span>
+                                )}
                             </button>
                         </div>
                     </div>

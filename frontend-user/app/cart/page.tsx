@@ -367,18 +367,20 @@ export default function CartPage() {
 
                         const verifyData = await verifyRes.json();
                         if (verifyRes.ok && verifyData.success) {
+                            const confirmedOrder = verifyData.order;
+                            const confirmedId = confirmedOrder?.readableId || orderData.readableId || orderData.id;
                             // Trigger Meta Pixel Purchase event
                             trackPurchase({
-                                orderId: orderData.readableId || orderData.id,
+                                orderId: confirmedId,
                                 items: cartItems.map(i => ({ id: i.id, name: i.name, price: i.price, quantity: i.quantity })),
-                                totalAmount: orderData.totalAmount || finalTotal
+                                totalAmount: confirmedOrder?.totalAmount || orderData.totalAmount || finalTotal
                             });
 
                             // Trigger Google Analytics Purchase event
                             trackGaPurchase({
-                                orderId: orderData.readableId || orderData.id,
+                                orderId: confirmedId,
                                 items: cartItems.map(i => ({ id: i.id, name: i.name, price: i.price, quantity: i.quantity })),
-                                totalAmount: orderData.totalAmount || finalTotal
+                                totalAmount: confirmedOrder?.totalAmount || orderData.totalAmount || finalTotal
                             });
                             setOrderSuccess(true);
                             clearCart();
@@ -402,11 +404,31 @@ export default function CartPage() {
                 modal: {
                     ondismiss: function () {
                         setLoading(false);
+                        // Notify backend that customer closed checkout without paying
+                        fetch(`${API_URL}/orders/${orderData.id}/fail-unpaid`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            }
+                        }).catch(e => console.error('Failed to notify unpaid order status:', e));
                     }
                 }
             };
 
             const rzp = new (window as any).Razorpay(options);
+            rzp.on('payment.failed', function (response: any) {
+                setError(response.error?.description || "Payment failed. Please try again.");
+                setLoading(false);
+                // Notify backend that payment failed
+                fetch(`${API_URL}/orders/${orderData.id}/fail-unpaid`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                }).catch(e => console.error('Failed to notify failed payment status:', e));
+            });
             rzp.open();
 
         } catch (err) {

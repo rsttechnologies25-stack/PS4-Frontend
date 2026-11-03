@@ -16,6 +16,7 @@ interface Product {
     description?: string;
     categoryId?: string;
     isSoldOut?: boolean;
+    isDisabled?: boolean;
     variants?: { id: string; weight: string; price: number; stock: number; isDefault: boolean; sortOrder: number }[];
 }
 
@@ -54,6 +55,7 @@ export default function ProductShowcase({
                 const res = await fetch(`${API_URL}/products?${query}&limit=${limit}`);
                 const data = await res.json();
                 let productsArray = Array.isArray(data) ? data : (data?.data || []);
+                productsArray = productsArray.filter((p: any) => !p.isDisabled);
                 if (filter === "isNewLaunch") {
                     productsArray = productsArray.filter((p: Product) => !p.isSoldOut);
                 }

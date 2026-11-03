@@ -16,6 +16,7 @@ interface Product {
     isBestSeller: boolean;
     isNewLaunch: boolean;
     isSoldOut: boolean;
+    isDisabled?: boolean;
     categoryId: string;
     variants?: { id: string; weight: string; price: number; stock: number; isDefault: boolean; sortOrder: number }[];
 }
@@ -63,7 +64,8 @@ export default function CategoryClient({ slug }: CategoryClientProps) {
                     const prodRes = await fetch(`${API_URL}/products?category=${slug}&includeChildren=true&limit=1000`);
                     if (prodRes.ok) {
                         const prodData = await prodRes.json();
-                        const productsArray = Array.isArray(prodData) ? prodData : (prodData?.data || []);
+                        let productsArray = Array.isArray(prodData) ? prodData : (prodData?.data || []);
+                        productsArray = productsArray.filter((p: any) => !p.isDisabled);
                         setProducts(productsArray);
                         setFilteredProducts(productsArray);
                     }

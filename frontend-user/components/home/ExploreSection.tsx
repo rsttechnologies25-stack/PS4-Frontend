@@ -15,6 +15,7 @@ interface Product {
     description?: string;
     categoryId?: string;
     isSoldOut?: boolean;
+    isDisabled?: boolean;
     variants?: { id: string; weight: string; price: number; stock: number; isDefault: boolean; sortOrder: number }[];
 }
 
@@ -64,6 +65,7 @@ export default function ExploreSection() {
                 const res = await fetch(`${API_URL}/products?${activeTab.query}`);
                 const data = await res.json();
                 let prods = Array.isArray(data) ? data : [];
+                prods = prods.filter((p: any) => !p.isDisabled);
                 if (activeTab.name === "NEW LAUNCHES" || activeTab.query.includes("isNewLaunch=true")) {
                     prods = prods.filter((p: any) => !p.isSoldOut);
                 }

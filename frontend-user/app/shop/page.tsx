@@ -18,6 +18,7 @@ interface Product {
     isBestSeller: boolean;
     isNewLaunch: boolean;
     isSoldOut: boolean;
+    isDisabled?: boolean;
     categoryId: string;
     variants?: { id: string; weight: string; price: number; stock: number; isDefault: boolean; sortOrder: number }[];
     category?: {
@@ -77,6 +78,7 @@ function ShopContent() {
     }, []);
 
     const filteredProducts = products.filter(p => {
+        if (p.isDisabled) return false;
         // 1. Global Filter (Best Seller / New Launch)
         if (globalFilter === "best-seller" && !p.isBestSeller) return false;
         if (globalFilter === "new-launch" && (!p.isNewLaunch || p.isSoldOut)) return false;

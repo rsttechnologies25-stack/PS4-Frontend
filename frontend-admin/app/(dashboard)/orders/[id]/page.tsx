@@ -25,7 +25,8 @@ import {
     ChevronDown,
     Save,
     Download,
-    X
+    X,
+    RefreshCw
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -34,7 +35,8 @@ const statusConfig: Record<string, { label: string; icon: any; color: string; bg
     'PROCESSING': { label: "Processing", icon: Package, color: "text-blue-700", bg: "bg-blue-50", border: "border-blue-100" },
     'SHIPPED': { label: "Shipped", icon: Truck, color: "text-purple-700", bg: "bg-purple-50", border: "border-purple-100" },
     'DELIVERED': { label: "Delivered", icon: CheckCircle2, color: "text-green-700", bg: "bg-green-50", border: "border-green-100" },
-    'CANCELLED': { label: "Cancelled", icon: XCircle, color: "text-red-700", bg: "bg-red-50", border: "border-red-100" },
+    'FAILED': { label: "Failed", icon: XCircle, color: "text-red-700", bg: "bg-red-50", border: "border-red-200" },
+    'CANCELLED': { label: "Cancelled", icon: XCircle, color: "text-rose-700", bg: "bg-rose-50", border: "border-rose-100" },
 };
 
 export default function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -52,6 +54,80 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         trackingLink: "",
         trackingId: ""
     });
+    const [syncing, setSyncing] = useState(false);
+    const [syncMessage, setSyncMessage] = useState<{ text: string; type: 'success' | 'error' | 'info' } | null>(null);
+
+    const handleSyncRazorpay = async () => {
+        setSyncing(true);
+        setSyncMessage(null);
+        try {
+            const res = await fetchWithAuth(`${API_URL}/orders/admin/${id}/sync-payment`, {
+                method: 'POST'
+            });
+            const data = await res.json();
+            if (res.ok) {
+                if (data.captured) {
+                    setOrder(data.order);
+                    setNewStatus(data.order.status);
+                    setSyncMessage({ text: data.message, type: 'success' });
+                } else {
+                    setSyncMessage({ text: data.message, type: 'info' });
+                }
+            } else {
+                setSyncMessage({ text: data.error || 'Failed to verify payment with Razorpay', type: 'error' });
+            }
+        } catch (err: any) {
+            setSyncMessage({ text: 'Network error checking Razorpay status', type: 'error' });
+        } finally {
+            setSyncing(false);
+        }
+    };
+
+    const handleMarkFailed = async () => {
+        if (!confirm('Are you sure you want to mark this unpaid checkout as Failed?')) return;
+        setSyncing(true);
+        try {
+            const res = await fetchWithAuth(`${API_URL}/orders/admin/${id}/mark-failed`, {
+                method: 'POST'
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setOrder(data.order);
+                setNewStatus(data.order.status);
+                alert('Order marked as Failed.');
+            } else {
+                const data = await res.json();
+                alert(data.error || 'Failed to update order');
+            }
+        } catch (e) {
+            alert('Error updating order');
+        } finally {
+            setSyncing(false);
+        }
+    };
+
+    const handleMarkCancelled = async () => {
+        if (!confirm('Are you sure you want to mark this unpaid checkout as Cancelled?')) return;
+        setSyncing(true);
+        try {
+            const res = await fetchWithAuth(`${API_URL}/orders/admin/${id}/mark-unpaid-cancelled`, {
+                method: 'POST'
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setOrder(data.order);
+                setNewStatus(data.order.status);
+                alert('Order marked as Cancelled.');
+            } else {
+                const data = await res.json();
+                alert(data.error || 'Failed to update order');
+            }
+        } catch (e) {
+            alert('Error updating order');
+        } finally {
+            setSyncing(false);
+        }
+    };
 
     useEffect(() => {
         if (id) fetchOrderDetail();
@@ -154,6 +230,10 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
     const handleDownloadInvoice = async () => {
         if (!order) return;
+        if (order.paymentStatus !== 'PAID') {
+            alert('Tax invoice can only be generated for PAID orders.');
+            return;
+        }
 
         // Dynamic imports to reduce bundle size
         const { default: jsPDF } = await import("jspdf");
@@ -175,10 +255,10 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                 console.warn("Logo failed to load for PDF");
             }
 
-            doc.setFontSize(18);
+            doc.setFontSize(11);
             doc.setFont("helvetica", "bold");
             doc.setTextColor(139, 69, 19); // Brand Maroon
-            doc.text("Perambur Sri Srinivasa", 14, 22);
+            doc.text("PERAMBUR SRI SRINIVASA SWEETS INDIA PRIVATE LIMITED", 14, 22);
 
             doc.setFontSize(8);
             doc.setFont("helvetica", "normal");
@@ -310,7 +390,11 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                 </Link>
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
                     <div>
-                        <h1 className="text-4xl font-black text-brand-maroon uppercase tracking-tight outfit">Order {order.readableId || "#" + order.id.slice(-8).toUpperCase()}</h1>
+                        <h1 className="text-4xl font-black text-brand-maroon uppercase tracking-tight outfit">
+                            {order.paymentStatus === 'PAID' || order.readableId
+                                ? `Order ${order.readableId || "#" + order.id.slice(-8).toUpperCase()}`
+                                : `Checkout Ref #${order.id.slice(-8).toUpperCase()}`}
+                        </h1>
                         <p className="text-orange-900/40 font-black text-[10px] tracking-[0.3em] uppercase mt-2 flex items-center gap-2">
                             <Calendar size={14} className="text-brand-orange" /> Recorded on {new Date(order.createdAt).toLocaleDateString(undefined, { dateStyle: 'full' })} at {new Date(order.createdAt).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
                         </p>
@@ -351,13 +435,86 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
                 {/* Download Invoice Action */}
                 <div className="flex justify-end mt-4">
-                    <button
-                        onClick={handleDownloadInvoice}
-                        className="bg-white border-2 border-brand-maroon text-brand-maroon font-black py-3 px-8 rounded-2xl shadow-lg hover:bg-brand-maroon hover:text-white transition-all flex items-center gap-3 active:scale-95"
-                    >
-                        <Download size={18} /> DOWNLOAD TAX INVOICE
-                    </button>
+                    {order.paymentStatus === 'PAID' ? (
+                        <button
+                            onClick={handleDownloadInvoice}
+                            className="bg-white border-2 border-brand-maroon text-brand-maroon font-black py-3 px-8 rounded-2xl shadow-lg hover:bg-brand-maroon hover:text-white transition-all flex items-center gap-3 active:scale-95"
+                        >
+                            <Download size={18} /> DOWNLOAD TAX INVOICE
+                        </button>
+                    ) : (
+                        <div className="flex items-center gap-2.5 px-5 py-3 bg-red-50 border border-red-200 rounded-2xl text-red-900 text-xs font-bold shadow-sm">
+                            <AlertCircle size={16} className="text-red-600 shrink-0" />
+                            <span>Tax invoice unavailable — Payment not received (Status: {order.status === 'FAILED' ? 'FAILED' : (order.paymentStatus || 'PENDING')})</span>
+                        </div>
+                    )}
                 </div>
+
+                {/* Razorpay Live Status Verification Banner for Unpaid Orders */}
+                {order.paymentStatus !== 'PAID' && (
+                    <div className="mt-6 bg-gradient-to-r from-orange-50 via-amber-50 to-orange-100/40 border border-orange-200 rounded-3xl p-6 shadow-sm space-y-4">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div className="space-y-1">
+                                <div className="flex items-center gap-2">
+                                    <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse" />
+                                    <h4 className="font-black text-brand-maroon uppercase tracking-wide text-sm">
+                                        Live Razorpay Payment Verification
+                                    </h4>
+                                    <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-200">
+                                        Payment {order.paymentStatus || 'PENDING'}
+                                    </span>
+                                </div>
+                                <p className="text-xs text-orange-900/70 font-medium">
+                                    If the customer completed payment (via UPI / Card / NetBanking) and the status is still Pending, click below to verify live with Razorpay.
+                                </p>
+                                {order.razorpayOrderId && (
+                                    <p className="text-[10px] text-orange-900/50 font-mono">
+                                        Razorpay Order ID: {order.razorpayOrderId}
+                                    </p>
+                                )}
+                            </div>
+                            <div className="flex flex-wrap items-center gap-3">
+                                <button
+                                    onClick={handleSyncRazorpay}
+                                    disabled={syncing}
+                                    className="bg-brand-maroon hover:bg-brand-orange text-white text-xs font-black uppercase tracking-wider px-6 py-3 rounded-xl transition-all shadow-md flex items-center gap-2 active:scale-95 disabled:opacity-50"
+                                >
+                                    {syncing ? <Loader2 size={16} className="animate-spin" /> : <RefreshCw size={16} />}
+                                    Verify with Razorpay
+                                </button>
+                                {order.paymentStatus !== 'PAID' && order.status !== 'FAILED' && (
+                                    <button
+                                        onClick={handleMarkFailed}
+                                        disabled={syncing}
+                                        className="bg-red-600 hover:bg-red-700 text-white text-xs font-black uppercase tracking-wider px-4 py-3 rounded-xl transition-all shadow-md active:scale-95 disabled:opacity-50 flex items-center gap-2"
+                                    >
+                                        <XCircle size={16} /> Mark as Failed
+                                    </button>
+                                )}
+                                {order.status === 'PENDING' && (
+                                    <button
+                                        onClick={handleMarkCancelled}
+                                        disabled={syncing}
+                                        className="bg-white hover:bg-rose-50 text-rose-700 border border-rose-200 text-xs font-black uppercase tracking-wider px-4 py-3 rounded-xl transition-all active:scale-95 disabled:opacity-50"
+                                    >
+                                        Mark Cancelled
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                        {syncMessage && (
+                            <div className={cn(
+                                "p-4 rounded-xl text-xs font-bold border flex items-center gap-3",
+                                syncMessage.type === 'success' ? "bg-green-50 text-green-800 border-green-200" :
+                                syncMessage.type === 'error' ? "bg-red-50 text-red-800 border-red-200" :
+                                "bg-blue-50 text-blue-800 border-blue-200"
+                            )}>
+                                {syncMessage.type === 'success' ? <CheckCircle2 size={18} className="text-green-600 shrink-0" /> : <AlertCircle size={18} className="shrink-0" />}
+                                <span>{syncMessage.text}</span>
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">

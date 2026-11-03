@@ -59,6 +59,7 @@ interface Order {
     deliveryManPhone?: string | null;
     trackingLink?: string | null;
     trackingId?: string | null;
+    paymentStatus?: string | null;
     items: OrderItem[];
 }
 
@@ -140,6 +141,10 @@ export default function OrderClient({ params }: { params: Promise<{ id: string }
 
     const handleDownloadInvoice = async () => {
         if (!order) return;
+        if (order.paymentStatus && order.paymentStatus !== 'PAID') {
+            alert('Tax invoice is only available for paid orders.');
+            return;
+        }
 
         // Dynamic imports for modern Next.js environments
         const { default: jsPDF } = await import("jspdf");
@@ -161,10 +166,10 @@ export default function OrderClient({ params }: { params: Promise<{ id: string }
                 console.warn("Logo failed to load for PDF");
             }
 
-            doc.setFontSize(18);
+            doc.setFontSize(11);
             doc.setFont("helvetica", "bold");
             doc.setTextColor(139, 69, 19); // Brand Maroon
-            doc.text("Perambur Sri Srinivasa", 14, 22);
+            doc.text("PERAMBUR SRI SRINIVASA SWEETS INDIA PRIVATE LIMITED", 14, 22);
 
             doc.setFontSize(8);
             doc.setFont("helvetica", "normal");
@@ -512,12 +517,20 @@ export default function OrderClient({ params }: { params: Promise<{ id: string }
                                 </div>
                             </div>
 
-                            <button
-                                onClick={handleDownloadInvoice}
-                                className="w-full mt-10 bg-white text-secondary font-black py-4 rounded-2xl shadow-xl hover:bg-primary hover:text-white transition-all active:scale-[0.98] uppercase tracking-widest text-xs"
-                            >
-                                Download Invoice
-                            </button>
+                            {order.paymentStatus === 'PAID' ? (
+                                <button
+                                    onClick={handleDownloadInvoice}
+                                    className="w-full mt-10 bg-white text-secondary font-black py-4 rounded-2xl shadow-xl hover:bg-primary hover:text-white transition-all active:scale-[0.98] uppercase tracking-widest text-xs"
+                                >
+                                    Download Invoice
+                                </button>
+                            ) : (
+                                <div className="mt-10 p-4 bg-white/10 rounded-2xl border border-white/20 text-center">
+                                    <p className="text-white/80 font-bold text-xs">
+                                        Tax invoice will be available once payment is confirmed.
+                                    </p>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

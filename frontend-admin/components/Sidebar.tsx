@@ -19,6 +19,7 @@ import {
     LayoutGrid,
     MessageCircle,
     User,
+    TrendingUp,
     X
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -26,6 +27,7 @@ import { cn } from "@/lib/utils";
 const menuItems = [
     { icon: LayoutDashboard, label: "DASHBOARD", href: "/" },
     { icon: ShoppingBag, label: "ORDERS", href: "/orders" },
+    { icon: TrendingUp, label: "SALES REPORT", href: "/sales" },
     { icon: ShoppingBag, label: "PRODUCTS", href: "/products" },
     { icon: Layers, label: "CATEGORIES", href: "/categories" },
     { icon: Ticket, label: "COUPONS", href: "/coupons" },

@@ -35,11 +35,12 @@ import {
 } from 'date-fns';
 
 const statusConfig: Record<string, { label: string; icon: any; color: string; bg: string; border: string }> = {
-    'PENDING': { label: "Pending", icon: Clock, color: "text-orange-700", bg: "bg-orange-50", border: "border-orange-100" },
     'PROCESSING': { label: "Processing", icon: Package, color: "text-blue-700", bg: "bg-blue-50", border: "border-blue-100" },
     'SHIPPED': { label: "Shipped", icon: Truck, color: "text-purple-700", bg: "bg-purple-50", border: "border-purple-100" },
     'DELIVERED': { label: "Delivered", icon: CheckCircle2, color: "text-green-700", bg: "bg-green-50", border: "border-green-100" },
-    'CANCELLED': { label: "Cancelled", icon: XCircle, color: "text-red-700", bg: "bg-red-50", border: "border-red-100" },
+    'FAILED': { label: "Failed", icon: XCircle, color: "text-red-700", bg: "bg-red-50", border: "border-red-200" },
+    'CANCELLED': { label: "Cancelled", icon: XCircle, color: "text-rose-700", bg: "bg-rose-50", border: "border-rose-100" },
+    'PENDING': { label: "Pending", icon: Clock, color: "text-orange-700", bg: "bg-orange-50", border: "border-orange-100" },
 };
 
 export default function OrdersPage() {
@@ -73,13 +74,26 @@ export default function OrdersPage() {
         }
     };
 
+    const totalCount = orders.length;
+    const processingCount = orders.filter(o => o.status === 'PROCESSING').length;
+    const shippedCount = orders.filter(o => o.status === 'SHIPPED').length;
+    const deliveredCount = orders.filter(o => o.status === 'DELIVERED').length;
+    const failedCount = orders.filter(o => o.status === 'FAILED' || o.paymentStatus === 'FAILED').length;
+    const cancelledCount = orders.filter(o => o.status === 'CANCELLED').length;
+
     const filteredOrders = orders.filter(order => {
         const matchesSearch =
             order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (order.readableId || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
             (order.customerName || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
             (order.user?.name || "").toLowerCase().includes(searchTerm.toLowerCase());
 
-        const matchesStatus = statusFilter === "all" || order.status === statusFilter;
+        let matchesStatus = true;
+        if (statusFilter === "FAILED") {
+            matchesStatus = order.status === "FAILED" || order.paymentStatus === "FAILED";
+        } else if (statusFilter !== "all") {
+            matchesStatus = order.status === statusFilter;
+        }
 
         return matchesSearch && matchesStatus;
     });
@@ -200,6 +214,87 @@ export default function OrdersPage() {
                                 Analytics Export
                             </button>
                         </div>
+                    </div>
+
+                    {/* Status Filter Tabs */}
+                    <div className="flex flex-wrap items-center gap-2.5 pt-2">
+                        <button
+                            onClick={() => setStatusFilter("all")}
+                            className={cn(
+                                "px-5 py-2.5 rounded-2xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all shadow-sm border",
+                                statusFilter === "all"
+                                    ? "bg-brand-maroon text-white border-brand-maroon shadow-brand-maroon/20"
+                                    : "bg-white text-orange-950/60 border-orange-200/60 hover:bg-orange-50"
+                            )}
+                        >
+                            <span>All Orders ({totalCount})</span>
+                        </button>
+
+                        <button
+                            onClick={() => setStatusFilter("PROCESSING")}
+                            className={cn(
+                                "px-5 py-2.5 rounded-2xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all shadow-sm border",
+                                statusFilter === "PROCESSING"
+                                    ? "bg-blue-600 text-white border-blue-600 shadow-blue-600/20"
+                                    : "bg-white text-blue-900 border-blue-100 hover:bg-blue-50"
+                            )}
+                        >
+                            <Package size={15} />
+                            <span>Processing ({processingCount})</span>
+                        </button>
+
+                        <button
+                            onClick={() => setStatusFilter("SHIPPED")}
+                            className={cn(
+                                "px-5 py-2.5 rounded-2xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all shadow-sm border",
+                                statusFilter === "SHIPPED"
+                                    ? "bg-purple-600 text-white border-purple-600 shadow-purple-600/20"
+                                    : "bg-white text-purple-900 border-purple-100 hover:bg-purple-50"
+                            )}
+                        >
+                            <Truck size={15} />
+                            <span>Shipped ({shippedCount})</span>
+                        </button>
+
+                        <button
+                            onClick={() => setStatusFilter("DELIVERED")}
+                            className={cn(
+                                "px-5 py-2.5 rounded-2xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all shadow-sm border",
+                                statusFilter === "DELIVERED"
+                                    ? "bg-green-600 text-white border-green-600 shadow-green-600/20"
+                                    : "bg-white text-green-900 border-green-100 hover:bg-green-50"
+                            )}
+                        >
+                            <CheckCircle2 size={15} />
+                            <span>Delivered ({deliveredCount})</span>
+                        </button>
+
+                        <button
+                            onClick={() => setStatusFilter("FAILED")}
+                            className={cn(
+                                "px-5 py-2.5 rounded-2xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all shadow-sm border",
+                                statusFilter === "FAILED"
+                                    ? "bg-red-600 text-white border-red-600 shadow-red-600/20"
+                                    : "bg-white text-red-900 border-red-200 hover:bg-red-50"
+                            )}
+                        >
+                            <XCircle size={15} className={failedCount > 0 ? "text-red-500" : ""} />
+                            <span>Failed ({failedCount})</span>
+                        </button>
+
+                        {cancelledCount > 0 && (
+                            <button
+                                onClick={() => setStatusFilter("CANCELLED")}
+                                className={cn(
+                                    "px-5 py-2.5 rounded-2xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all shadow-sm border",
+                                    statusFilter === "CANCELLED"
+                                        ? "bg-rose-600 text-white border-rose-600"
+                                        : "bg-white text-rose-900 border-rose-100 hover:bg-rose-50"
+                                )}
+                            >
+                                <span>Cancelled ({cancelledCount})</span>
+                            </button>
+                        )}
                     </div>
 
                     {isExportOpen && (
@@ -330,8 +425,29 @@ export default function OrdersPage() {
                                         <tr key={order.id} className="hover:bg-orange-100/5 transition-colors group">
                                             <td className="px-8 py-6">
                                                 <div className="space-y-1">
-                                                    <p className="font-bold text-[#7C2D12] text-sm outfit uppercase tracking-tighter">{order.readableId || "#" + order.id.slice(-8).toUpperCase()}</p>
-                                                    <p className="text-[10px] text-orange-900/40 font-black uppercase tracking-widest">{new Date(order.createdAt).toLocaleDateString(undefined, { dateStyle: 'medium' })}</p>
+                                                    {order.paymentStatus === 'PAID' && order.readableId ? (
+                                                        <p className="font-bold text-[#7C2D12] text-sm outfit uppercase tracking-tighter">
+                                                            {order.readableId}
+                                                        </p>
+                                                    ) : (
+                                                        <div className="flex flex-col gap-0.5">
+                                                            <span className="font-bold text-neutral-800 text-xs outfit">
+                                                                Order #{order.id.slice(-8).toUpperCase()}
+                                                            </span>
+                                                            {order.status === 'FAILED' || order.paymentStatus === 'FAILED' ? (
+                                                                <span className="inline-block w-fit px-2 py-0.5 rounded text-[9px] font-black uppercase bg-red-100 text-red-700 border border-red-200">
+                                                                    Payment Failed
+                                                                </span>
+                                                            ) : (
+                                                                <span className="inline-block w-fit px-2 py-0.5 rounded text-[9px] font-black uppercase bg-amber-100 text-amber-800 border border-amber-200">
+                                                                    Payment Pending
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                    )}
+                                                    <p className="text-[10px] text-orange-900/40 font-black uppercase tracking-widest">
+                                                        {new Date(order.createdAt).toLocaleDateString(undefined, { dateStyle: 'medium' })}
+                                                    </p>
                                                 </div>
                                             </td>
                                             <td className="px-8 py-6">
@@ -367,9 +483,11 @@ export default function OrdersPage() {
                                                     "inline-flex items-center px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border shadow-sm transition-all",
                                                     order.paymentStatus === 'PAID'
                                                         ? "bg-green-50 text-green-700 border-green-100 group-hover:bg-green-100"
+                                                        : (order.paymentStatus === 'FAILED' || order.status === 'FAILED')
+                                                        ? "bg-red-50 text-red-700 border-red-200 font-black"
                                                         : "bg-orange-50 text-orange-700 border-orange-100 group-hover:bg-orange-100"
                                                 )}>
-                                                    {order.paymentStatus || 'PENDING'}
+                                                    {order.paymentStatus === 'PAID' ? 'PAID' : (order.paymentStatus === 'FAILED' || order.status === 'FAILED') ? 'FAILED' : (order.paymentStatus || 'PENDING')}
                                                 </div>
                                             </td>
                                             <td className="px-8 py-6">

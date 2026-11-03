@@ -64,10 +64,10 @@ export default function DashboardPage() {
                         <Plus size={24} />
                         New Product
                     </Link>
-                    <button className="px-8 py-4 bg-brand-orange text-white rounded-2xl font-black hover:bg-primary-dark transition-all transform hover:scale-[1.02] shadow-2xl shadow-orange-600/30 flex items-center gap-3">
+                    <Link href="/sales" className="px-8 py-4 bg-brand-orange text-white rounded-2xl font-black hover:bg-primary-dark transition-all transform hover:scale-[1.02] shadow-2xl shadow-orange-600/30 flex items-center gap-3">
                         <TrendingUp size={24} />
-                        Reports
-                    </button>
+                        Sales Report
+                    </Link>
                 </div>
             </div>
 

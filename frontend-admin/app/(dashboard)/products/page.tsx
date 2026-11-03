@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { API_URL, fetchWithAuth } from "@/lib/api";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, cn } from "@/lib/utils";
 import {
     Plus,
     Search,
@@ -12,7 +12,9 @@ import {
     Loader2,
     Filter,
     Package,
-    ArrowRight
+    ArrowRight,
+    Eye,
+    EyeOff
 } from "lucide-react";
 import { formatImageUrl } from "@/lib/imageHelper";
 
@@ -22,6 +24,7 @@ export default function ProductsPage() {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
     const [deletingId, setDeletingId] = useState<string | null>(null);
+    const [togglingId, setTogglingId] = useState<string | null>(null);
     const [isRefineOpen, setIsRefineOpen] = useState(false);
 
     // Refinement States
@@ -36,7 +39,7 @@ export default function ProductsPage() {
 
     const fetchProducts = async () => {
         try {
-            const res = await fetch(`${API_URL}/products?limit=1000`);
+            const res = await fetchWithAuth(`${API_URL}/products?limit=1000&includeDisabled=true`);
             if (res.ok) {
                 const data = await res.json();
                 if (Array.isArray(data)) {
@@ -63,6 +66,27 @@ export default function ProductsPage() {
             }
         } catch (error) {
             console.error("Failed to fetch categories", error);
+        }
+    };
+
+    const handleToggleDisabled = async (id: string, currentDisabled: boolean) => {
+        setTogglingId(id);
+        try {
+            const res = await fetchWithAuth(`${API_URL}/products/${id}/status`, {
+                method: "PATCH",
+                body: JSON.stringify({ isDisabled: !currentDisabled })
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setProducts(products.map(p => p.id === id ? { ...p, isDisabled: data.isDisabled } : p));
+            } else {
+                alert("Failed to update product status");
+            }
+        } catch (error) {
+            console.error("Error toggling product status:", error);
+            alert("Error updating product status");
+        } finally {
+            setTogglingId(null);
         }
     };
 
@@ -278,6 +302,11 @@ export default function ProductsPage() {
                                         </td>
                                         <td className="px-8 py-6">
                                             <div className="flex flex-wrap gap-2">
+                                                {product.isDisabled && (
+                                                    <span className="text-[9px] bg-red-700 text-white px-2.5 py-1 rounded-lg font-black uppercase tracking-wider shadow-sm flex items-center gap-1">
+                                                        <EyeOff size={10} /> Disabled
+                                                    </span>
+                                                )}
                                                 {product.isBestSeller && (
                                                     <span className="text-[9px] bg-yellow-400/20 text-yellow-700 px-2.5 py-1 rounded-lg font-black uppercase tracking-wider border border-yellow-400/30">
                                                         Best Seller
@@ -297,6 +326,19 @@ export default function ProductsPage() {
                                         </td>
                                         <td className="px-8 py-6">
                                             <div className="flex items-center justify-end gap-3">
+                                                <button
+                                                    onClick={() => handleToggleDisabled(product.id, !!product.isDisabled)}
+                                                    disabled={togglingId === product.id}
+                                                    title={product.isDisabled ? "Product is disabled (hidden). Click to enable." : "Product is active. Click to disable (hide)."}
+                                                    className={cn(
+                                                        "p-3 rounded-2xl transition-all shadow-sm",
+                                                        product.isDisabled
+                                                            ? "text-red-700 bg-red-100/70 hover:bg-red-200"
+                                                            : "text-[#7C2D14]/40 hover:text-[#7C2D14] hover:bg-orange-100"
+                                                    )}
+                                                >
+                                                    {togglingId === product.id ? <Loader2 className="animate-spin" size={20} /> : (product.isDisabled ? <EyeOff size={20} /> : <Eye size={20} />)}
+                                                </button>
                                                 <Link
                                                     href={`/products/${product.id}`}
                                                     className="p-3 text-[#7C2D14]/40 hover:text-[#EA580C] hover:bg-orange-100 rounded-2xl transition-all shadow-sm"

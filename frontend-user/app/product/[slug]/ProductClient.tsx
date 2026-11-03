@@ -66,6 +66,7 @@ interface Product {
     isBestSeller: boolean;
     isNewLaunch: boolean;
     isSoldOut: boolean;
+    isDisabled?: boolean;
     variants?: ProductVariant[];
     images?: ProductImage[];
     averageRating?: number;
@@ -119,6 +120,7 @@ export default function ProductClient({ slug }: { slug: string }) {
                 const res = await fetch(`${API_URL}/products/${slug}`);
                 if (!res.ok) throw new Error("Product not found");
                 const data = await res.json();
+                if (data.isDisabled) throw new Error("Product unavailable");
                 setProduct(data);
 
                 // Pre-select default variant
@@ -144,7 +146,7 @@ export default function ProductClient({ slug }: { slug: string }) {
                 const relRes = await fetch(`${API_URL}/products?category=${data.category.slug}&limit=20`);
                 const relDataRaw = await relRes.json();
                 const relData = Array.isArray(relDataRaw) ? relDataRaw : (relDataRaw?.data || []);
-                setRelatedProducts(relData.filter((p: Product) => p.slug !== slug).slice(0, 4));
+                setRelatedProducts(relData.filter((p: Product) => p.slug !== slug && !p.isDisabled).slice(0, 4));
             } catch (error) {
                 console.error("Error fetching product:", error);
             } finally {
