@@ -10,6 +10,17 @@ export default function AccountPage() {
     const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
     const [showPassword, setShowPassword] = useState(false);
 
+    interface LoginHistoryItem {
+        id: string;
+        ip?: string | null;
+        device?: string | null;
+        browser?: string | null;
+        os?: string | null;
+        createdAt: string;
+    }
+
+    const [loginHistory, setLoginHistory] = useState<LoginHistoryItem[]>([]);
+
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -26,6 +37,9 @@ export default function AccountPage() {
             if (res.ok) {
                 const data = await res.json();
                 setFormData(prev => ({ ...prev, email: data.email }));
+                if (Array.isArray(data.loginHistory)) {
+                    setLoginHistory(data.loginHistory);
+                }
             }
         } catch (error) {
             console.error("Failed to fetch admin data");
@@ -191,14 +205,61 @@ export default function AccountPage() {
                     </div>
 
                     <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-orange-100/50 space-y-6">
-                        <h4 className="text-[10px] font-black text-orange-900/40 uppercase tracking-[0.3em]">Login History</h4>
+                        <div className="flex items-center justify-between">
+                            <h4 className="text-[10px] font-black text-orange-900/40 uppercase tracking-[0.3em]">Login History</h4>
+                            <span className="text-[10px] font-bold text-orange-900/40 uppercase tracking-widest">
+                                {loginHistory.length > 0 ? `${loginHistory.length} Recorded` : "Live"}
+                            </span>
+                        </div>
                         <div className="space-y-4">
-                            {[1, 2].map((_, i) => (
-                                <div key={i} className="flex items-center gap-4 text-xs font-bold text-brand-maroon/60">
-                                    <div className="w-2 h-2 rounded-full bg-green-500" />
-                                    <span>Session Active - Chrome (Windows)</span>
+                            {loginHistory.length === 0 ? (
+                                <div className="text-xs font-medium text-orange-900/50 py-2">
+                                    No login records found.
                                 </div>
-                            ))}
+                            ) : (
+                                loginHistory.map((item, i) => {
+                                    const browserName = item.browser || "Browser";
+                                    const osName = item.os || "Device";
+                                    const isCurrent = i === 0;
+
+                                    const formattedDate = new Date(item.createdAt).toLocaleDateString(undefined, {
+                                        month: 'short',
+                                        day: 'numeric'
+                                    });
+                                    const formattedTime = new Date(item.createdAt).toLocaleTimeString(undefined, {
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                    });
+
+                                    return (
+                                        <div key={item.id || i} className="flex items-start gap-3.5 text-xs">
+                                            <div
+                                                className={`w-2.5 h-2.5 rounded-full mt-1 shrink-0 ${
+                                                    isCurrent
+                                                        ? "bg-green-500 ring-4 ring-green-100 shadow-sm"
+                                                        : "bg-orange-300/80"
+                                                }`}
+                                            />
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex items-center justify-between gap-2">
+                                                    <span className={`font-bold truncate ${isCurrent ? "text-brand-maroon" : "text-brand-maroon/75"}`}>
+                                                        {isCurrent ? "Session Active" : "Logged in"} - {browserName} ({osName})
+                                                    </span>
+                                                    {isCurrent && (
+                                                        <span className="text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-green-50 text-green-700 border border-green-200 shrink-0">
+                                                            Active
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <div className="flex items-center gap-2 text-[11px] text-orange-900/45 font-medium mt-0.5">
+                                                    <span>{formattedDate}, {formattedTime}</span>
+                                                    {item.ip && <span>• IP {item.ip}</span>}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })
+                            )}
                         </div>
                     </div>
                 </div>
