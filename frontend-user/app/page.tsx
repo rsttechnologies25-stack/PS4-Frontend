@@ -3,7 +3,7 @@ import Hero from "@/components/home/Hero";
 import ExploreSection from "@/components/home/ExploreSection";
 import CollectionsGrid from "@/components/home/CollectionsGrid";
 import BrandsSection from "@/components/home/BrandsSection";
-import DeliveryPopup from "@/components/ui/DeliveryPopup";
+
 import ProductShowcase from "@/components/home/ProductShowcase";
 
 export const metadata: Metadata = {
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <>
-      <DeliveryPopup />
+
       <Hero />
       <ExploreSection />
 

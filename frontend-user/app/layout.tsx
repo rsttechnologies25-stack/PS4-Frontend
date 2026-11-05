@@ -6,6 +6,7 @@ import Footer from "@/components/layout/Footer";
 import WhatsAppButton from "@/components/ui/WhatsAppButton";
 import AnnouncementBanner from "@/components/AnnouncementBanner";
 import LocationModal from "@/components/LocationModal";
+import DeliveryPopup from "@/components/ui/DeliveryPopup";
 import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
 import { LocationProvider } from "@/context/LocationContext";
@@ -114,6 +115,7 @@ export default function RootLayout({
               <LocationProvider>
                 <CartProvider>
                   <LocationModal />
+                  <DeliveryPopup />
                   <Navbar />
                   <AnnouncementBanner />
                   <main>{children}</main>
