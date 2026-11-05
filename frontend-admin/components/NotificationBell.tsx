@@ -1,10 +1,34 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { Bell, ShoppingBag, X, CheckCheck, Loader2 } from "lucide-react";
+import { Bell, ShoppingBag, CheckCheck, Loader2 } from "lucide-react";
 import { API_URL, fetchWithAuth } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+
+function formatNotificationTime(dateStr: string) {
+    if (!dateStr) return "";
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return "";
+
+    const now = new Date();
+    const isToday = d.toDateString() === now.toDateString();
+
+    const yesterday = new Date(now);
+    yesterday.setDate(now.getDate() - 1);
+    const isYesterday = d.toDateString() === yesterday.toDateString();
+
+    const timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    if (isToday) {
+        return `Today, ${timeStr}`;
+    }
+    if (isYesterday) {
+        return `Yesterday, ${timeStr}`;
+    }
+
+    return `${d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}, ${timeStr}`;
+}
 
 export default function NotificationBell() {
     const [notifications, setNotifications] = useState<any[]>([]);
@@ -40,11 +64,22 @@ export default function NotificationBell() {
         // Find the latest high-priority unread notification
         const latestHighPriority = notifications.find(n => !n.isRead && n.priority === 'HIGH');
         
-        if (latestHighPriority && latestHighPriority.id !== lastPlayedId.current) {
-            audio?.play().catch(e => console.log("Audio play blocked", e));
-            lastPlayedId.current = latestHighPriority.id;
+        if (latestHighPriority) {
+            const storedPlayedId = typeof window !== 'undefined' ? localStorage.getItem('admin_last_played_notif_id') : null;
+            const notifTime = new Date(latestHighPriority.createdAt).getTime();
+            const isRecent = Date.now() - notifTime < 5 * 60 * 1000; // Only ring for alerts received in the last 5 minutes
+
+            if (latestHighPriority.id !== storedPlayedId && latestHighPriority.id !== lastPlayedId.current) {
+                lastPlayedId.current = latestHighPriority.id;
+                if (typeof window !== 'undefined') {
+                    localStorage.setItem('admin_last_played_notif_id', latestHighPriority.id);
+                }
+                if (isRecent) {
+                    audio?.play().catch(e => console.log("Audio play blocked", e));
+                }
+            }
         }
-    }, [notifications]);
+    }, [notifications, audio]);
 
     const fetchNotifications = async () => {
         try {
@@ -150,17 +185,17 @@ export default function NotificationBell() {
                                                 {n.message}
                                             </p>
                                             <div className="flex items-center justify-between">
-                                                <p className="text-[9px] text-orange-900/30 font-black uppercase tracking-widest flex items-center gap-2">
-                                                    {new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                <p className="text-[9px] text-orange-900/40 font-black uppercase tracking-widest flex items-center gap-2">
+                                                    {formatNotificationTime(n.createdAt)}
                                                     {n.priority === 'HIGH' && (
                                                         <span className="px-1.5 py-0.5 bg-red-100 text-red-600 text-[8px] rounded-md border border-red-200">URGENT</span>
                                                     )}
                                                 </p>
                                                 {n.orderId && (
                                                     <Link
-                                                        href={`/orders/${n.orderId}`}
+                                                        href={`/orders/view?id=${n.orderId}`}
                                                         onClick={() => {
-                                                            markAsRead(n.id);
+                                                             markAsRead(n.id);
                                                             setIsOpen(false);
                                                         }}
                                                         className="text-[9px] font-black text-brand-orange hover:underline uppercase tracking-widest"

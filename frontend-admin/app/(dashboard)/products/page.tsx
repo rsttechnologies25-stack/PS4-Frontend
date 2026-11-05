@@ -14,7 +14,9 @@ import {
     Package,
     ArrowRight,
     Eye,
-    EyeOff
+    EyeOff,
+    AlertCircle,
+    CheckCircle2
 } from "lucide-react";
 import { formatImageUrl } from "@/lib/imageHelper";
 
@@ -25,6 +27,7 @@ export default function ProductsPage() {
     const [searchTerm, setSearchTerm] = useState("");
     const [deletingId, setDeletingId] = useState<string | null>(null);
     const [togglingId, setTogglingId] = useState<string | null>(null);
+    const [togglingAllSoldOut, setTogglingAllSoldOut] = useState(false);
     const [isRefineOpen, setIsRefineOpen] = useState(false);
 
     // Refinement States
@@ -90,6 +93,37 @@ export default function ProductsPage() {
         }
     };
 
+    const areAllSoldOut = products.length > 0 && products.every(p => p.isSoldOut);
+    const soldOutCount = products.filter(p => p.isSoldOut).length;
+
+    const handleToggleAllSoldOut = async () => {
+        const targetState = !areAllSoldOut;
+        const confirmMessage = targetState
+            ? `Are you sure you want to mark ALL ${products.length} products as SOLD OUT?\n\n(No items will be purchasable by customers).`
+            : `Are you sure you want to put ALL ${products.length} products back ON SALE?\n\n(All products will be marked as in stock without exceptions).`;
+
+        if (!confirm(confirmMessage)) return;
+
+        setTogglingAllSoldOut(true);
+        try {
+            const res = await fetchWithAuth(`${API_URL}/products/bulk-sold-out`, {
+                method: "POST",
+                body: JSON.stringify({ isSoldOut: targetState })
+            });
+
+            if (res.ok) {
+                setProducts(products.map(p => ({ ...p, isSoldOut: targetState })));
+            } else {
+                alert("Failed to update products status. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error bulk updating sold out:", error);
+            alert("Network error updating products.");
+        } finally {
+            setTogglingAllSoldOut(false);
+        }
+    };
+
     const handleDelete = async (id: string) => {
         if (!confirm("Are you sure you want to delete this product?")) return;
 
@@ -141,15 +175,53 @@ export default function ProductsPage() {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
                     <h1 className="text-4xl font-bold text-brand-maroon tracking-tight">Products Catalog</h1>
-                    <p className="text-orange-900/50 mt-2 font-medium italic">Oversee your exquisite collection of sweets ({products.length} items)</p>
+                    <p className="text-orange-900/50 mt-2 font-medium italic">
+                        Oversee your exquisite collection of sweets ({products.length} items
+                        {soldOutCount > 0 && (
+                            <span className="ml-2 font-bold text-red-600 not-italic font-sans">
+                                • {soldOutCount} sold out
+                            </span>
+                        )}
+                        )
+                    </p>
                 </div>
-                <Link
+                <div className="flex flex-wrap items-center gap-3">
+                    <button
+                        type="button"
+                        onClick={handleToggleAllSoldOut}
+                        disabled={loading || togglingAllSoldOut || products.length === 0}
+                        title={areAllSoldOut ? "All products are currently Sold Out. Click to put all products back on sale." : "Click to mark all products in the catalog as Sold Out."}
+                        className={cn(
+                            "px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-wider flex items-center gap-3 transition-all shadow-md transform hover:scale-[1.02] active:scale-[0.98] border-2 cursor-pointer disabled:opacity-50",
+                            areAllSoldOut
+                                ? "bg-red-600 hover:bg-red-700 text-white border-red-700 shadow-red-600/30 ring-4 ring-red-500/20"
+                                : "bg-white hover:bg-red-50 text-red-700 border-red-200 shadow-orange-900/5 hover:border-red-300"
+                        )}
+                    >
+                        {togglingAllSoldOut ? (
+                            <Loader2 className="animate-spin" size={18} />
+                        ) : areAllSoldOut ? (
+                            <CheckCircle2 size={18} />
+                        ) : (
+                            <AlertCircle size={18} />
+                        )}
+                        <span>
+                            {togglingAllSoldOut
+                                ? "Updating Catalog..."
+                                : areAllSoldOut
+                                    ? "All Sold Out (Click to Resume Sale)"
+                                    : "Mark All Sold Out"}
+                        </span>
+                    </button>
+
+                    <Link
                     href="/products/new"
                     className="bg-primary text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-primary-dark transition-all shadow-xl shadow-orange-600/20 w-fit transform hover:scale-[1.02]"
                 >
                     <Plus size={22} />
                     Create New Product
                 </Link>
+                </div>
             </div>
 
             <div className="bg-white rounded-[2.5rem] shadow-xl shadow-orange-900/5 border border-orange-100/50 overflow-hidden">
@@ -340,7 +412,7 @@ export default function ProductsPage() {
                                                     {togglingId === product.id ? <Loader2 className="animate-spin" size={20} /> : (product.isDisabled ? <EyeOff size={20} /> : <Eye size={20} />)}
                                                 </button>
                                                 <Link
-                                                    href={`/products/${product.id}`}
+                                                    href={`/products/edit?id=${product.id}`}
                                                     className="p-3 text-[#7C2D14]/40 hover:text-[#EA580C] hover:bg-orange-100 rounded-2xl transition-all shadow-sm"
                                                 >
                                                     <Edit3 size={20} />

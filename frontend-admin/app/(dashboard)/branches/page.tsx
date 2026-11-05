@@ -90,7 +90,7 @@ export default function BranchesPage() {
                             {/* Actions Overlay */}
                             <div className="absolute top-6 right-6 flex items-center gap-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
                                 <Link
-                                    href={`/branches/${branch.id}`}
+                                    href={`/branches/edit?id=${branch.id}`}
                                     className="p-3 bg-white/90 backdrop-blur-md text-brand-maroon hover:text-primary rounded-2xl shadow-lg transition-all"
                                 >
                                     <Edit3 size={18} />

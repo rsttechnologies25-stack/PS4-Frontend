@@ -78,7 +78,7 @@ export default function OrdersPage() {
     const processingCount = orders.filter(o => o.status === 'PROCESSING').length;
     const shippedCount = orders.filter(o => o.status === 'SHIPPED').length;
     const deliveredCount = orders.filter(o => o.status === 'DELIVERED').length;
-    const failedCount = orders.filter(o => o.status === 'FAILED' || o.paymentStatus === 'FAILED').length;
+    const failedCount = orders.filter(o => o.status === 'FAILED' || o.paymentStatus === 'FAILED' || (o.status === 'PENDING' && o.paymentStatus === 'PENDING')).length;
     const cancelledCount = orders.filter(o => o.status === 'CANCELLED').length;
 
     const filteredOrders = orders.filter(order => {
@@ -90,7 +90,7 @@ export default function OrdersPage() {
 
         let matchesStatus = true;
         if (statusFilter === "FAILED") {
-            matchesStatus = order.status === "FAILED" || order.paymentStatus === "FAILED";
+            matchesStatus = order.status === "FAILED" || order.paymentStatus === "FAILED" || (order.status === "PENDING" && order.paymentStatus === "PENDING");
         } else if (statusFilter !== "all") {
             matchesStatus = order.status === statusFilter;
         }
@@ -492,11 +492,11 @@ export default function OrdersPage() {
                                             </td>
                                             <td className="px-8 py-6">
                                                 <p className="font-black text-sm text-brand-maroon">₹{order.totalAmount}</p>
-                                                <p className="text-[10px] text-orange-900/40 font-bold italic">{order.items.length} Items</p>
+                                                <p className="text-[10px] text-orange-900/40 font-bold italic">{(order.items || []).length} Items</p>
                                             </td>
                                             <td className="px-8 py-6 text-right">
                                                 <Link
-                                                    href={`/orders/${order.id}`}
+                                                    href={`/orders/view?id=${order.id}`}
                                                     className="inline-flex items-center gap-2 p-3 text-brand-maroon hover:text-white hover:bg-brand-orange rounded-2xl transition-all shadow-sm group/btn"
                                                 >
                                                     <Eye size={20} className="group-hover/btn:scale-110 transition-transform" />

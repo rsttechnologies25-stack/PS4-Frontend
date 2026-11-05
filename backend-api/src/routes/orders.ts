@@ -7,6 +7,8 @@ import Razorpay from 'razorpay';
 import crypto from 'crypto';
 import { validate } from '../middleware/validate';
 import { orderSchema } from '../lib/schemas';
+import { getDeliveryZoneConfig } from './shipping';
+import { isDeliveryLocationAllowed } from '../utils/deliveryZones';
 
 const router = Router();
 
@@ -92,28 +94,48 @@ export async function confirmOrderPayment({
         return order;
     });
 
-    // Create User Notification
+    // Create User Notification (Idempotent: only if not already created)
     const displayId = updatedOrder.readableId || "#" + updatedOrder.id.slice(-6);
-    await prisma.notification.create({
-        data: {
-            userId: updatedOrder.userId,
-            isAdmin: false,
-            type: 'ORDER_CONFIRMED',
-            message: `Thank you! Your order ${displayId} has been confirmed and is now being processed.`,
-            orderId: updatedOrder.id
+    if (updatedOrder.userId) {
+        const existingUserNotif = await prisma.notification.findFirst({
+            where: {
+                orderId: updatedOrder.id,
+                userId: updatedOrder.userId,
+                type: 'ORDER_CONFIRMED'
+            }
+        });
+        if (!existingUserNotif) {
+            await prisma.notification.create({
+                data: {
+                    userId: updatedOrder.userId,
+                    isAdmin: false,
+                    type: 'ORDER_CONFIRMED',
+                    message: `Thank you! Your order ${displayId} has been confirmed and is now being processed.`,
+                    orderId: updatedOrder.id
+                }
+            }).catch(console.error);
         }
-    }).catch(console.error);
+    }
 
-    // Create Admin Notification (High Priority)
-    await prisma.notification.create({
-        data: {
+    // Create Admin Notification (High Priority, Idempotent: only if not already created)
+    const existingAdminNotif = await prisma.notification.findFirst({
+        where: {
+            orderId: updatedOrder.id,
             isAdmin: true,
-            priority: 'HIGH',
-            type: 'NEW_ORDER',
-            message: `New Order ${displayId} received! Click to process.`,
-            orderId: updatedOrder.id
+            type: 'NEW_ORDER'
         }
-    }).catch(console.error);
+    });
+    if (!existingAdminNotif) {
+        await prisma.notification.create({
+            data: {
+                isAdmin: true,
+                priority: 'HIGH',
+                type: 'NEW_ORDER',
+                message: `New Order ${displayId} received! Click to process.`,
+                orderId: updatedOrder.id
+            }
+        }).catch(console.error);
+    }
 
     // Fire-and-forget: Send WhatsApp order confirmation
     sendOrderWhatsApp('ORDER_CONFIRMED', updatedOrder).catch(err =>
@@ -132,6 +154,18 @@ router.post('/', userAuthMiddleware, validate(orderSchema), async (req, res) => 
     if (!req.user) return res.status(401).json({ error: 'Unauthorized' });
 
     try {
+        // Validate Delivery Zone Restrictions (if configured by admin)
+        const zoneConfig = await getDeliveryZoneConfig();
+        const locationCheck = isDeliveryLocationAllowed(
+            { city, pincode, state: req.body.state, addressLine1 },
+            zoneConfig
+        );
+        if (!locationCheck.allowed) {
+            return res.status(400).json({
+                error: locationCheck.reason || `Delivery is currently restricted to: ${zoneConfig.allowedAreas.join(', ')}.`
+            });
+        }
+
         let calculatedSubtotal = 0;
         let totalWeightKg = 0;
 
@@ -546,7 +580,8 @@ router.get('/admin/sales-analytics', authMiddleware, async (req, res) => {
 
         // Sales strictly include confirmed paid orders
         const whereClause: any = {
-            paymentStatus: 'PAID'
+            paymentStatus: 'PAID',
+            status: { notIn: ['CANCELLED', 'FAILED', 'PENDING'] }
         };
 
         if (startDate && endDate) {

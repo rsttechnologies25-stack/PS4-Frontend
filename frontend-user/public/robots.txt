@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://perambursrinivasa.com/sitemap.xml
+Sitemap: https://www.perambursrinivasa.com/sitemap.xml

@@ -89,7 +89,7 @@ export default function DashboardLayout({
                             <p className="text-[10px] font-black text-brand-orange uppercase tracking-[.3em] mb-1">New Order Received!</p>
                             <h4 className="text-sm font-bold line-clamp-1">{newOrder.message}</h4>
                             <Link
-                                href={`/orders/${newOrder.orderId}`}
+                                href={`/orders/view?id=${newOrder.orderId}`}
                                 onClick={() => setNewOrder(null)}
                                 className="mt-3 inline-flex items-center gap-2 text-xs font-black text-brand-orange hover:text-white transition-colors group/link"
                             >

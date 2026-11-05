@@ -2,13 +2,21 @@
 
 export const runtime = "edge";
 
-import { useParams } from "next/navigation";
+import { useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
 import CategoryForm from "@/components/CategoryForm";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 
 export default function EditCategoryPage() {
     const { id } = useParams();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (id) {
+            router.replace(`/categories/edit?id=${id}`);
+        }
+    }, [id, router]);
 
     return (
         <div className="space-y-8">
@@ -21,7 +29,7 @@ export default function EditCategoryPage() {
                 </Link>
                 <div>
                     <h1 className="text-3xl font-bold text-gray-900">Edit Category</h1>
-                    <p className="text-gray-500 italic">Update category naming and hierarchy.</p>
+                    <p className="text-gray-500 italic">Update category details and hierarchy.</p>
                 </div>
             </div>
 

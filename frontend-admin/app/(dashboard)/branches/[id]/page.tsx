@@ -2,13 +2,21 @@
 
 export const runtime = "edge";
 
-import { useParams } from "next/navigation";
+import { useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
 import BranchForm from "@/components/BranchForm";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 
 export default function EditBranchPage() {
     const { id } = useParams();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (id) {
+            router.replace(`/branches/edit?id=${id}`);
+        }
+    }, [id, router]);
 
     return (
         <div className="space-y-8">
@@ -21,7 +29,7 @@ export default function EditBranchPage() {
                 </Link>
                 <div>
                     <h1 className="text-3xl font-bold text-gray-900">Edit Branch</h1>
-                    <p className="text-gray-500 italic">Update store location details and contact info.</p>
+                    <p className="text-gray-500 italic">Update store location details and operating hours.</p>
                 </div>
             </div>
 

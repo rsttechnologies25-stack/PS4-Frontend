@@ -6,7 +6,7 @@ import {
     AlertCircle, CheckCircle2, Info, Eye, EyeOff, Plus,
     Globe, UtensilsCrossed, Quote, Heart, Building2, MapPin
 } from "lucide-react";
-import { API_URL, fetchWithAuth } from "@/lib/api";
+import { API_URL, API_BASE_URL, fetchWithAuth } from "@/lib/api";
 
 type TabType = 'general' | 'about' | 'contact' | 'splash';
 
@@ -1006,7 +1006,7 @@ export default function SettingsPage() {
                                         style={{ backgroundColor: settings.splashContent.backgroundColor }}
                                     >
                                         <img 
-                                            src={settings.splashContent.image.startsWith('/') ? `http://localhost:4000${settings.splashContent.image}` : settings.splashContent.image} 
+                                            src={settings.splashContent.image.startsWith('/') ? `${API_BASE_URL}${settings.splashContent.image}` : settings.splashContent.image} 
                                             alt="Splash Logo" 
                                             className="w-32 h-32 object-contain mb-8"
                                             onError={(e) => (e.currentTarget.src = 'https://via.placeholder.com/150')}

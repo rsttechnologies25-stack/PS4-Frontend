@@ -11,6 +11,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { formatImageUrl } from "@/lib/imageHelper";
 import { trackInitiateCheckout, trackPurchase } from "@/lib/fpixel";
 import { trackBeginCheckout, trackPurchase as trackGaPurchase } from "@/lib/gtag";
+import { DeliveryZoneConfig, isDeliveryLocationAllowed } from "@/lib/deliveryZones";
 
 function cn(...classes: any[]) {
     return classes.filter(Boolean).join(" ");
@@ -84,6 +85,31 @@ export default function CartPage() {
     const [useSavedAddress, setUseSavedAddress] = useState(true);
     const [fetchingProfile, setFetchingProfile] = useState(false);
     const [locationLoading, setLocationLoading] = useState(false);
+    const [zoneConfig, setZoneConfig] = useState<DeliveryZoneConfig | null>(null);
+
+    // Fetch delivery zone restrictions
+    useEffect(() => {
+        fetch(`${API_URL}/shipping/delivery-zones`)
+            .then(res => res.json())
+            .then(data => setZoneConfig(data))
+            .catch(err => console.error("Error fetching delivery zones:", err));
+    }, []);
+
+    // Delivery Zone Restriction check (City & Pincode)
+    const zoneCheck = useMemo(() => {
+        return isDeliveryLocationAllowed(
+            {
+                city: address.city,
+                pincode: address.pincode,
+                state: address.state,
+                addressLine1: address.addressLine1
+            },
+            zoneConfig
+        );
+    }, [address.city, address.pincode, address.state, address.addressLine1, zoneConfig]);
+
+    const isZoneAllowed = zoneCheck.allowed;
+    const zoneError = zoneCheck.reason || null;
 
     // Hill Area detection (City + Pincode prefixes)
     const isHillArea = useMemo(() => {
@@ -437,7 +463,7 @@ export default function CartPage() {
         }
     };
 
-    const isAddressValid = address.customerName && address.phoneNumber && address.addressLine1 && address.city && address.state && address.pincode && !isHillArea && !pincodeError && !phoneError;
+    const isAddressValid = address.customerName && address.phoneNumber && address.addressLine1 && address.city && address.state && address.pincode && !isHillArea && isZoneAllowed && !pincodeError && !phoneError;
 
     if (orderSuccess) {
         return (
@@ -808,6 +834,16 @@ export default function CartPage() {
                                     </div>
                                 )}
 
+                                {!isZoneAllowed && (
+                                    <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-xl flex gap-3 text-amber-800">
+                                        <AlertCircle size={20} className="shrink-0 text-amber-600" />
+                                        <div>
+                                            <p className="text-xs font-black uppercase tracking-wider mb-0.5">Delivery Unavailable in Your Location</p>
+                                            <p className="text-xs font-medium leading-tight">{zoneError} Please check back later or update your delivery address.</p>
+                                        </div>
+                                    </div>
+                                )}
+
                                 {(pincodeError || phoneError) && (
                                     <div className="mt-4 p-4 bg-orange-50 border border-orange-100 rounded-xl flex gap-3 text-orange-600">
                                         <AlertCircle size={20} className="shrink-0" />
@@ -915,7 +951,11 @@ export default function CartPage() {
                                 >
                                     {loading ? <Loader2 className="w-6 h-6 animate-spin" /> :
                                         hasSoldOutItems ? "Action: Remove Sold Out Items" :
-                                            !isAddressValid ? (isHillArea ? "Shipping Unavailable" : "Complete Address to Proceed") :
+                                            !isAddressValid ? (
+                                                isHillArea ? "Shipping Unavailable" :
+                                                !isZoneAllowed ? "Delivery Unavailable in Location" :
+                                                "Complete Address to Proceed"
+                                            ) :
                                                 user ? "Secure Checkout" : "Login to Place Order"}
                                 </button>
 

@@ -15,7 +15,7 @@ import MetaPixel from "@/components/analytics/MetaPixel";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://perambursrinivasa.com"),
+  metadataBase: new URL("https://www.perambursrinivasa.com"),
   title: {
     default: "Perambur Srinivasa Sweets | 100% Veg Sweets & Snacks",
     template: "%s | Perambur Srinivasa Sweets",
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_IN",
-    url: "https://perambursrinivasa.com",
+    url: "https://www.perambursrinivasa.com",
     siteName: "Perambur Srinivasa Sweets",
     title: "Perambur Srinivasa Sweets | 100% Veg Sweets & Snacks",
     description: "Order 100% Veg traditional South Indian sweets and snacks online with 10% off. Crafted with no artificial preservatives and no MSG. Ideal for corporate & bulk orders.",
@@ -86,10 +86,10 @@ export default function RootLayout({
                 "@context": "https://schema.org",
                 "@type": "WebSite",
                 "name": "Perambur Srinivasa Sweets",
-                "url": "https://perambursrinivasa.com",
+                "url": "https://www.perambursrinivasa.com",
                 "potentialAction": {
                   "@type": "SearchAction",
-                  "target": "https://perambursrinivasa.com/shop?q={search_term_string}",
+                  "target": "https://www.perambursrinivasa.com/shop?q={search_term_string}",
                   "query-input": "required name=search_term_string"
                 }
               },
@@ -97,8 +97,8 @@ export default function RootLayout({
                 "@context": "https://schema.org",
                 "@type": "Organization",
                 "name": "Perambur Srinivasa Sweets",
-                "url": "https://perambursrinivasa.com",
-                "logo": "https://perambursrinivasa.com/app-icon.png",
+                "url": "https://www.perambursrinivasa.com",
+                "logo": "https://www.perambursrinivasa.com/app-icon.png",
                 "contactPoint": {
                   "@type": "ContactPoint",
                   "telephone": "+91-92824-45577",

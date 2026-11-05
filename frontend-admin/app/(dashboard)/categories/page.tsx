@@ -124,7 +124,7 @@ export default function CategoriesPage() {
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <Link
-                                        href={`/categories/${parent.id}`}
+                                        href={`/categories/edit?id=${parent.id}`}
                                         className="p-3 text-[#7C2D12]/30 hover:text-[#EA580C] hover:bg-white rounded-2xl transition-all shadow-sm border border-transparent hover:border-orange-100"
                                     >
                                         <Edit3 size={22} />
@@ -155,7 +155,7 @@ export default function CategoriesPage() {
                                                 <span className="text-[9px] font-bold bg-orange-100 text-brand-maroon px-1.5 py-0.5 rounded">#{child.sortOrder ?? 0}</span>
                                             </div>
                                             <div className="flex items-center gap-1 opacity-0 group-hover/child:opacity-100 transition-opacity">
-                                                <Link href={`/categories/${child.id}`} className="p-2 text-orange-900/40 hover:text-primary transition-colors">
+                                                <Link href={`/categories/edit?id=${child.id}`} className="p-2 text-orange-900/40 hover:text-primary transition-colors">
                                                     <Edit3 size={16} />
                                                 </Link>
                                                 <button onClick={() => handleDelete(child.id)} className="p-2 text-orange-900/40 hover:text-red-500 transition-colors">

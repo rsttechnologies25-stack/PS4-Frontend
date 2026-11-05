@@ -92,10 +92,16 @@ export default function SalesAnalyticsPage() {
     };
 
     // Filter strictly for confirmed paid orders
+    // Failed, pending, and cancelled orders must NEVER be included in revenue, order counts, or GST calculations
     const paidOrders = useMemo(() => {
-        return orders.filter(
-            (o) => o.paymentStatus === "PAID" || (o.status !== "PENDING" && o.status !== "CANCELLED")
-        );
+        return orders.filter((o) => {
+            const isPaid = o.paymentStatus === "PAID";
+            const isNotFailed = o.status !== "FAILED" && o.paymentStatus !== "FAILED";
+            const isNotPending = o.status !== "PENDING" && o.paymentStatus !== "PENDING";
+            const isNotCancelled = o.status !== "CANCELLED";
+
+            return isPaid && isNotFailed && isNotPending && isNotCancelled;
+        });
     }, [orders]);
 
     // Apply the active date filter
@@ -698,42 +704,79 @@ export default function SalesAnalyticsPage() {
                     </div>
 
                     {timeSeriesData.length === 0 ? (
-                        <div className="py-20 text-center text-orange-900/30 font-bold italic">
+                        <div className="py-24 text-center text-orange-900/30 font-bold italic">
                             No sales activity recorded in this period.
                         </div>
                     ) : (
-                        <div className="pt-8 space-y-6">
-                            <div className="h-64 flex items-end gap-2 md:gap-3 overflow-x-auto pb-4 pt-6">
-                                {timeSeriesData.map((d) => {
-                                    const heightPct = Math.max(Math.round((d.amount / maxChartAmount) * 100), 6);
-                                    return (
-                                        <div
-                                            key={d.dateKey}
-                                            className="flex-1 min-w-[36px] max-w-[60px] flex flex-col items-center gap-2 group relative"
-                                        >
-                                            {/* Tooltip */}
-                                            <div className="absolute -top-12 opacity-0 group-hover:opacity-100 transition-opacity bg-brand-maroon text-white text-[10px] font-black px-2.5 py-1 rounded-lg pointer-events-none whitespace-nowrap z-20 shadow-lg">
-                                                ₹{d.amount.toLocaleString("en-IN")} ({d.count} orders)
-                                            </div>
+                        <div className="pt-6 space-y-6">
+                            {/* Chart Area with background grid lines */}
+                            <div className="relative h-72 w-full pt-4">
+                                {/* Horizontal Guideline Grids */}
+                                <div className="absolute inset-x-0 inset-y-0 flex flex-col justify-between pointer-events-none pb-8 pt-4">
+                                    <div className="border-b border-dashed border-orange-200/50 flex justify-between items-center text-[9px] font-bold text-orange-900/30 pr-1">
+                                        <span></span>
+                                        <span>₹{Math.round(maxChartAmount).toLocaleString("en-IN")}</span>
+                                    </div>
+                                    <div className="border-b border-dashed border-orange-200/30 flex justify-between items-center text-[9px] font-bold text-orange-900/25 pr-1">
+                                        <span></span>
+                                        <span>₹{Math.round(maxChartAmount * 0.5).toLocaleString("en-IN")}</span>
+                                    </div>
+                                    <div className="border-b border-orange-200/60 flex justify-between items-center text-[9px] font-bold text-orange-900/30 pr-1">
+                                        <span></span>
+                                        <span>₹0</span>
+                                    </div>
+                                </div>
 
-                                            {/* Bar */}
-                                            <div className="w-full bg-orange-100/60 rounded-xl h-full flex items-end overflow-hidden p-1">
-                                                <div
-                                                    style={{ height: `${heightPct}%` }}
-                                                    className="w-full bg-gradient-to-t from-brand-maroon to-brand-orange rounded-lg transition-all duration-500 group-hover:brightness-110"
-                                                />
-                                            </div>
+                                {/* Bars Container */}
+                                <div className={cn(
+                                    "h-full flex items-stretch gap-3 md:gap-4 overflow-x-auto pb-2 relative z-10",
+                                    timeSeriesData.length <= 5 ? "justify-center md:justify-around" : "justify-start"
+                                )}>
+                                    {timeSeriesData.map((d) => {
+                                        const heightPct = Math.max(Math.round((d.amount / maxChartAmount) * 100), 8);
+                                        return (
+                                            <div
+                                                key={d.dateKey}
+                                                className="flex-1 min-w-[56px] max-w-[96px] h-full flex flex-col items-center justify-end gap-2 group relative"
+                                            >
+                                                {/* Tooltip */}
+                                                <div className="absolute -top-10 opacity-0 group-hover:opacity-100 transition-opacity bg-brand-maroon text-white text-[10px] font-black px-3 py-1.5 rounded-xl pointer-events-none whitespace-nowrap z-30 shadow-xl border border-white/10 flex flex-col items-center">
+                                                    <span>₹{d.amount.toLocaleString("en-IN")}</span>
+                                                    <span className="text-[8px] opacity-75 font-normal">{d.count} {d.count === 1 ? 'order' : 'orders'}</span>
+                                                </div>
 
-                                            {/* Date Label */}
-                                            <span className="text-[9px] font-black text-orange-900/50 uppercase tracking-tighter truncate w-full text-center">
-                                                {d.label}
-                                            </span>
-                                        </div>
-                                    );
-                                })}
+                                                {/* Bar Track */}
+                                                <div className="w-full bg-orange-100/50 rounded-2xl flex-1 flex items-end overflow-hidden p-1.5 border border-orange-200/40 relative shadow-inner">
+                                                    {/* Animated Gradient Bar */}
+                                                    <div
+                                                        style={{ height: `${heightPct}%` }}
+                                                        className="w-full bg-gradient-to-t from-brand-maroon via-brand-orange to-amber-500 rounded-xl transition-all duration-700 shadow-md group-hover:brightness-110 flex items-start justify-center pt-1.5 relative overflow-hidden"
+                                                    >
+                                                        <div className="absolute inset-0 bg-white/15 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                                        {heightPct >= 20 && (
+                                                            <span className="text-[9px] font-black text-white drop-shadow truncate px-0.5">
+                                                                ₹{d.amount >= 1000 ? `${(d.amount / 1000).toFixed(1)}k` : Math.round(d.amount)}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </div>
+
+                                                {/* Date Label */}
+                                                <div className="flex flex-col items-center flex-shrink-0">
+                                                    <span className="text-[10px] font-black text-brand-maroon uppercase tracking-tight truncate w-full text-center">
+                                                        {d.label}
+                                                    </span>
+                                                    <span className="text-[8px] font-bold text-orange-900/40 uppercase">
+                                                        {d.count} {d.count === 1 ? 'order' : 'orders'}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
                             </div>
 
-                            <div className="flex items-center justify-between text-[11px] font-bold text-orange-900/40 pt-4 border-t border-orange-50">
+                            <div className="flex items-center justify-between text-[11px] font-bold text-orange-900/40 pt-4 border-t border-orange-100">
                                 <span>Timeline Range: {activePeriodLabel}</span>
                                 <span>Peak Day: ₹{maxChartAmount.toLocaleString("en-IN")}</span>
                             </div>

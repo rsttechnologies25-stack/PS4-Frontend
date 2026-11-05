@@ -1,5 +1,7 @@
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
-export const API_URL = `${API_BASE_URL}/api`;
+const rawUrl = process.env.NEXT_PUBLIC_API_URL || "https://ecommerce.perambursrinivasa.co.in/api";
+const cleanUrl = rawUrl.replace(/\/+$/, "");
+export const API_BASE_URL = cleanUrl.endsWith("/api") ? cleanUrl.replace(/\/api$/, "") : cleanUrl;
+export const API_URL = cleanUrl.endsWith("/api") ? cleanUrl : `${cleanUrl}/api`;
 
 export async function fetchWithAuth(url: string, options: RequestInit & { isFormData?: boolean } = {}) {
     const token = typeof window !== 'undefined' ? localStorage.getItem('admin_token') : null;

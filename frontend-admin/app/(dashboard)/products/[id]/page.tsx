@@ -2,13 +2,21 @@
 
 export const runtime = "edge";
 
-import { useParams } from "next/navigation";
+import { useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
 import ProductForm from "@/components/ProductForm";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 
 export default function EditProductPage() {
     const { id } = useParams();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (id) {
+            router.replace(`/products/edit?id=${id}`);
+        }
+    }, [id, router]);
 
     return (
         <div className="space-y-8">
